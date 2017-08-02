@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <variable
+            name="news"
+            type="com.lovejjfg.readhub.data.HotTopic.Data.NewsArrayBean"/>
+        <variable
+            name="test"
+            type="com.lovejjfg.readhub.data.Test"/>
+    </data>
+
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context="com.lovejjfg.readhub.HomeActivity">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{news.title}"
+            android:textColor="@color/theme_color_text_g0"
+            android:textSize="@dimen/text_sec_title"
+            tools:text="xxxxxxxxxxx"
+            />
+
+        <TextView
+            android:id="@+id/tv_site_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="@{test.name}"
+            android:textColor="@color/theme_color_text_g1"
+            android:textSize="@dimen/text_time"
+            tools:text="3小时前"
+            />
+
+    </LinearLayout>
+
+</layout>
+
