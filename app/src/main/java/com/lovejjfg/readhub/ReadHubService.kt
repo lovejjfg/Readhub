@@ -1,6 +1,6 @@
 package com.lovejjfg.readhub
 
-import com.lovejjfg.readhub.data.HotTopic
+import com.lovejjfg.readhub.data.topic.HotTopic
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.GET

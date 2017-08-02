@@ -48,4 +48,5 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt "com.android.databinding:compiler:${gradle_version}"
 
+    compile 'javax.annotation:javax.annotation-api:1.2'
 }

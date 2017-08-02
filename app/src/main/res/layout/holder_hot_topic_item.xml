@@ -7,10 +7,7 @@
 
         <variable
             name="news"
-            type="com.lovejjfg.readhub.data.HotTopic.Data.NewsArrayBean"/>
-        <variable
-            name="test"
-            type="com.lovejjfg.readhub.data.Test"/>
+            type="com.lovejjfg.readhub.data.topic.NewsArrayItem"/>
     </data>
 
 
@@ -37,7 +34,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:text="@{test.name}"
+            android:text="@{news.siteName}"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_time"
             tools:text="3小时前"

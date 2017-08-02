@@ -5,13 +5,14 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.transition.Fade
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lovejjfg.readhub.DataManager
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.data.Test
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import io.reactivex.functions.Consumer
 
