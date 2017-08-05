@@ -3,6 +3,7 @@ package com.lovejjfg.readhub.utils;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -32,6 +33,16 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC+08:00"));
         return sdf;
+    }
+
+    public static String parseTimeToMillis(String date) {
+        try {
+            SimpleDateFormat sdf = initDateFormat();
+            return String.valueOf(sdf.parse(date).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

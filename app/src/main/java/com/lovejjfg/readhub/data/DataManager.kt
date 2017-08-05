@@ -1,22 +1,16 @@
-package com.lovejjfg.readhub
+package com.lovejjfg.readhub.data
 
-import android.util.Log
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import org.reactivestreams.Subscription
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
-import java.util.logging.Logger
 
 /**
  * ReadHub
