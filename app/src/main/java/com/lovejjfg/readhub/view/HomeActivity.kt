@@ -4,10 +4,13 @@ import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
+import com.lovejjfg.readhub.utils.RxBus
+import com.lovejjfg.readhub.utils.ScrollEvent
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
@@ -20,6 +23,8 @@ class HomeActivity : AppCompatActivity() {
     var hotTopicFragment: Fragment? = null
     var techFragment: Fragment? = null
     var developFragment: Fragment? = null
+    var floatButton : FloatingActionButton? = null
+    var navigation : BottomNavigationView? = null
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -58,6 +63,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
+        navigation = viewBind?.navigation
+        floatButton = viewBind?.fab
         viewBind?.navigation?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
@@ -75,6 +82,9 @@ class HomeActivity : AppCompatActivity() {
                 .hide(techFragment)
                 .hide(developFragment)
                 .commit()
+        viewBind?.fab?.setOnClickListener {
+            RxBus.instance.post(ScrollEvent())
+        }
 
     }
 
