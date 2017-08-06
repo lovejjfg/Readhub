@@ -7,6 +7,7 @@ import android.view.View
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
+import com.lovejjfg.readhub.utils.DateUtil
 import io.reactivex.functions.Consumer
 
 
@@ -31,8 +32,7 @@ class DevelopFragment : RefreshFragment() {
         DataManager.subscribe(DataManager.init().devNews(),
                 Consumer {
                     val data = it.data
-                    order = data?.last()?.id
-                    Log.e(TAG, "order:" + order)
+                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
                     adapter?.setList(data)
                     refresh?.isRefreshing = false
                 },
@@ -46,9 +46,8 @@ class DevelopFragment : RefreshFragment() {
         DataManager.subscribe(DataManager.init().devNewsMore(order!!, 10),
                 Consumer {
                     val data = it.data
-                    order = data?.last()?.order
+                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
                     adapter?.appendList(data)
-                    Log.e(TAG, "order:" + order)
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)

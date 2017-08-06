@@ -81,7 +81,8 @@ abstract class RefreshFragment : Fragment() {
             item.isExband = !item.isExband!!
             adapter?.notifyItemChanged(position)
         }
-        var isEnd = true
+        var isVisible = true
+        var isAnimating = false
         rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -92,21 +93,48 @@ abstract class RefreshFragment : Fragment() {
                                 ?.translationY(0f)
                                 ?.setListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationStart(animation: Animator?) {
+                                        isAnimating = true
                                         floatButton?.hide()
+                                    }
+
+                                    override fun onAnimationEnd(animation: Animator?) {
+                                        isAnimating = false
+                                        isVisible = true
+                                        super.onAnimationEnd(animation)
                                     }
                                 })
                                 ?.start()
                     }
-                    if (first > 3 && isEnd) {
+
+                    if (!isAnimating && dy < 0 && !isVisible) {
+                        navigation?.animate()
+                                ?.translationY(0f)
+                                ?.setListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationStart(animation: Animator?) {
+//                                        floatButton?.hide()
+                                        isAnimating = true
+                                    }
+
+                                    override fun onAnimationEnd(animation: Animator?) {
+                                        super.onAnimationEnd(animation)
+                                        isAnimating = false
+                                        isVisible = true
+                                    }
+                                })
+                                ?.start()
+                    }
+                    if (!isAnimating && dy > 0 && first > 2 && isVisible) {
                         navigation?.animate()
                                 ?.translationY(navigation?.height!! + 0.5f)
                                 ?.setListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationStart(animation: Animator?) {
-                                        isEnd = false
+                                        isAnimating = true
+//                                        isVisible = true
                                     }
 
                                     override fun onAnimationEnd(animation: Animator?) {
-                                        isEnd = true
+                                        isVisible = false
+                                        isAnimating = false
                                         floatButton?.show()
                                     }
                                 })
