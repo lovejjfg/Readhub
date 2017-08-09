@@ -93,7 +93,7 @@ abstract class RefreshFragment : Fragment() {
         }
         adapter?.totalCount = Int.MAX_VALUE
         refresh?.isRefreshing = true
-//                refresh(refresh)
+        refresh(refresh)
         println("isVisible:$tag")
 
 
