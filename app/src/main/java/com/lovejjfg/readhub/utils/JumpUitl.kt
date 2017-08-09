@@ -16,22 +16,24 @@
  *
  */
 
-package com.lovejjfg.readhub.utils;
+package com.lovejjfg.readhub.utils
 
-import android.content.Context;
-import android.content.Intent;
+import android.content.Context
+import android.content.Intent
 
-import com.lovejjfg.readhub.view.WebActivity;
+import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.view.WebActivity
 
 /**
  * ReadHub
  * Created by Joe at 2017/8/5.
  */
 
-public class JumpUitl {
+object JumpUitl {
 
-    public static void jumpWeb(Context context, String url) {
-        Intent intent = new Intent(context, WebActivity.class);
-        context.startActivity(intent);
+    fun jumpWeb(context: Context, url: String) {
+        val intent = Intent(context, WebActivity::class.java)
+        intent.putExtra(Constants.URL, url)
+        context.startActivity(intent)
     }
 }

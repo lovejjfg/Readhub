@@ -26,6 +26,7 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.DateUtil
+import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.functions.Consumer
 
 
@@ -42,7 +43,7 @@ class DevelopFragment : RefreshFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter?.setOnItemClickListener { itemView, position, item ->
-
+            JumpUitl.jumpWeb(activity, item.url!!)
         }
     }
 

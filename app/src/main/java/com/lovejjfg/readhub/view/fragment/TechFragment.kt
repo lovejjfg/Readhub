@@ -18,20 +18,15 @@
 
 package com.lovejjfg.readhub.view.fragment
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
-import com.lovejjfg.powerrecycle.holder.PowerHolder
-import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.databinding.HolderNormalTopicBinding
 import com.lovejjfg.readhub.utils.DateUtil
+import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.functions.Consumer
 
 
@@ -48,7 +43,9 @@ class TechFragment : RefreshFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter?.setOnItemClickListener { itemView, position, item ->
-
+            adapter?.setOnItemClickListener { _, _, item ->
+                JumpUitl.jumpWeb(activity, item.url!!)
+            }
         }
     }
 
