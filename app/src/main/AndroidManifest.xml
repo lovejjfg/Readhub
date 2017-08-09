@@ -21,6 +21,10 @@
         </activity>
         <activity android:name=".view.WebActivity">
         </activity>
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings">
+        </activity>
     </application>
 
 </manifest>

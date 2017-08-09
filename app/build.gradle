@@ -49,5 +49,6 @@ dependencies {
     compile 'com.lovejjfg.powerrecycle:powerrecycle:1.2.1'
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
 }

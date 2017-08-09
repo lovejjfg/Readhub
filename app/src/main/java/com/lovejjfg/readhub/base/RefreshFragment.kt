@@ -1,3 +1,21 @@
+/*
+ *
+ *   Copyright (c) 2017.  Joe
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+
 package com.lovejjfg.readhub.view.fragment
 
 import android.animation.Animator
@@ -75,6 +93,10 @@ abstract class RefreshFragment : Fragment() {
         }
         adapter?.totalCount = Int.MAX_VALUE
         refresh?.isRefreshing = true
+//                refresh(refresh)
+        println("isVisible:$tag")
+
+
         refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         refresh?.setOnRefreshListener { refresh(refresh) }
         adapter?.setOnItemClickListener { _, position, item ->
@@ -142,7 +164,6 @@ abstract class RefreshFragment : Fragment() {
                 }
             }
         })
-        refresh(refresh)
     }
 
     abstract fun createAdapter(): PowerAdapter<DataItem>?
@@ -156,5 +177,19 @@ abstract class RefreshFragment : Fragment() {
         super.onDestroy()
         RxBus.instance.unSubscribe(this)
     }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        println("setUserVisibleHint:" + isVisibleToUser)
+
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Log.e("TAG", "onHiddenChanged:$hidden::$tag")
+        println("onHiddenChanged:" + hidden)
+
+    }
+
 
 }
