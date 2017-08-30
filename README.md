@@ -1,6 +1,6 @@
-### ReadHub
+### Readhub
 
-无码科技 [冯大辉](https://github.com/Fenng) 的 [ReadHub](https://readhub.me/) Android 客户端。说句废话，**这不是官方的App** 。
+无码科技 [冯大辉](https://github.com/Fenng) 的 [Readhub](https://readhub.me/) Android 客户端。说句废话，**这不是官方的App** 。
 
 ### Todo
 * 「相关」新闻打开方式
@@ -10,8 +10,13 @@
 
 ### Thanks
 [Kotlin](https://github.com/JetBrains/kotlin)
+
 [Rxjava2](https://github.com/ReactiveX/RxJava)
+
 [Retrofit](https://github.com/square/retrofit)
+
 [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+
 [PowerRecyclerView](https://github.com/lovejjfg/PowerRecyclerView)
-Android Support Libs & DataBinding
+
+[Android Support Libs & DataBinding](https://developer.android.com/topic/libraries/support-library/index.html)

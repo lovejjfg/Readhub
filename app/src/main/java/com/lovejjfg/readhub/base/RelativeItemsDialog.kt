@@ -52,17 +52,17 @@ class RelativeItemsDialog : DialogFragment() {
         val rvHot = layoutBinding.rvHot
 
         rvHot?.layoutManager = LinearLayoutManager(context)
-        val itemAdapter = HotTopicItemAdapter()
+        val itemAdapter = DialogTopicItemAdapter()
         rvHot?.adapter = itemAdapter
         itemAdapter.setList(relatedItems?.data)
         return layoutBinding.root
     }
 
 
-    inner class HotTopicItemAdapter : PowerAdapter<DataItem>() {
+    inner class DialogTopicItemAdapter : PowerAdapter<DataItem>() {
         override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
             val itemBinding = DataBindingUtil.inflate<HolderTopicItemBinding>(LayoutInflater.from(parent?.context), R.layout.holder_topic_item, parent, false)
-            val itemHolder = HotTopicItemHolder(itemBinding)
+            val itemHolder = DialogTopicItemHolder(itemBinding)
             return itemHolder
 
         }
@@ -73,7 +73,7 @@ class RelativeItemsDialog : DialogFragment() {
 
     }
 
-    inner class HotTopicItemHolder(itemView: HolderTopicItemBinding) : PowerHolder<DataItem>(itemView.root) {
+    inner class DialogTopicItemHolder(itemView: HolderTopicItemBinding) : PowerHolder<DataItem>(itemView.root) {
         var itemBinding: HolderTopicItemBinding? = itemView
         override fun onBind(t: DataItem?) {
             itemBinding!!.news = t
