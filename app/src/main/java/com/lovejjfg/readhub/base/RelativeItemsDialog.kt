@@ -51,9 +51,9 @@ class RelativeItemsDialog : DialogFragment() {
         val layoutBinding = DataBindingUtil.inflate<LayoutRecyclerBinding>(inflater, R.layout.layout_recycler, container, false)
         val rvHot = layoutBinding.rvHot
 
-        rvHot?.layoutManager = LinearLayoutManager(context)
+        rvHot.layoutManager = LinearLayoutManager(context)
         val itemAdapter = DialogTopicItemAdapter()
-        rvHot?.adapter = itemAdapter
+        rvHot.adapter = itemAdapter
         itemAdapter.setList(relatedItems?.data)
         return layoutBinding.root
     }
