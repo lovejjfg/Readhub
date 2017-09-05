@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Library
 import com.lovejjfg.readhub.databinding.ActivityAboutBinding
@@ -42,6 +43,7 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
+        contentView?.tvVersoin?.text = String.format("版本：%s", BuildConfig.VERSION_NAME)
         contentView?.toolbar?.setNavigationOnClickListener({ finish() })
         aboutAdapter = AboutAdapter()
         val recyclerView = contentView?.recyclerView
