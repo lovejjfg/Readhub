@@ -120,18 +120,18 @@ class HomeActivity : AppCompatActivity() {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
             developFragment = DevelopFragment()
+            fragmentManager.beginTransaction()
+                    .add(R.id.content, hotTopicFragment, Constants.HOT)
+                    .add(R.id.content, techFragment, Constants.TECH)
+                    .add(R.id.content, developFragment, Constants.DEV)
+                    .hide(techFragment)
+                    .hide(developFragment)
+                    .commit()
         } else {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
             developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
         }
-        fragmentManager.beginTransaction()
-                .add(R.id.content, hotTopicFragment, Constants.HOT)
-                .add(R.id.content, techFragment, Constants.TECH)
-                .add(R.id.content, developFragment, Constants.DEV)
-                .hide(techFragment)
-                .hide(developFragment)
-                .commit()
         viewBind?.fab?.setOnClickListener {
             RxBus.instance.post(ScrollEvent())
         }
