@@ -41,17 +41,6 @@
                 tools:text="xxxxxxxxxxx"
                 />
 
-            <TextView
-                android:id="@+id/tv_publish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="3dp"
-                android:text="@{DateUtil.parseTime(topic.createdAt)}"
-                android:textColor="@color/theme_color_text_g1"
-                android:textSize="@dimen/text_time"
-                tools:text="xxxxx"
-                />
-
 
             <TextView
                 android:id="@+id/tv_des"
@@ -74,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 tools:text="相关："
-
+                android:textSize="@dimen/text_time"
                 />
         </LinearLayout>
     </android.support.v7.widget.CardView>

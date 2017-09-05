@@ -14,11 +14,14 @@
             >
 
             <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:title="@string/app_name"
                 app:titleTextColor="#fff"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 >
 
             </android.support.v7.widget.Toolbar>
@@ -45,14 +48,14 @@
             app:menu="@menu/navigation"/>
 
 
-        <android.support.design.widget.FloatingActionButton
+        <com.lovejjfg.readhub.view.CustomFab
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:translationY="-40dp"
             android:src="@drawable/ic_arrow_upward_black"
+            android:visibility="invisible"
             app:backgroundTint="@color/colorPrimary"
+            android:translationY="-40dp"
             app:layout_anchor="@id/navigation"
             app:layout_anchorGravity="right|top"
             app:useCompatPadding="true"

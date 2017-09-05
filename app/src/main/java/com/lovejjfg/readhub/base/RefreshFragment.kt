@@ -145,7 +145,7 @@ abstract class RefreshFragment : Fragment() {
                                 })
                                 ?.start()
                     }
-                    if (!isAnimating && dy > 0 && first > 2 && isVisible) {
+                    if (!isAnimating && dy > 0 && isVisible) {
                         navigation?.animate()
                                 ?.translationY(navigation?.height!! + 0.5f)
                                 ?.setListener(object : AnimatorListenerAdapter() {

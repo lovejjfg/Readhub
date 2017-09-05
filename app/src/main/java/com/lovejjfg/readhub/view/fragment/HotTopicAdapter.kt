@@ -18,7 +18,6 @@
 
 package com.lovejjfg.readhub.view.fragment
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -35,7 +34,7 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
 import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
-import com.lovejjfg.readhub.view.WebActivity
+import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -71,10 +70,8 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
             rvItem?.layoutManager = LinearLayoutManager(context)
             val itemAdapter = HotTopicItemAdapter()
             itemAdapter.setOnItemClickListener { itemView, position, item ->
-                val i = Intent(context, WebActivity::class.java)
-                i.putExtra(Constants.URL, t?.newsArray!![position]?.mobileUrl)
-
-                context.startActivity(i)
+                val mobileUrl = t?.newsArray!![position]?.mobileUrl
+                JumpUitl.jumpWeb(context, mobileUrl)
             }
             rvItem?.adapter = itemAdapter
             itemAdapter.setList(t?.newsArray)

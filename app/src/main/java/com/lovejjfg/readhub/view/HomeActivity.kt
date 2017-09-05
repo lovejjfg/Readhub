@@ -24,11 +24,14 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
+import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.ScrollEvent
+import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
@@ -41,14 +44,19 @@ class HomeActivity : AppCompatActivity() {
     var hotTopicFragment: Fragment? = null
     var techFragment: Fragment? = null
     var developFragment: Fragment? = null
-    var floatButton : FloatingActionButton? = null
-    var navigation : BottomNavigationView? = null
+    var floatButton: FloatingActionButton? = null
+    var navigation: BottomNavigationView? = null
+    var mFirebaseAnalytics: FirebaseAnalytics? = null
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-
+        if (UIUtil.doubleClick()) {
+            RxBus.instance.post(ScrollEvent())
+            return@OnNavigationItemSelectedListener true
+        }
         when (item.itemId) {
             R.id.navigation_home -> {
+                logEvent("热门服务")
                 fragmentManager.beginTransaction()
                         .show(hotTopicFragment)
                         .hide(techFragment)
@@ -57,6 +65,7 @@ class HomeActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
+                logEvent("科技动态")
                 fragmentManager.beginTransaction()
                         .show(techFragment)
                         .hide(hotTopicFragment)
@@ -65,6 +74,7 @@ class HomeActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
+                logEvent("开发资讯")
                 fragmentManager.beginTransaction()
                         .show(developFragment)
                         .hide(hotTopicFragment)
@@ -80,10 +90,32 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mFirebaseAnalytics?.setCurrentScreen(this, "首页", null)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
-        navigation = viewBind?.navigation
+        val navigation1 = viewBind?.navigation
+        navigation = navigation1
         floatButton = viewBind?.fab
-        viewBind?.navigation?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        val toolbar = viewBind?.toolbar
+        toolbar?.setOnClickListener({
+            if (UIUtil.doubleClick()) {
+                RxBus.instance.post(ScrollEvent())
+            }
+        })
+        toolbar?.inflateMenu(R.menu.home)
+        toolbar?.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.home_setting -> {
+                    JumpUitl.jumpSetting(this)
+                    return@setOnMenuItemClickListener true
+
+                }
+                else -> {
+                    JumpUitl.jumpAbout(this)
+                    return@setOnMenuItemClickListener false
+                }
+            }
+        }
+        navigation1?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
@@ -103,6 +135,13 @@ class HomeActivity : AppCompatActivity() {
         viewBind?.fab?.setOnClickListener {
             RxBus.instance.post(ScrollEvent())
         }
+
+    }
+
+    fun logEvent(name: String) {
+        val params = Bundle()
+        params.putString("tab", name)
+        mFirebaseAnalytics?.logEvent("tab点击", params)
 
     }
 

@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="theme_color_text">#333333</color>
+    <color name="color_white">#ffffff</color>
     <color name="theme_color_text_g0">#4e4e4e</color>
     <color name="theme_color_text_g1">#b0b0b0</color>
     <color name="theme_color_text_g2">#656565</color>

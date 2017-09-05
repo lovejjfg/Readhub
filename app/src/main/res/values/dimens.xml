@@ -5,6 +5,14 @@
     <dimen name="margin_24">24dp</dimen>
     <dimen name="text_title">15sp</dimen>
     <dimen name="text_time">12sp</dimen>
-    <dimen name="text_des">13sp</dimen>
+    <dimen name="text_des">14sp</dimen>
     <dimen name="text_sec_title">14sp</dimen>
+
+    <dimen name="normal_margin_padding">8dp</dimen>
+    <dimen name="detail_backdrop_height">280dp</dimen>
+    <dimen name="about_height">280dp</dimen>
+    <dimen name="detail_info_height">240dp</dimen>
+    <dimen name="text_bigger">18sp</dimen>
+    <dimen name="text_normal">16sp</dimen>
+    <dimen name="text_small">14sp</dimen>
 </resources>

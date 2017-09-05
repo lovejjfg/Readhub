@@ -24,12 +24,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 # okhttp
--dontwarn com.squareup.okhttp3.**
--keep class com.squareup.okhttp3.** { *;}
--keep interface com.squareup.okhttp3.** { *; }
+-dontwarn okio.**
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
--dontwarn okio.**
 
 
 #retrofit
@@ -37,18 +34,20 @@
 -dontnote retrofit2.Platform
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
--dontwarn retrofit2.OkHttpCall
+#-dontwarn retrofit2.OkHttpCall
 # Retain generic type information for use by reflection by converters and adapters.
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+-dontwarn javax.annotation.**
 # keep anotation
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
 
-
--dontwarn rx.**
+#rx
+#-dontwarn rx.**
 
 # lambda
 -dontwarn java.lang.invoke.*
@@ -60,6 +59,8 @@
 
 
 -dontwarn com.lovejjfg.**
+
+-keepattributes EnclosingMethod
 
 
 

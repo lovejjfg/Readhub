@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "689745366156",
+    "firebase_url": "https://readhub-46dc0.firebaseio.com",
+    "project_id": "readhub-46dc0",
+    "storage_bucket": "readhub-46dc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689745366156:android:7c480c335dec1735",
+        "android_client_info": {
+          "package_name": "com.lovejjfg.readhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689745366156-bisjq0200nash35ma70cdk5hol4mhhg9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVAQyvtIilb2FsdgqQneeKojWII5L98uI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,4 +9,47 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Text.ListName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">left|center_horizontal</item>
+        <item name="android:textColor">@color/theme_color_text</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.ListContent">
+        <item name="android:textColor">@color/theme_color_text_g3</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:maxLines">15</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="Text.ListTag">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_small</item>
+
+    </style>
+
+
+    <style name="Text.Content">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
 </resources>
