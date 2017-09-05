@@ -35,6 +35,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseFragment
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.RxBus
@@ -47,7 +48,7 @@ import io.reactivex.functions.Consumer
  * ReadHub
  * Created by Joe at 2017/7/30.
  */
-abstract class RefreshFragment : Fragment() {
+abstract class RefreshFragment : BaseFragment() {
     protected val TAG = "HotTopicFragment"
     protected var order: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
