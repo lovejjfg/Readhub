@@ -41,7 +41,7 @@ class WebActivity : AppCompatActivity() {
         loading = ProgressDialog(this)
 //        val title = intent.getStringExtra(Constants.TITLE)
 //        setMyTitle(title)
-        mWeb = findViewById(R.id.web)
+        mWeb = findViewById(R.id.web) as WebView?
 
         val url = intent.getStringExtra(Constants.URL)
         if (TextUtils.isEmpty(url)) {
@@ -64,15 +64,15 @@ class WebActivity : AppCompatActivity() {
         webSettings.blockNetworkImage = false
         webSettings.displayZoomControls = false
         //        mWeb.setWebViewClient(new WebViewClient());
-        mWeb!!.webChromeClient = object : WebChromeClient() {
+        mWeb!!.setWebChromeClient(object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
                 if (TextUtils.isEmpty(title)) {
 //                    setMyTitle(s)
                 }
             }
-        }
-        mWeb!!.webViewClient = object : WebViewClient() {
+        })
+        mWeb!!.setWebViewClient(object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 //                loading?.show()
             }
@@ -82,7 +82,7 @@ class WebActivity : AppCompatActivity() {
 
             }
 
-        }
+        })
 
         mWeb!!.loadUrl(url)
     }
