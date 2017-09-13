@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
@@ -75,30 +76,33 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
             }
             rvItem?.adapter = itemAdapter
             itemAdapter.setList(t?.newsArray)
-            val tvRelative = dataBind?.tvRelative
-            Observable.fromIterable(t?.entityRelatedTopics)
-                    .map { it.entityName!! }
-                    .filter { !TextUtils.isEmpty(it) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .toList()
-                    .subscribeBy(onError = {}, onSuccess = {
-                        tvRelative?.text = null
-                        tvRelative?.append("相关：")
-                        tvRelative?.append(TextUtils.join(",", it))
-                        tvRelative?.setOnClickListener {
-                            if (context is FragmentActivity) {
-                                val fragmentManager = (context as FragmentActivity).supportFragmentManager!!
-                                if (relativeItemsDialog == null) {
-                                    relativeItemsDialog = RelativeItemsDialog()
-                                }
-                                val bundle = Bundle()
-                                bundle.putParcelable(Constants.RELATIVE_ITEMS, t!!.entityRelatedTopics!![0]!!)
-                                relativeItemsDialog!!.arguments = bundle
-                                relativeItemsDialog!!.show(fragmentManager, "xxxx")
-                            }
-
-                        }
-                    })
+            dataBind?.ivShow?.setOnClickListener{}
+            dataBind?.ivTimeLine?.setOnClickListener{}
+//            dataBind?.tvRealTime?.setOnClickListener{ Log.e("xxx", "")}
+//            val tvRelative = dataBind?.tvRelative
+//            Observable.fromIterable(t?.entityRelatedTopics)
+//                    .map { it.entityName!! }
+//                    .filter { !TextUtils.isEmpty(it) }
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .toList()
+//                    .subscribeBy(onError = {}, onSuccess = {
+//                        tvRelative?.text = null
+//                        tvRelative?.append("相关：")
+//                        tvRelative?.append(TextUtils.join(",", it))
+//                        tvRelative?.setOnClickListener {
+//                            if (context is FragmentActivity) {
+//                                val fragmentManager = (context as FragmentActivity).supportFragmentManager!!
+//                                if (relativeItemsDialog == null) {
+//                                    relativeItemsDialog = RelativeItemsDialog()
+//                                }
+//                                val bundle = Bundle()
+//                                bundle.putParcelable(Constants.RELATIVE_ITEMS, t!!.entityRelatedTopics!![0]!!)
+//                                relativeItemsDialog!!.arguments = bundle
+//                                relativeItemsDialog!!.show(fragmentManager, "xxxx")
+//                            }
+//
+//                        }
+//                    })
         }
     }
 

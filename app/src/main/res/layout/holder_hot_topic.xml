@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -15,16 +15,17 @@
         <variable
             name="topic"
             type="com.lovejjfg.readhub.data.topic.DataItem"/>
+
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        app:cardElevation="@{topic.isExband?20:4}"
-        android:foreground="?selectableItemBackground">
+        android:foreground="?selectableItemBackground"
+        app:cardElevation="@{topic.isExband?20:4}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,23 +44,52 @@
                 tools:text="xxxxxxxxxxx"
                 />
 
-            <TextView
-                android:id="@+id/tv_publish"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="3dp"
-                android:text="@{DateUtil.parseTime(topic.createdAt)}"
-                android:textColor="@color/theme_color_text_g1"
-                android:textSize="@dimen/text_time"
-                tools:text="xxxxx"
-                />
+                android:layout_gravity="center"
+                >
+
+                <TextView
+                    android:id="@+id/tv_publish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{DateUtil.parseTime(topic.createdAt)}"
+                    android:textColor="@color/theme_color_text_g1"
+                    android:textSize="@dimen/text_time"
+                    tools:text="xxxxx"
+                    />
+
+                <com.lovejjfg.readhub.view.widget.ForegroundImageView
+                    android:id="@+id/iv_show"
+                    android:foreground="?selectableItemBackgroundBorderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_padding"
+                    android:gravity="center"
+                    android:src="@drawable/ic_detail_topic_black_24dp"
+                    android:visibility="@{(topic.extra!=null)?View.VISIBLE:View.GONE}"
+                    />
+
+                <com.lovejjfg.readhub.view.widget.ForegroundImageView
+                    android:id="@+id/iv_time_line"
+                    android:foreground="?selectableItemBackgroundBorderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_padding"
+                    android:gravity="center"
+                    android:src="@drawable/ic_time_line_black_24dp"
+                    android:textColor="@color/theme_color_text"/>
+
+            </LinearLayout>
 
 
             <TextView
                 android:id="@+id/tv_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/normal_margin_padding"
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.1"
                 android:maxLines="@{topic.isExband?1000:3}"
@@ -74,18 +104,11 @@
                 android:id="@+id/rv_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:visibility="@{topic.isExband?View.VISIBLE:View.GONE}">
             </android.support.v7.widget.RecyclerView>
 
-            <TextView
-                android:id="@+id/tv_relative"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:visibility="gone"
-                tools:text="相关："
-                />
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

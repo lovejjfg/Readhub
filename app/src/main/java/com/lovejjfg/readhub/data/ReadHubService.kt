@@ -19,11 +19,13 @@
 package com.lovejjfg.readhub.data
 
 import com.lovejjfg.readhub.data.topic.HotTopic
+import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.data.topic.develop.Develop
 import com.lovejjfg.readhub.data.topic.tech.Tech
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -34,6 +36,9 @@ interface ReadHubService {
 
     @GET("topic")
     fun hotTopic(): Observable<Response<HotTopic>>
+
+    @GET("topic/{id}")
+    fun topicDetail(@Path("id") id: String): Observable<Response<TopicDetail>>
 
     @GET("topic")
     fun hotTopicMore(@Query("lastCursor") lastId: String, @Query("pageSize") size: Int): Observable<Response<HotTopic>>

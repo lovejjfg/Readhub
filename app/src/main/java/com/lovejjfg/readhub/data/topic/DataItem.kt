@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName
 import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
- data class DataItem(
+data class DataItem(
         @field:SerializedName("isExband")
         var isExband: Boolean? = false,
 
@@ -68,7 +68,12 @@ import javax.annotation.Generated
         val siteName: String? = null,
 
         @field:SerializedName("url")
-        val url: String? = null
+        val url: String? = null,
+
+        @field:SerializedName("extra")
+        val extra: Extra? = null
+
+
 ) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<DataItem> = object : Parcelable.Creator<DataItem> {
@@ -78,21 +83,21 @@ import javax.annotation.Generated
     }
 
     constructor(source: Parcel) : this(
-    source.readValue(Boolean::class.java.classLoader) as Boolean?,
-    source.readString(),
-    source.readString(),
-    ArrayList<Any?>().apply { source.readList(this, Any::class.java.classLoader) },
-    source.readParcelable<NelData>(NelData::class.java.classLoader),
-    source.readString(),
-    source.readString(),
-    ArrayList<NewsArrayItem?>().apply { source.readList(this, NewsArrayItem::class.java.classLoader) },
-    source.readString(),
-    source.createTypedArrayList(EntityRelatedTopicsItem.CREATOR),
-    source.readString(),
-    source.readString(),
-    source.readString(),
-    source.readString(),
-    source.readString()
+            source.readValue(Boolean::class.java.classLoader) as Boolean?,
+            source.readString(),
+            source.readString(),
+            ArrayList<Any?>().apply { source.readList(this, Any::class.java.classLoader) },
+            source.readParcelable<NelData>(NelData::class.java.classLoader),
+            source.readString(),
+            source.readString(),
+            ArrayList<NewsArrayItem?>().apply { source.readList(this, NewsArrayItem::class.java.classLoader) },
+            source.readString(),
+            source.createTypedArrayList(EntityRelatedTopicsItem.CREATOR),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString()
     )
 
     override fun describeContents() = 0
