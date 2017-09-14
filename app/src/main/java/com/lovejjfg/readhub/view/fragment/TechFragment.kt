@@ -42,10 +42,8 @@ class TechFragment : RefreshFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter?.setOnItemClickListener { itemView, position, item ->
-            adapter?.setOnItemClickListener { _, _, item ->
-                JumpUitl.jumpWeb(activity, item.url!!)
-            }
+        adapter?.setOnItemClickListener { _, _, item ->
+            JumpUitl.jumpWeb(activity, item.url!!)
         }
     }
 
