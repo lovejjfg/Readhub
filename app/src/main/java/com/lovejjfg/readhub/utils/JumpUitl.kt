@@ -26,9 +26,8 @@ import android.preference.PreferenceManager
 import android.text.TextUtils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.view.AboutActivity
-import com.lovejjfg.readhub.view.SettingsActivity
-import com.lovejjfg.readhub.view.WebActivity
+import com.lovejjfg.readhub.data.topic.Extra
+import com.lovejjfg.readhub.view.*
 
 
 /**
@@ -68,5 +67,17 @@ object JumpUitl {
     fun jumpAbout(context: Context) {
         val intent = Intent(context, AboutActivity::class.java)
         context.startActivity(intent)
+    }
+
+    fun jumpTimeLine(context: Context?, id: String?) {
+        val intent = Intent(context, TopicDetailActivity::class.java)
+        intent.putExtra(Constants.ID, id)
+        context!!.startActivity(intent)
+    }
+
+    fun jumpInstant(context: Context?, extra: Extra?) {
+        val intent = Intent(context, InstantActivity::class.java)
+        intent.putExtra(Constants.EXTRA, extra)
+        context!!.startActivity(intent)
     }
 }

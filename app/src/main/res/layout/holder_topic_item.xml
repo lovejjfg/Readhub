@@ -11,36 +11,39 @@
     </data>
 
 
-    <android.support.design.internal.ForegroundLinearLayout
+    <ParterLayout
         android:id="@+id/container"
-        android:foreground="?selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
         android:orientation="vertical"
-        tools:context="com.lovejjfg.readhub.view.HomeActivity">
+        android:layout_marginBottom="@dimen/normal_margin_padding"
+        >
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:text="@{news.title}"
             android:textColor="@color/theme_color_text_g0"
             android:textSize="@dimen/text_sec_title"
-            tools:text="xxxxxxxxxxx"
+            tools:text="xxxxxxxxxxxxxxxx"
             />
 
         <TextView
             android:id="@+id/tv_site_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
             android:text="@{news.summary}"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_time"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
             tools:text="3小时前"
             />
 
-    </android.support.design.internal.ForegroundLinearLayout>
+    </ParterLayout>
 
 </layout>
 

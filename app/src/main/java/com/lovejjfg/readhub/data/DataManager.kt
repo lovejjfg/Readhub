@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.data
 
+import com.lovejjfg.readhub.data.Constants.API_RELEASE
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -36,7 +37,7 @@ import java.net.UnknownHostException
  */
 object DataManager {
 
-    private val API_RELEASE = "https://api.readhub.me/"
+
     private var retrofit: Retrofit? = null
     private val isDebug = true
 
@@ -72,6 +73,12 @@ object DataManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError)
 
+    }
+
+    fun <R> mapScribe(request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>): Disposable {
+        return convert(request)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError)
 
     }
 

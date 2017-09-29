@@ -49,11 +49,10 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
         override fun onBind(t: DataItem?) {
             itemBinding!!.topic = t
 
-            val text: String?
-            if (TextUtils.isEmpty(t?.authorName)) {
-                text = t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
+            val text: String? = if (TextUtils.isEmpty(t?.authorName)) {
+                t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
             } else {
-                text = t?.authorName + "/" + t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
+                t?.authorName + "/" + t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
 
             }
             itemBinding!!.tvRelative.text = text

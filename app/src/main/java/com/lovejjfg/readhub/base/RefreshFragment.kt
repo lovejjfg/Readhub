@@ -20,7 +20,6 @@ package com.lovejjfg.readhub.view.fragment
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.app.Fragment
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -33,6 +32,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseFragment
@@ -84,8 +84,9 @@ abstract class RefreshFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val rvHot = binding?.rvHot
         rvHot?.layoutManager = LinearLayoutManager(activity)
+        rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
-        rvHot?.adapter = adapter
+        adapter?.attachRecyclerView(rvHot!!)
         val refresh = binding?.container
         adapter?.setLoadMoreListener {
             if (order != null) {
@@ -98,6 +99,7 @@ abstract class RefreshFragment : BaseFragment() {
         println("isVisible:$tag")
 
 
+        @Suppress("DEPRECATION")
         refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         refresh?.setOnRefreshListener { refresh(refresh) }
         adapter?.setOnItemClickListener { _, position, item ->

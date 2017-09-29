@@ -1,9 +1,7 @@
 package com.lovejjfg.readhub.data.topic.detail
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.lovejjfg.readhub.data.topic.SourcesItem
-import kotlinx.android.parcel.Parcelize
 import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")

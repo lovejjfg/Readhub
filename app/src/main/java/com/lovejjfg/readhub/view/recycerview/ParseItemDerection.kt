@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2017.  Joe
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.lovejjfg.readhub.view.recycerview
+
+import android.graphics.Rect
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.utils.UIUtil
+
+
+/**
+ * Created by joe on 2017/9/29.
+ * Email: lovejjfg@gmail.com
+ */
+class ParseItemDerection : RecyclerView.ItemDecoration() {
+
+    override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
+        val position = parent?.getChildAdapterPosition(view)
+        val adapter = parent?.adapter
+        val viewType = adapter?.getItemViewType(position!!)
+        var preType = -1
+        if (position!! > 0) {
+            preType = adapter!!.getItemViewType(position - 1)
+        }
+        if (preType != -1) {
+            when (viewType) {
+                Constants.TYPE_PARSE_TEXT -> if (viewType != preType) {
+                    outRect?.top = UIUtil.dip2px(parent.context, 30F)
+                } else {
+                    outRect?.top = UIUtil.dip2px(parent.context, 20F)
+                }
+                Constants.TYPE_PARSE_IMG -> {
+                    outRect?.left = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.right = UIUtil.dip2px(parent.context, 20F)
+                    if (viewType != preType) {
+                        outRect?.top = UIUtil.dip2px(parent.context, 30F)
+                    } else {
+                        outRect?.top = UIUtil.dip2px(parent.context, 20F)
+                    }
+                }
+            }
+        } else {
+            when (viewType) {
+                Constants.TYPE_PARSE_IMG -> {
+                    outRect?.left = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.right = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.top = 0
+                }
+                else -> {
+                    outRect?.top = UIUtil.dip2px(parent.context, 20F)
+
+                }
+            }
+        }
+    }
+
+}

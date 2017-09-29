@@ -143,7 +143,7 @@ public class UIUtil {
     }
 
 
-    public static int dip2px(Context context, double dpValue) {
+    public static int dip2px(Context context, float dpValue) {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * density + 0.5);
     }

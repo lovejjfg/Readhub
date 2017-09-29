@@ -1,5 +1,7 @@
 package com.lovejjfg.readhub;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,6 +14,10 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        String test = "</em><strong><em>《好奇心日报（www.qdaily.com）》发布，即使我们允许了也不许转载＊&nbsp;</em></strong></span>";
+
+        Element child = Jsoup.parse(test).body().child(0);
+        System.out.println(child.outerHtml());
+
     }
 }

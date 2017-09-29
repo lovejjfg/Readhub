@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#2c4856</color>
-    <color name="colorPrimaryDark">#304A57</color>
+    <color name="colorPrimaryDark">#2c4856</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="theme_color_text">#333333</color>
@@ -13,4 +13,6 @@
     <color name="theme_color_text_g4">#707070</color>
     <color name="theme_color_text_g5">#b4b4b4</color>
     <color name="theme_color_text_g6">#4c4c4c</color>
+    <color name="theme_color_divider">#eeeeee</color>
+
 </resources>

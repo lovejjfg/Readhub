@@ -62,22 +62,22 @@
                     />
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
-                    android:id="@+id/iv_show"
-                    android:foreground="?selectableItemBackgroundBorderless"
+                    android:id="@+id/iv_time_line"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
+                    android:background="?actionBarItemBackground"
                     android:gravity="center"
+                    android:rotation="180"
                     android:src="@drawable/ic_detail_topic_black_24dp"
-                    android:visibility="@{(topic.extra!=null)?View.VISIBLE:View.GONE}"
                     />
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
-                    android:id="@+id/iv_time_line"
-                    android:foreground="?selectableItemBackgroundBorderless"
+                    android:id="@+id/iv_show"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
+                    android:background="?actionBarItemBackground"
                     android:gravity="center"
                     android:src="@drawable/ic_time_line_black_24dp"
                     android:textColor="@color/theme_color_text"/>

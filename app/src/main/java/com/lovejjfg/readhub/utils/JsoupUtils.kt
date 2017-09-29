@@ -2,15 +2,12 @@ package com.lovejjfg.readhub.utils
 
 import android.text.TextUtils
 import android.util.Log
-
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import io.reactivex.ObservableEmitter
-
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-
 import java.util.regex.Pattern
 
 
@@ -27,13 +24,13 @@ object JsoupUtils {
     private val FLAG_UNDERLINE = FLAG_BLOCK shl 3
     private val FLAG_COLOR = FLAG_BLOCK shl 4
     val FLAG_HREF = FLAG_BLOCK shl 5
-
+    var currentFlag = 0
 
     @JvmOverloads
     fun parse(p: Elements, subscriber: ObservableEmitter<in DetailItems>, attr: String, flag: Int = 0) {
         Log.i("TAG", "parse: " + p.outerHtml())
         for (e in p) {
-            var currentFlag = flag
+            currentFlag = flag
             var gravity: String? = attr
             if (TextUtils.isEmpty(attr)) {
                 gravity = getGravity(e)
@@ -87,11 +84,15 @@ object JsoupUtils {
                 }
             } else {
                 //p 标签只含有 br标签
-                html = e.html()
+                html = if (TextUtils.equals(e.tagName(), "p")) {
+                    e.html()
+                } else {
+                    e.outerHtml()
+                }
                 if (TextUtils.isEmpty(e.text())) {
-                    if (!TextUtils.isEmpty(html) && html.contains("<br>")) {
-                        addEmptyText(subscriber)
-                    }
+//                    if (!TextUtils.isEmpty(html) && html.contains("<br>")) {
+//                        addEmptyText(subscriber)
+//                    }
                     continue
                 }
                 addText(subscriber, gravity, html, currentFlag)
@@ -127,7 +128,7 @@ object JsoupUtils {
 
     private fun addContent(html1: String, flag: Int, sb: StringBuilder, addSpan: Boolean) {
         var html = html1
-        if (!html.startsWith("<") || addSpan) {
+        if (!html.startsWith("<span") || addSpan) {
             html = "<span>$html</span>"
         }
         Log.i("TAG", "parseContent: " + html)
@@ -190,17 +191,21 @@ object JsoupUtils {
             if (substring.size == 0) {//没有可以切割的
                 addATag(sb, ee, flag)
             }
+            val s0 = substring[0]
             if (substring.size == 2) {
-                if (!TextUtils.isEmpty(substring[0])) {
-                    addContent(substring[0], flag, sb, false)
+                //拆掉的时候可能会丢失一些属性
+                if (!TextUtils.isEmpty(s0)) {
+                    addContent(s0, flag, sb, false)
                 }
                 addATag(sb, ee, flag)
-                if (!TextUtils.isEmpty(substring[1])) {
-                    addContent(substring[1], flag, sb, false)
+                var s1 = substring[1]
+                if (!TextUtils.isEmpty(s1)) {
+                    s1 = correctHtml(s1)
+                    addContent(s1, flag, sb, false)
                 }
             } else {
-                if (!TextUtils.isEmpty(substring[0])) {
-                    addContent(substring[0], flag, sb, false)
+                if (!TextUtils.isEmpty(s0)) {
+                    addContent(s0, flag, sb, false)
                 }
                 addATag(sb, ee, flag)
             }
@@ -211,14 +216,34 @@ object JsoupUtils {
 
     }
 
+    private fun correctHtml(s1: String): String {
+        var s: String = s1
+        if (s1.contains("</strong>") && !s1.contains("<strong>")) {
+            s = "<strong>" + s1
+        }
+        if (s1.contains("</b>") && !s1.contains("<b>")) {
+            s = "<b>" + s1
+        }
+        if (s1.contains("</u>") && !s1.contains("<u>")) {
+            s = "<u>" + s1
+        }
+        return s
+
+    }
+
+    var map = HashMap<String, String>()
+
     private fun addATag(sb: StringBuilder, ee: Element, flag: Int) {
+
         val colorStart = "<font color=\"#68AEFF\">"
         val colorEnd = "</font>"
         val href = ee.attr("href")
         //        Log.i("TAG", "addContent:href:: " + href);
         var text = ee.text()
+        map[text] = href
         text = String.format("%s<u>%s</u>%s", colorStart, text, colorEnd)
         sb.append(text)
+        currentFlag = addFlag(currentFlag, FLAG_HREF)
     }
 
     private fun addText(sb: StringBuilder, flag: Int, s: String) {
@@ -272,28 +297,21 @@ object JsoupUtils {
         if (TextUtils.isEmpty(text1)) {
             return
         }
-        //新增超链接解析
-        val selectA = Jsoup.parse(text).body().select("a")
-        var href: String? = null
-        if (!selectA.isEmpty()) {
-            val colorStart = "<font color=\"#68AEFF\">"
-            val colorEnd = "</font>"
-            flag = addFlag(FLAG_HREF, flag)
-            href = selectA.first().attr("href")
-            Log.i("TAG", "addContent:href:: " + href!!)
-            text = selectA.first().text()
-            text = String.format("%s<u>%s</u>%s", colorStart, text, colorEnd)
-        }
+
         val gravity1 = getGravity(text)
         val item = DetailItems(Constants.TYPE_PARSE_TEXT)
-
+        //新增超链接解析
+        if (haveFlag(currentFlag, FLAG_HREF)) {
+            item.map = HashMap(map)
+        }
         Log.i("TAG", "文字解析结果: " + text)
         item.isBlockquote = haveFlag(FLAG_BLOCK, flag)
         item.flag = flag
         item.text = text
-        item.href = href
         item.gravity = if (TextUtils.isEmpty(gravity1)) gravity else gravity1
         subscriber.onNext(item)
+        currentFlag = 0
+        map.clear()
     }
 
     private fun addEmptyText(subscriber: ObservableEmitter<in DetailItems>) {

@@ -11,11 +11,12 @@
     </data>
 
 
-    <android.support.design.internal.ForegroundLinearLayout
+    <ParterLayout
         android:id="@+id/container"
-        android:foreground="?selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/normal_margin_padding"
+        android:foreground="?selectableItemBackground"
         android:orientation="vertical"
         tools:context="com.lovejjfg.readhub.view.HomeActivity">
 
@@ -33,14 +34,14 @@
             android:id="@+id/tv_site_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
             android:text="@{news.siteName}"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_time"
             tools:text="3小时前"
             />
 
-    </android.support.design.internal.ForegroundLinearLayout>
+    </ParterLayout>
 
 </layout>
 

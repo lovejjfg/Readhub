@@ -50,10 +50,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (UIUtil.doubleClick()) {
-            RxBus.instance.post(ScrollEvent())
-            return@OnNavigationItemSelectedListener true
-        }
         when (item.itemId) {
             R.id.navigation_home -> {
                 logEvent("热门服务")
@@ -87,6 +83,12 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
+        if (UIUtil.doubleClick()) {
+            RxBus.instance.post(ScrollEvent())
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +118,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         navigation1?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()

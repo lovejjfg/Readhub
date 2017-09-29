@@ -51,12 +51,12 @@ class HotTopicFragment : RefreshFragment() {
                 Consumer {
                     val data = it.data
                     order = data?.last()?.order
-                    Log.e(TAG, "order:" + order)
+                    Log.e(TAG, "refresh:order:" + order)
                     adapter?.setList(data)
                     refresh?.isRefreshing = false
                 },
                 Consumer {
-                    Log.e(TAG, "error:", it)
+                    it.printStackTrace()
                     refresh?.isRefreshing = false
                 })
     }
@@ -67,12 +67,11 @@ class HotTopicFragment : RefreshFragment() {
                     val data = it.data
                     order = data?.last()?.order
                     adapter?.appendList(data)
-                    Log.e(TAG, "order:" + order)
+                    Log.e(TAG, "loadMore:order:" + order)
                 },
                 Consumer {
-                    Log.e(TAG, "error:", it)
+                    it.printStackTrace()
                     adapter?.loadMoreError()
-
                 })
     }
 }
