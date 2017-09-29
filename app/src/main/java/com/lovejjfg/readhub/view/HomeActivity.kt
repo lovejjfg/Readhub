@@ -83,11 +83,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
-        if (UIUtil.doubleClick()) {
-            RxBus.instance.post(ScrollEvent())
-        }
-    }
+//    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
+//        if (UIUtil.doubleClick()) {
+//            RxBus.instance.post(ScrollEvent())
+//        }
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,12 +113,12 @@ class HomeActivity : AppCompatActivity() {
                 }
                 else -> {
                     JumpUitl.jumpAbout(this)
-                    return@setOnMenuItemClickListener false
+                    return@setOnMenuItemClickListener true
                 }
             }
         }
         navigation1?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
+//        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()

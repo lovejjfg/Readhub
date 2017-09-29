@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.view
 
+import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
@@ -29,6 +30,7 @@ import android.webkit.*
 import android.widget.ProgressBar
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.databinding.ActivityWebBinding
 
 class WebActivity : AppCompatActivity() {
 
@@ -39,12 +41,12 @@ class WebActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        val viewBind = DataBindingUtil.setContentView<ActivityWebBinding>(this, R.layout.activity_web)
 //        val title = intent.getStringExtra(Constants.TITLE)
 //        setMyTitle(title)
-        mWeb = findViewById(R.id.web)
-        loading = findViewById(R.id.progress)
-        toolbar = findViewById(R.id.toolbar)
+        mWeb = viewBind.web
+        loading = viewBind.pb
+        toolbar = viewBind?.toolbar
         toolbar?.setNavigationOnClickListener({ finish() })
 
         val url = intent.getStringExtra(Constants.URL)

@@ -81,8 +81,14 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.lovejjfg.powerrecycle:powerrecycle:1.2.1'
+    compile 'com.lovejjfg.powerrecycle:powerrecycle:1.2.2'
     compile 'javax.annotation:javax.annotation-api:1.2'
+
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    kapt 'com.github.bumptech.glide:compiler:4.0.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0@aar'
+
+    compile 'org.jsoup:jsoup:1.10.3'
 
     testCompile 'junit:junit:4.12'
 }
