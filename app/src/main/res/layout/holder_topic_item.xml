@@ -11,13 +11,13 @@
     </data>
 
 
-    <ParterLayout
+    <com.lovejjfg.readhub.view.PartnerLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/normal_margin_padding"
         android:foreground="?selectableItemBackground"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/normal_margin_padding"
         >
 
         <TextView
@@ -35,15 +35,15 @@
             android:id="@+id/tv_site_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
             android:text="@{news.summary}"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_time"
-            android:gravity="center_vertical"
-            android:paddingLeft="4dp"
             tools:text="3小时前"
             />
 
-    </ParterLayout>
+    </com.lovejjfg.readhub.view.PartnerLayout>
 
 </layout>
 

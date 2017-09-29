@@ -18,30 +18,34 @@
 
 package com.lovejjfg.readhub.view
 
-import android.app.ProgressDialog
 import android.graphics.Bitmap
+import android.net.http.SslError
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.text.TextUtils
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.view.View
+import android.webkit.*
+import android.widget.ProgressBar
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 
 class WebActivity : AppCompatActivity() {
 
     var mWeb: WebView? = null
-    var loading: ProgressDialog? = null
+    var loading: ProgressBar? = null
+    var toolbar: Toolbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
-        loading = ProgressDialog(this)
 //        val title = intent.getStringExtra(Constants.TITLE)
 //        setMyTitle(title)
         mWeb = findViewById(R.id.web)
+        loading = findViewById(R.id.progress)
+        toolbar = findViewById(R.id.toolbar)
+        toolbar?.setNavigationOnClickListener({ finish() })
 
         val url = intent.getStringExtra(Constants.URL)
         if (TextUtils.isEmpty(url)) {
@@ -67,19 +71,42 @@ class WebActivity : AppCompatActivity() {
         mWeb!!.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
-                if (TextUtils.isEmpty(title)) {
-//                    setMyTitle(s)
-                }
+                toolbar?.title = s
+            }
+
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                super.onProgressChanged(view, newProgress)
+                loading?.progress = newProgress
+                if (newProgress == 100)
+                    loading?.visibility = View.GONE
+
             }
         }
         mWeb!!.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 //                loading?.show()
+                loading?.visibility = View.VISIBLE
+
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
+                loading?.visibility = View.GONE
 //                loading?.dismiss()
+            }
 
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                loading?.visibility = View.GONE
+            }
+
+            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                super.onReceivedSslError(view, handler, error)
+                loading?.visibility = View.GONE
+            }
+
+            override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+                super.onReceivedHttpError(view, request, errorResponse)
+                loading?.visibility = View.GONE
             }
 
         }

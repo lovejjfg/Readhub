@@ -57,8 +57,6 @@ class ParseItemDerection : RecyclerView.ItemDecoration() {
         } else {
             when (viewType) {
                 Constants.TYPE_PARSE_IMG -> {
-                    outRect?.left = UIUtil.dip2px(parent.context, 20F)
-                    outRect?.right = UIUtil.dip2px(parent.context, 20F)
                     outRect?.top = 0
                 }
                 else -> {
