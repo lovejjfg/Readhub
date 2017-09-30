@@ -2,6 +2,16 @@
 
 无码科技 [冯大辉](https://github.com/Fenng) 的 [Readhub](https://readhub.me/) Android 客户端。说句废话，**这不是官方的App** 。
 
+### Release 
+
+[更新记录](https://github.com/lovejjfg/Readhub/releases)
+
+[下载地址](https://fir.im/readHub)
+
+![QR](https://raw.githubusercontent.com/lovejjfg/screenshort/e7499040ff9ed18f3577d94b80e76b440e1781eb/qr_readhub.png)
+
+
+
 ### Screenshots
 ![screenshot](https://github.com/lovejjfg/screenshort/blob/master/WechatIMG21.jpeg?raw=true)
 ![screenshot](https://github.com/lovejjfg/screenshort/blob/master/WechatIMG18.jpeg?raw=true)
