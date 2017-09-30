@@ -31,7 +31,7 @@
             android:layout_height="2dp"
             android:max="100"
             android:padding="0dp"
-            app:progress="80"
+            tools:progress="80"
             android:progressDrawable="@drawable/progress_state"
             android:progressTint="@color/colorAccent"
             />
