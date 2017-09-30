@@ -31,6 +31,7 @@ import android.widget.ProgressBar
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityWebBinding
+import com.lovejjfg.readhub.utils.UIUtil
 
 class WebActivity : AppCompatActivity() {
 
@@ -48,6 +49,11 @@ class WebActivity : AppCompatActivity() {
         loading = viewBind.pb
         toolbar = viewBind?.toolbar
         toolbar?.setNavigationOnClickListener({ finish() })
+        toolbar?.setOnClickListener{
+            if (UIUtil.doubleClick()) {
+                onTitleDoubleClick()
+            }
+        }
 
         val url = intent.getStringExtra(Constants.URL)
         if (TextUtils.isEmpty(url)) {
@@ -122,10 +128,14 @@ class WebActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        if (mWeb?.canGoBack()!!) {
+            mWeb?.goBack()
+            return
+        }
         super.onBackPressed()
     }
 
-    fun onTitleDoubleClick() {
-        mWeb!!.scrollTo(0, 0)
+    private fun onTitleDoubleClick() {
+        mWeb?.scrollTo(0, 0)
     }
 }

@@ -48,19 +48,6 @@
             app:menu="@menu/navigation"/>
 
 
-        <com.lovejjfg.readhub.view.CustomFab
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_upward_black"
-            android:visibility="invisible"
-            app:backgroundTint="@color/colorPrimary"
-            android:translationY="-40dp"
-            app:layout_anchor="@id/navigation"
-            app:layout_anchorGravity="right|top"
-            app:useCompatPadding="true"
-            />
-
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

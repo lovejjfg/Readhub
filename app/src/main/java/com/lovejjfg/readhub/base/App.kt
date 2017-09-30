@@ -19,7 +19,8 @@
 package com.lovejjfg.readhub.base
 
 import android.app.Application
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.lovejjfg.readhub.BuildConfig
+import com.tencent.bugly.crashreport.CrashReport
 
 
 /**
@@ -30,5 +31,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        CrashReport.initCrashReport(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
     }
 }

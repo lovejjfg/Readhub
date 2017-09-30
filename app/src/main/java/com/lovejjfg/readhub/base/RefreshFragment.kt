@@ -53,7 +53,6 @@ abstract class RefreshFragment : BaseFragment() {
     protected var order: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
     protected var adapter: PowerAdapter<DataItem>? = null
-    var floatButton: FloatingActionButton? = null
     var navigation: BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +73,6 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
-        floatButton = (activity as HomeActivity).floatButton
         binding = DataBindingUtil.inflate<LayoutRefreshRecyclerBinding>(inflater, R.layout.layout_refresh_recycler, container, false)
         val root = binding?.root
         return root!!
@@ -119,7 +117,6 @@ abstract class RefreshFragment : BaseFragment() {
                                 ?.setListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationStart(animation: Animator?) {
                                         isAnimating = true
-                                        floatButton?.hide()
                                     }
 
                                     override fun onAnimationEnd(animation: Animator?) {
@@ -160,7 +157,6 @@ abstract class RefreshFragment : BaseFragment() {
                                     override fun onAnimationEnd(animation: Animator?) {
                                         isVisible = false
                                         isAnimating = false
-                                        floatButton?.show()
                                     }
                                 })
                     }

@@ -44,7 +44,6 @@ class HomeActivity : AppCompatActivity() {
     var hotTopicFragment: Fragment? = null
     var techFragment: Fragment? = null
     var developFragment: Fragment? = null
-    var floatButton: FloatingActionButton? = null
     var navigation: BottomNavigationView? = null
     var mFirebaseAnalytics: FirebaseAnalytics? = null
 
@@ -96,7 +95,6 @@ class HomeActivity : AppCompatActivity() {
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         val navigation1 = viewBind?.navigation
         navigation = navigation1
-        floatButton = viewBind?.fab
         val toolbar = viewBind?.toolbar
         toolbar?.setOnClickListener({
             if (UIUtil.doubleClick()) {
@@ -134,9 +132,6 @@ class HomeActivity : AppCompatActivity() {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
             developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
-        }
-        viewBind?.fab?.setOnClickListener {
-            RxBus.instance.post(ScrollEvent())
         }
 
     }
