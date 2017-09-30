@@ -22,7 +22,6 @@ import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R
@@ -35,6 +34,7 @@ import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
+import com.tencent.bugly.crashreport.CrashReport
 
 class HomeActivity : AppCompatActivity() {
 
@@ -91,6 +91,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         mFirebaseAnalytics?.setCurrentScreen(this, "首页", null)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         val navigation1 = viewBind?.navigation
@@ -137,9 +138,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun logEvent(name: String) {
-        val params = Bundle()
-        params.putString("tab", name)
-        mFirebaseAnalytics?.logEvent("tab点击", params)
+        try {
+            val params = Bundle()
+            params.putString("tab", name)
+            mFirebaseAnalytics?.logEvent("tab点击", params)
+        } catch (e: Exception) {
+            CrashReport.postCatchedException(e)
+        }
 
     }
 

@@ -40,7 +40,11 @@ public class DateUtil {
         try {
             SimpleDateFormat sdf = initDateFormat();
             Date d = sdf.parse(date);
-            return DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+            String s = DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+            if (!TextUtils.isEmpty(s) && s.contains("0分钟")) {
+                return "刚刚";
+            }
+            return s;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
