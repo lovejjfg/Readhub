@@ -15,6 +15,10 @@ android {
         //只保留对应的国际化
         resConfigs "zh"
         buildConfigField "String", "BUGLY", '"b8676c281b"'
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
 
     signingConfigs {
@@ -97,7 +101,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     //bugly
-    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -19,7 +19,10 @@
 package com.lovejjfg.readhub.base
 
 import android.app.Application
+import android.os.Environment
 import com.lovejjfg.readhub.BuildConfig
+import com.tencent.bugly.Bugly
+import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
 
 
@@ -31,6 +34,16 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        CrashReport.initCrashReport(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+        Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+        Beta.autoInit = true
+        Beta.enableNotification = false
+        Beta.enableHotfix = false
+        Beta.showInterruptedStrategy = false
+        Beta.autoCheckUpgrade = true
+        Beta.tipsDialogLayoutId
+        Beta.autoDownloadOnWifi = true
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        Beta.init(this, BuildConfig.IS_DEBUG)
+
     }
 }
