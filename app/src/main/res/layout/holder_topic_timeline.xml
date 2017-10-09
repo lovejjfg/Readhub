@@ -14,7 +14,7 @@
         <com.lovejjfg.readhub.view.widget.ConnectorView
             android:id="@+id/connector"
             android:layout_width="5dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="@dimen/normal_margin_padding"/>
 
