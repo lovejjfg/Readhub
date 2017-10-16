@@ -26,12 +26,13 @@ object Constants {
     val API_RELEASE = "https://api.readhub.me/"
 
     val RELATIVE_ITEMS = "relative_items"
-    val URL: String? = "url"
-    val HOT: String? = "hotTopic"
-    val TECH: String? = "tech"
-    val DEV: String? = "developer"
-    val ID: String? = "id"
-    val EXTRA: String? = "extra"
+    val URL: String = "url"
+    val HOT: String = "hotTopic"
+    val TECH: String = "tech"
+    val DEV: String = "developer"
+    val ID: String = "id"
+    val EXTRA: String = "extra"
+    val TAB_ID: String = "tab_id"
     //
     val TYPE_HEADER = 1
     val TYPE_NEWS = 2

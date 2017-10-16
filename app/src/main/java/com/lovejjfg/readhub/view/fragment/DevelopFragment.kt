@@ -48,7 +48,7 @@ class DevelopFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(DataManager.init().devNews(),
+         DataManager.subscribe(DataManager.init().devNews(),
                 Consumer {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)

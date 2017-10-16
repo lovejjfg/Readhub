@@ -32,7 +32,8 @@ import com.lovejjfg.readhub.data.Library
 import com.lovejjfg.readhub.databinding.ActivityAboutBinding
 import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
 import com.lovejjfg.readhub.utils.JumpUitl
-import java.util.*
+import io.reactivex.Observable
+
 
 /**
  * ReadHub
@@ -56,36 +57,48 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        val libraries = ArrayList<Library>()
-        libraries.add(Library("Readhub",
-                "Readhub Android 客户端",
-                "https://github.com/lovejjfg/Readhub"))
-        libraries.add(Library("Android support libraries",
-                "The Android support libraries offer a number of features that are not built into the framework.",
-                "https://developer.android.com/topic/libraries/support-library"))
-        libraries.add(Library("OkHttp",
-                "An HTTP & HTTP/2 client for Android and Java applications.",
-                "http://square.github.io/okhttp/"))
-        libraries.add(Library("RxKotlin",
-                "RxJava bindings for Kotlin.",
-                "https://github.com/ReactiveX/RxKotlin"))
-        libraries.add(Library("PowerRecyclerView",
-                "Easy for RecyclerView to pull refresh and load more.",
-                "https://github.com/lovejjfg/PowerRecyclerView"))
-        libraries.add(Library("Retrofit",
-                "A type-safe HTTP client for Android and Java.",
-                "http://square.github.io/retrofit/"))
-        libraries.add(Library("RxAndroid",
-                "RxJava bindings for Android.",
-                "https://github.com/ReactiveX/RxAndroid"))
-        libraries.add(Library("RxJava",
-                "RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.",
-                "https://github.com/ReactiveX/RxJava"))
-        libraries.add(Library("Gson",
-                "A Java serialization/deserialization library to convert Java Objects into JSON and back",
-                "https://github.com/google/gson"))
+        Observable.create<Library> {
+            it.onNext(Library("Readhub",
+                    "Readhub Android 客户端",
+                    "https://github.com/lovejjfg/Readhub"))
+            it.onNext(Library("Android support libraries",
+                    "The Android support libraries offer a number of features that are not built into the framework.",
+                    "https://developer.android.com/topic/libraries/support-library"))
+            it.onNext(Library("OkHttp",
+                    "An HTTP & HTTP/2 client for Android and Java applications.",
+                    "http://square.github.io/okhttp/"))
+            it.onNext(Library("RxKotlin",
+                    "RxJava bindings for Kotlin.",
+                    "https://github.com/ReactiveX/RxKotlin"))
+            it.onNext(Library("PowerRecyclerView",
+                    "Easy for RecyclerView to pull refresh and load more.",
+                    "https://github.com/lovejjfg/PowerRecyclerView"))
+            it.onNext(Library("Retrofit",
+                    "A type-safe HTTP client for Android and Java.",
+                    "http://square.github.io/retrofit/"))
+            it.onNext(Library("RxAndroid",
+                    "RxJava bindings for Android.",
+                    "https://github.com/ReactiveX/RxAndroid"))
+            it.onNext(Library("RxJava",
+                    "RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.",
+                    "https://github.com/ReactiveX/RxJava"))
+            it.onNext(Library("Gson",
+                    "A Java serialization/deserialization library to convert Java Objects into JSON and back",
+                    "https://github.com/google/gson"))
 
-        aboutAdapter?.setList(libraries)
+            it.onNext(Library("Glide",
+                    "An image loading and caching library for Android focused on smooth scrolling.",
+                    "https://github.com/bumptech/glide"))
+
+            it.onNext(Library("JSoup",
+                    "Java HTML Parser, with best of DOM, CSS, and jquery.",
+                    "https://github.com/jhy/jsoup/"))
+            it.onComplete()
+        }.toSortedList({ t, t1 ->
+            t.name!!.compareTo(t1.name!!)
+        })
+                .subscribe({ aboutAdapter?.setList(it) }, { it.printStackTrace() })
+
 
     }
 
