@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (c) 2017.  Joe
   ~
@@ -14,157 +15,111 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<LinearLayout
-    android:id="@+id/parentPanel"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="280dp"
-    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="3dip"
-    android:paddingEnd="1dip"
-    android:paddingStart="3dip"
-    android:paddingTop="9dip">
+    android:background="#aa000000"
+    android:clipChildren="false"
+    >
 
-    <LinearLayout
-        android:id="@+id/topPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="54dip"
-        android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:layout_marginBottom="60dp"
+                  android:layout_marginLeft="30dp"
+                  android:layout_marginRight="30dp"
+                  android:layout_marginTop="60dp"
+                  android:background="@color/color_white"
+                  android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/title_template"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="9dip"
-            android:layout_marginEnd="10dip"
-            android:layout_marginStart="10dip"
-            android:layout_marginTop="6dip"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_gravity="start"
+            android:ellipsize="end"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
+            android:singleLine="true"
+            android:tag="beta_title"
+            android:textAlignment="viewStart"
+            android:textColor="#000"
+            android:textSize="@dimen/text_bigger"
+            tools:text="更新啦"/>
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingEnd="10dip"
-                android:paddingTop="6dip"
-                />
-
-            <android.support.v7.widget.DialogTitle
-                android:id="@+id/alertTitle"
-                style="?android:attr/textAppearanceLarge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:tag="beta_title"
-                android:textAlignment="viewStart"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/titleDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:gravity="fill_horizontal"
-            android:scaleType="fitXY"
-            android:src="@android:drawable/divider_horizontal_dark"
-            android:visibility="gone"/>
-        <!-- If the client uses a customTitle, it will be added here. -->
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/contentPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <ScrollView
-            android:id="@+id/scrollView"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="ifContentScrolls"
-            android:paddingBottom="12dip"
-            android:paddingEnd="10dip"
-            android:paddingStart="14dip"
-            android:paddingTop="2dip">
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:tag="beta_upgrade_info"
+            android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            android:textColor="@color/theme_color_text_g2"
+            android:textSize="@dimen/text_normal"
+            android:visibility="gone"
+            />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
 
             <TextView
-                android:id="@+id/message"
-                style="?android:attr/textAppearanceMedium"
+                android:id="@+id/alert_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dip"
-                android:tag="beta_upgrade_feature"/>
-        </ScrollView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/buttonPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="54dip"
-        android:orientation="vertical">
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:tag="beta_upgrade_feature"
+                android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                android:textColor="#666"
+                android:textSize="@dimen/text_normal"
+                />
+        </android.support.v4.widget.NestedScrollView>
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
+            android:id="@+id/buttonPanel"
+            style="?attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:measureWithLargestChild="true"
+            android:gravity="bottom"
             android:orientation="horizontal"
-            android:paddingEnd="2dip"
-            android:paddingStart="2dip"
-            android:paddingTop="4dip">
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <LinearLayout
-                android:id="@+id/leftSpacer"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:orientation="horizontal"
-                android:visibility="gone"/>
-
-            <Button
-                android:id="@+id/button1"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:maxLines="2"
-                android:tag="beta_cancel_button"/>
+                android:visibility="invisible"/>
 
-            <Button
-                android:id="@+id/button3"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dip"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:tag="beta_confirm_button"/>
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@drawable/selector_alert"
+                android:padding="@dimen/normal_margin_padding"
+                android:tag="beta_cancel_button"
+                android:text="@string/cancel"
+                android:textColor="@color/theme_color_text_g2"/>
 
-            <Button
-                android:id="@+id/button2"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dip"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/rightSpacer"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:orientation="horizontal"
-                android:visibility="gone"/>
+                android:background="@drawable/selector_alert"
+                android:padding="@dimen/normal_margin_padding"
+                android:tag="beta_confirm_button"
+                android:text="@string/confirm"
+                android:textColor="@color/colorAccent"/>
         </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

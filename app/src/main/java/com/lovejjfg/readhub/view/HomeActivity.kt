@@ -38,7 +38,6 @@ import com.tencent.bugly.crashreport.CrashReport
 
 class HomeActivity : AppCompatActivity() {
 
-    var order: Int? = 0
     val TAG = "HOME"
     var viewBind: ActivityHomeBinding? = null
     var hotTopicFragment: Fragment? = null
@@ -46,9 +45,11 @@ class HomeActivity : AppCompatActivity() {
     var developFragment: Fragment? = null
     var navigation: BottomNavigationView? = null
     var mFirebaseAnalytics: FirebaseAnalytics? = null
+    var currentId: Int = 0
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        currentId = item.itemId
         when (item.itemId) {
             R.id.navigation_home -> {
                 logEvent("热门服务")
@@ -82,17 +83,16 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-//    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
-//        if (UIUtil.doubleClick()) {
-//            RxBus.instance.post(ScrollEvent())
-//        }
-//    }
+    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
+        if (UIUtil.doubleClick()) {
+            RxBus.instance.post(ScrollEvent())
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        mFirebaseAnalytics?.setCurrentScreen(this, "首页", null)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         val navigation1 = viewBind?.navigation
         navigation = navigation1
@@ -117,7 +117,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         navigation1?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-//        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
+        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
@@ -133,6 +133,9 @@ class HomeActivity : AppCompatActivity() {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
             developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
+            if (currentId != 0) {
+                navigation1?.selectedItemId = currentId
+            }
         }
 
     }
@@ -145,6 +148,19 @@ class HomeActivity : AppCompatActivity() {
         } catch (e: Exception) {
             CrashReport.postCatchedException(e)
         }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        if (currentId != 0) {
+            outState?.putInt(Constants.TAB_ID, currentId)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onBackPressed() {
+
+        JumpUitl.backHome(this)
 
     }
 
