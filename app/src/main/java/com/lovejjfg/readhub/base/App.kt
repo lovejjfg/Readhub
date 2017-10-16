@@ -20,6 +20,8 @@ package com.lovejjfg.readhub.base
 
 import android.app.Application
 import android.os.Environment
+import android.preference.PreferenceManager
+import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.tencent.bugly.Bugly
@@ -34,15 +36,27 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Beta.autoInit = true
-        Beta.enableNotification = true
-        Beta.enableHotfix = false
-        Beta.showInterruptedStrategy = false
-        Beta.autoCheckUpgrade = true
-        Beta.autoDownloadOnWifi = true
-        Beta.upgradeDialogLayoutId = R.layout.dialog_update
-        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val notify = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("auto_update", true)
+        Log.e("APP", "自动更新：$notify")
+
+
+        val autoDownload = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("auto_download", false)
         Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+
+        Log.e("APP", "自动下载：$autoDownload")
+        Beta.autoInit = true
+        Beta.enableHotfix = false
+        Beta.canShowApkInfo = false
+        Beta.upgradeDialogLayoutId = R.layout.dialog_update
+        Beta.showInterruptedStrategy = false
+        Beta.autoCheckUpgrade = notify
+        Beta.autoDownloadOnWifi = autoDownload
+        Beta.smallIconId
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         Beta.init(this, BuildConfig.IS_DEBUG)
 
     }
