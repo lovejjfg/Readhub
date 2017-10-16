@@ -61,7 +61,6 @@
     <style name="Text.TimeLine">
         <item name="android:textColor">@color/theme_color_text_g3</item>
         <item name="android:textSize">@dimen/text_des</item>
-        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
 
