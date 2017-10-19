@@ -171,8 +171,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
-        JumpUitl.backHome(this)
+        try {
+            JumpUitl.backHome(this)
+        } catch (e: Exception) {
+            super.onBackPressed()
+        }
 
     }
 
