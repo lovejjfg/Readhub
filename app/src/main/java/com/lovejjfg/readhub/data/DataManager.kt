@@ -19,11 +19,14 @@
 package com.lovejjfg.readhub.data
 
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
+import com.lovejjfg.readhub.utils.http.LoggingInterceptor
+import com.lovejjfg.readhub.utils.http.RequestUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -47,6 +50,11 @@ object DataManager {
                     .baseUrl(API_RELEASE)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(OkHttpClient.Builder()
+                            .addInterceptor({ chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) })
+                            .addInterceptor(LoggingInterceptor())
+                            .build()
+                    )
                     .build()
         }
         return retrofit!!.create(clazz)
