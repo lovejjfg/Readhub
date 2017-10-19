@@ -27,7 +27,6 @@ import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.base.RelativeItemsDialog
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
@@ -52,44 +51,51 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
     }
 
+    override fun getItemId(position: Int): Long {
+        return if (position >= 0 && position < list.size) {
+            list[position].order!!.toLong()
+        } else {
+            super.getItemId(position)
+        }
+
+    }
+
     inner class HotTopicHolder(itemView: HolderHotTopicBinding) : PowerHolder<DataItem>(itemView.root) {
 
         var dataBind: HolderHotTopicBinding? = itemView
 
-        private var relativeItemsDialog: RelativeItemsDialog? = null
-
-
         override fun onBind(t: DataItem?) {
-//            dataBind?.ivShow?.visibility = View.INVISIBLE
-//            dataBind?.ivTimeLine?.visibility = View.INVISIBLE
-            dataBind?.topic = t
-            val rvItem = dataBind?.rvItem
-            rvItem?.layoutManager = LinearLayoutManager(context)
-            val itemAdapter = HotTopicItemAdapter()
-            itemAdapter.setOnItemClickListener { itemView, position, item ->
-                val mobileUrl = t?.newsArray!![position]?.mobileUrl
-                JumpUitl.jumpWeb(context, mobileUrl)
-            }
-            rvItem?.adapter = itemAdapter
-            itemAdapter.setList(t?.newsArray)
-            if (t?.extra?.instantView != null) {
-                dataBind?.ivTimeLine?.visibility = View.VISIBLE
-                dataBind?.ivTimeLine?.setOnClickListener {
-                    JumpUitl.jumpInstant(context, t.extra)
+            if (dataBind?.topic?.order != t?.order) {
+                dataBind?.topic = t
+                val rvItem = dataBind?.rvItem
+                rvItem?.layoutManager = LinearLayoutManager(context)
+                val itemAdapter = HotTopicItemAdapter()
+                itemAdapter.setOnItemClickListener { itemView, position, item ->
+                    val mobileUrl = t?.newsArray!![position]?.mobileUrl
+                    JumpUitl.jumpWeb(context, mobileUrl)
                 }
+                rvItem?.adapter = itemAdapter
+                itemAdapter.setList(t?.newsArray)
+                if (t?.extra?.instantView != null) {
+                    dataBind?.ivTimeLine?.visibility = View.VISIBLE
+                    dataBind?.ivTimeLine?.setOnClickListener {
+                        JumpUitl.jumpInstant(context, t.extra)
+                    }
 
-            } else {
-                dataBind?.ivTimeLine?.visibility = View.GONE
-            }
-            if (TextUtils.isEmpty(t?.id)) {
-                dataBind?.ivShow?.visibility = View.GONE
-            } else {
-                dataBind?.ivShow?.visibility = View.VISIBLE
-                dataBind?.ivShow?.setOnClickListener {
-                    JumpUitl.jumpTimeLine(context, t?.id)
+                } else {
+                    dataBind?.ivTimeLine?.visibility = View.GONE
                 }
+                if (TextUtils.isEmpty(t?.id)) {
+                    dataBind?.ivShow?.visibility = View.GONE
+                } else {
+                    dataBind?.ivShow?.visibility = View.VISIBLE
+                    dataBind?.ivShow?.setOnClickListener {
+                        JumpUitl.jumpTimeLine(context, t?.id)
+                    }
+                }
+            } else {
+                dataBind?.topic = t
             }
-
         }
     }
 

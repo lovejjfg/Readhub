@@ -91,7 +91,7 @@
     <string name="auto_update">auto_update</string>
     <string name="manual_update">manual_update</string>
     <string name="auto_download">自动下载更新</string>
-    <string name="auto_download_des">WI-FI 网络下自动下载更新</string>
+    <string name="auto_download_des">WI-FI 网络自动下载更新</string>
     <string name="cancel">取消</string>
     <string name="confirm">立即下载</string>
 </resources>

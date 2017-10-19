@@ -87,6 +87,7 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.layoutManager = LinearLayoutManager(activity)
         rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
+        adapter?.setHasStableIds(true)
         adapter?.attachRecyclerView(rvHot!!)
         refresh = binding?.container
         adapter?.setLoadMoreListener {

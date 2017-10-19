@@ -77,3 +77,11 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
+
+-assumenosideeffects class android.util.Log {
+    public static *** i(...);
+    public static *** v(...);
+    public static *** println(...);
+    public static *** w(...);
+    public static *** wtf(...);
+}

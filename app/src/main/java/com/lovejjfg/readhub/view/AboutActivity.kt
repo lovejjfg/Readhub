@@ -93,6 +93,9 @@ class AboutActivity : AppCompatActivity() {
             it.onNext(Library("JSoup",
                     "Java HTML Parser, with best of DOM, CSS, and jquery.",
                     "https://github.com/jhy/jsoup/"))
+            it.onNext(Library("RxPermissions",
+                    "Android runtime permissions powered by RxJava",
+                    "https://github.com/tbruyelle/RxPermissions"))
             it.onComplete()
         }.toSortedList({ t, t1 ->
             t.name!!.compareTo(t1.name!!)
