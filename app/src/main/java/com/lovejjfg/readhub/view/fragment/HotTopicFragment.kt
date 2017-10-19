@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.View
 import com.lovejjfg.powerrecycle.PowerAdapter
+import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import io.reactivex.functions.Consumer

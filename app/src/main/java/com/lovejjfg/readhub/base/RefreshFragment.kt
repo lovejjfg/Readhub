@@ -16,7 +16,7 @@
  *
  */
 
-package com.lovejjfg.readhub.view.fragment
+package com.lovejjfg.readhub.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -35,7 +35,6 @@ import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.base.BaseFragment
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
@@ -178,7 +177,10 @@ abstract class RefreshFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         //refresh time
-        adapter?.notifyDataSetChanged()
+        if (!isHidden) {
+            adapter?.notifyDataSetChanged()
+        }
+
     }
 
     override fun onDestroy() {
