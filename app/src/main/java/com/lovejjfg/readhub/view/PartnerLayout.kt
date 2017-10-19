@@ -42,7 +42,7 @@ import java.lang.IllegalStateException
 class PartnerLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = -1) : ViewGroup(context, attrs, defStyleAttr) {
     private var foreground: Drawable? = null
     //显示样式
-    private var type: Int = 0
+    private var type: Int = SINGLE_LINE
     //绘制文字最后一行的顶部坐标
     private var lastLineTop: Int = 0
     //绘制文字最后一行的右边坐标
@@ -66,8 +66,8 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+       //todo add padding
         val childCount = childCount
         val w = View.MeasureSpec.getSize(widthMeasureSpec)
         measureChildren(widthMeasureSpec, heightMeasureSpec)
@@ -254,16 +254,15 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     companion object {
 
-        //单行显示
-        private val SINGLE_LINE = 0x01
-        //多行显示
-        private val MULTI_LINE = 0x02
-        //显示到下一行
-        private val NEXT_LINE = 0x03
-
         private val TOP = 0
         private val CENTER = 1
         private val BOTTOM = 2
+        //single
+        private val SINGLE_LINE = 4
+        //mul
+        private val MULTI_LINE = 5
+        //next line
+        private val NEXT_LINE = 6
 
     }
 }

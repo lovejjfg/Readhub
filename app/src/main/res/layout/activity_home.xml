@@ -18,10 +18,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name"
                 app:titleTextColor="#fff"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 >
 
             </android.support.v7.widget.Toolbar>
@@ -46,7 +46,6 @@
             android:background="?android:attr/windowBackground"
             android:elevation="8dp"
             app:menu="@menu/navigation"/>
-
 
 
     </android.support.design.widget.CoordinatorLayout>

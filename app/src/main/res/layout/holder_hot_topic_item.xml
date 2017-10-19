@@ -40,7 +40,6 @@
                 android:id="@+id/tv_site_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
                 android:text="@{news.siteName}"
                 android:textColor="@color/theme_color_text_g1"
                 android:textSize="@dimen/text_time"
