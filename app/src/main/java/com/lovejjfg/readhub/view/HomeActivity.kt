@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.view
 
+import android.Manifest
 import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -27,13 +28,11 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
-import com.lovejjfg.readhub.utils.JumpUitl
-import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.ScrollEvent
-import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.*
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
+import com.tbruyelle.rxpermissions2.RxPermissions
 import com.tencent.bugly.crashreport.CrashReport
 
 class HomeActivity : AppCompatActivity() {
@@ -57,7 +56,7 @@ class HomeActivity : AppCompatActivity() {
                         .show(hotTopicFragment)
                         .hide(techFragment)
                         .hide(developFragment)
-                        .commit()
+                        .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
@@ -66,7 +65,7 @@ class HomeActivity : AppCompatActivity() {
                         .show(techFragment)
                         .hide(hotTopicFragment)
                         .hide(developFragment)
-                        .commit()
+                        .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
@@ -75,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
                         .show(developFragment)
                         .hide(hotTopicFragment)
                         .hide(techFragment)
-                        .commit()
+                        .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             else -> {
@@ -92,6 +91,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkPermissions()
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         val navigation1 = viewBind?.navigation
@@ -128,7 +128,7 @@ class HomeActivity : AppCompatActivity() {
                     .add(R.id.content, developFragment, Constants.DEV)
                     .hide(techFragment)
                     .hide(developFragment)
-                    .commit()
+                    .commitAllowingStateLoss()
         } else {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
@@ -138,6 +138,18 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun checkPermissions() {
+        if (!SharedPrefsUtil.getValue(this, Constants.SHOW_PROMISSION, false)) {
+            RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .subscribe({
+                        SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
+                        if (it) {
+                            logEvent("授权成功！")
+                        }
+                    }, { it.printStackTrace() })
+        }
     }
 
     fun logEvent(name: String) {
