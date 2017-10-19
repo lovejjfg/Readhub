@@ -30,6 +30,8 @@ def initGradleEnvironment() {
     gradle.ext.isHasFile = isHasFile
     gradle.ext.user = properties.getProperty('bintray.user')
     gradle.ext.apikey = properties.getProperty('bintray.apikey')
+    gradle.ext.password = properties.getProperty('password')
+    gradle.ext.keyAlias = properties.getProperty('keyAlias')
 }
 
 initGradleEnvironment()

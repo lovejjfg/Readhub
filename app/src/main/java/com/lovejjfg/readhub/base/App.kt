@@ -39,7 +39,7 @@ class App : Application() {
         val notify = PreferenceManager
                 .getDefaultSharedPreferences(this)
                 .getBoolean("auto_update", true)
-        Log.e("APP", "自动更新：$notify")
+        Log.i("APP", "自动更新：$notify")
 
 
         val autoDownload = PreferenceManager
@@ -47,7 +47,7 @@ class App : Application() {
                 .getBoolean("auto_download", false)
         Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
 
-        Log.e("APP", "自动下载：$autoDownload")
+        Log.i("APP", "自动下载：$autoDownload")
         Beta.autoInit = true
         Beta.enableHotfix = false
         Beta.canShowApkInfo = false
@@ -55,7 +55,7 @@ class App : Application() {
         Beta.showInterruptedStrategy = false
         Beta.autoCheckUpgrade = notify
         Beta.autoDownloadOnWifi = autoDownload
-        Beta.smallIconId
+        Beta.smallIconId = R.mipmap.ic_notify
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         Beta.init(this, BuildConfig.IS_DEBUG)
 
