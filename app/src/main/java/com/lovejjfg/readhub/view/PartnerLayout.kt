@@ -29,42 +29,60 @@ import android.graphics.drawable.Drawable
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.TextView
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.utils.UIUtil
+import java.lang.IllegalStateException
 
 class PartnerLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = -1) : ViewGroup(context, attrs, defStyleAttr) {
     private var foreground: Drawable? = null
     //显示样式
-    private var type: Int = 0
+    private var type: Int = SINGLE_LINE
     //绘制文字最后一行的顶部坐标
     private var lastLineTop: Int = 0
     //绘制文字最后一行的右边坐标
     private var lastLineRight: Float = 0.toFloat()
 
-    init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.ForegroundView)
+    private var margin: Int = 0
+    private var pGravity: Int = CENTER
 
+
+    init {
+        margin = UIUtil.dip2px(getContext(), 4F)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.PartnerLayout)
         val d = a.getDrawable(R.styleable.ForegroundView_android_foreground)
+        margin = a.getDimensionPixelOffset(R.styleable.PartnerLayout_PartnerSpace, margin)
+        pGravity = a.getInt(R.styleable.PartnerLayout_PartnerGravity, CENTER)
         if (d != null) {
             setForeground(d)
         }
         a.recycle()
         outlineProvider = ViewOutlineProvider.BOUNDS
+
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+       //todo add padding
         val childCount = childCount
         val w = View.MeasureSpec.getSize(widthMeasureSpec)
         measureChildren(widthMeasureSpec, heightMeasureSpec)
         if (childCount == 2) {
-            var tv: TextView? = null
+            val tv: TextView?
             if (getChildAt(0) is TextView) {
                 tv = getChildAt(0) as TextView
+                if (TextUtils.isEmpty(tv.text)) {
+                    //fast return
+                    super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+                    return
+                }
+                if (tv.lineSpacingMultiplier > 1) {
+                    throw IllegalStateException("lineSpacingMultiplier is not support here!!")
+                }
                 initTextParams(tv.text, tv.measuredWidth, tv.paint)
             } else {
                 throw RuntimeException("PartnerLayout first child view not a TextView")
@@ -74,18 +92,17 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
             //测量子view的宽高
             //两个子view宽度相加小于该控件宽度的时候
-            if (tv.measuredWidth + sencodView.measuredWidth <= w) {
-                val width = tv.measuredWidth + sencodView.measuredWidth
+            if (tv.measuredWidth + sencodView.measuredWidth + margin <= w) {
                 //计算高度
                 val height = Math.max(tv.measuredHeight, sencodView.measuredHeight)
                 //设置该viewgroup的宽高
-                setMeasuredDimension(width, height)
+                setMeasuredDimension(w, height)
                 type = SINGLE_LINE
                 return
             }
             if (getChildAt(0) is TextView) {
                 //最后一行文字的宽度加上第二个view的宽度大于viewgroup宽度时第二个控件换行显示
-                if (lastLineRight + sencodView.measuredWidth > w) {
+                if (lastLineRight + sencodView.measuredWidth + margin > w) {
                     setMeasuredDimension(tv.measuredWidth, tv.measuredHeight + sencodView.measuredHeight)
                     type = NEXT_LINE
                     return
@@ -103,18 +120,36 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+
         if (type == SINGLE_LINE || type == MULTI_LINE) {
             val tv = getChildAt(0) as TextView
             val v1 = getChildAt(1)
             //设置第二个view在Textview文字末尾位置
             tv.layout(0, 0, tv.measuredWidth, tv.measuredHeight)
-            val left = lastLineRight.toInt()
+            //增加默认间距
+            val left = lastLineRight.toInt() + margin
             var top = lastLineTop
             //最后一行的高度 注:通过staticLayout得到的行高不准确故采用这种方式
             val lastLineHeight = tv.bottom - tv.paddingBottom - lastLineTop
             //当第二view高度小于单行文字高度时竖直居中显示
+            val extra: Int = tv.lineSpacingExtra.toInt()
             if (v1.measuredHeight < lastLineHeight) {
-                top = lastLineTop + (lastLineHeight - v1.measuredHeight) / 2
+                when (pGravity) {
+                    TOP -> {
+                        top = lastLineTop + extra
+                    }
+                    CENTER -> {
+                        top = if (type == MULTI_LINE) {
+                            (lastLineTop + (lastLineHeight - v1.measuredHeight + extra) * 0.5).toInt()
+                        } else {
+                            (lastLineTop + (lastLineHeight - v1.measuredHeight) * 0.5).toInt()
+                        }
+                    }
+                    BOTTOM -> {
+                        top = lastLineTop + (lastLineHeight - v1.measuredHeight)
+                    }
+                }
+
             }
             v1.layout(left, top, left + v1.measuredWidth, top + v1.measuredHeight)
         } else if (type == NEXT_LINE) {
@@ -219,12 +254,16 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     companion object {
 
-        //单行显示
-        private val SINGLE_LINE = 0x01
-        //多行显示
-        private val MULTI_LINE = 0x02
-        //显示到下一行
-        private val NEXT_LINE = 0x03
+        private val TOP = 0
+        private val CENTER = 1
+        private val BOTTOM = 2
+        //single
+        private val SINGLE_LINE = 4
+        //mul
+        private val MULTI_LINE = 5
+        //next line
+        private val NEXT_LINE = 6
+
     }
 }
 

@@ -11,37 +11,43 @@
     </data>
 
 
-    <com.lovejjfg.readhub.view.PartnerLayout
+    <android.support.design.internal.ForegroundLinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/normal_margin_padding"
         android:foreground="?selectableItemBackground"
-        android:orientation="vertical"
-        tools:context="com.lovejjfg.readhub.view.HomeActivity">
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
 
-        <TextView
-            android:id="@+id/tv_title"
+
+        <com.lovejjfg.readhub.view.PartnerLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{news.title}"
-            android:textColor="@color/theme_color_text_g0"
-            android:textSize="@dimen/text_sec_title"
-            tools:text="xxxxxxxxxxx"
-            />
+            android:orientation="vertical"
+            tools:context="com.lovejjfg.readhub.view.HomeActivity">
 
-        <TextView
-            android:id="@+id/tv_site_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:text="@{news.siteName}"
-            android:textColor="@color/theme_color_text_g1"
-            android:textSize="@dimen/text_time"
-            tools:text="3小时前"
-            />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{news.title}"
+                android:textColor="@color/theme_color_text_g0"
+                android:textSize="@dimen/text_sec_title"
+                tools:text="xxxxxxxxxxx"
+                />
 
-    </com.lovejjfg.readhub.view.PartnerLayout>
+            <TextView
+                android:id="@+id/tv_site_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{news.siteName}"
+                android:textColor="@color/theme_color_text_g1"
+                android:textSize="@dimen/text_time"
+                tools:text="3小时前"
+                />
+
+        </com.lovejjfg.readhub.view.PartnerLayout>
+    </android.support.design.internal.ForegroundLinearLayout>
 
 </layout>
 

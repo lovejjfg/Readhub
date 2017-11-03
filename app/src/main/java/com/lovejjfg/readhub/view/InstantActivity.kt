@@ -51,6 +51,11 @@ class InstantActivity : BaseActivity() {
         instantbind?.toolbar?.setNavigationOnClickListener({ finish() })
         instantbind?.toolbar?.title = extra?.instantView?.title
         val rvHot = instantbind?.rvDetail
+        instantbind?.toolbar?.setOnClickListener {
+            if (UIUtil.doubleClick()) {
+                rvHot?.smoothScrollToPosition(0)
+            }
+        }
         rvHot?.addItemDecoration(ParseItemDerection())
         rvHot?.layoutManager = LinearLayoutManager(this)
         val topicDetailAdapter = InstantAdapter()

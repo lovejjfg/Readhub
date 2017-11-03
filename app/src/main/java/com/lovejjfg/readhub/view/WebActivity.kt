@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.view
 
+import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
@@ -29,6 +30,8 @@ import android.webkit.*
 import android.widget.ProgressBar
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.databinding.ActivityWebBinding
+import com.lovejjfg.readhub.utils.UIUtil
 
 class WebActivity : AppCompatActivity() {
 
@@ -39,13 +42,18 @@ class WebActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        val viewBind = DataBindingUtil.setContentView<ActivityWebBinding>(this, R.layout.activity_web)
 //        val title = intent.getStringExtra(Constants.TITLE)
 //        setMyTitle(title)
-        mWeb = findViewById(R.id.web)
-        loading = findViewById(R.id.progress)
-        toolbar = findViewById(R.id.toolbar)
+        mWeb = viewBind.web
+        loading = viewBind.pb
+        toolbar = viewBind?.toolbar
         toolbar?.setNavigationOnClickListener({ finish() })
+        toolbar?.setOnClickListener{
+            if (UIUtil.doubleClick()) {
+                onTitleDoubleClick()
+            }
+        }
 
         val url = intent.getStringExtra(Constants.URL)
         if (TextUtils.isEmpty(url)) {
@@ -68,7 +76,7 @@ class WebActivity : AppCompatActivity() {
         webSettings.blockNetworkImage = false
         webSettings.displayZoomControls = false
         //        mWeb.setWebViewClient(new WebViewClient());
-        mWeb!!.webChromeClient = object : WebChromeClient() {
+        mWeb!!.setWebChromeClient(object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
                 toolbar?.title = s
@@ -81,8 +89,8 @@ class WebActivity : AppCompatActivity() {
                     loading?.visibility = View.GONE
 
             }
-        }
-        mWeb!!.webViewClient = object : WebViewClient() {
+        })
+        mWeb!!.setWebViewClient(object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 //                loading?.show()
                 loading?.visibility = View.VISIBLE
@@ -109,7 +117,7 @@ class WebActivity : AppCompatActivity() {
                 loading?.visibility = View.GONE
             }
 
-        }
+        })
 
         mWeb!!.loadUrl(url)
     }
@@ -120,10 +128,14 @@ class WebActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        if (mWeb?.canGoBack()!!) {
+            mWeb?.goBack()
+            return
+        }
         super.onBackPressed()
     }
 
-    fun onTitleDoubleClick() {
-        mWeb!!.scrollTo(0, 0)
+    private fun onTitleDoubleClick() {
+        mWeb?.scrollTo(0, 0)
     }
 }

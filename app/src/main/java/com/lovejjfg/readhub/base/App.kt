@@ -19,7 +19,13 @@
 package com.lovejjfg.readhub.base
 
 import android.app.Application
-import com.google.firebase.analytics.FirebaseAnalytics
+import android.os.Environment
+import android.preference.PreferenceManager
+import android.util.Log
+import com.lovejjfg.readhub.BuildConfig
+import com.lovejjfg.readhub.R
+import com.tencent.bugly.Bugly
+import com.tencent.bugly.beta.Beta
 
 
 /**
@@ -30,5 +36,28 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        val notify = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("auto_update", true)
+        Log.i("APP", "自动更新：$notify")
+
+
+        val autoDownload = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("auto_download", false)
+        Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+
+        Log.i("APP", "自动下载：$autoDownload")
+        Beta.autoInit = true
+        Beta.enableHotfix = false
+        Beta.canShowApkInfo = false
+        Beta.upgradeDialogLayoutId = R.layout.dialog_update
+        Beta.showInterruptedStrategy = false
+        Beta.autoCheckUpgrade = notify
+        Beta.autoDownloadOnWifi = autoDownload
+        Beta.smallIconId = R.mipmap.ic_notify
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        Beta.init(this, BuildConfig.IS_DEBUG)
+
     }
 }

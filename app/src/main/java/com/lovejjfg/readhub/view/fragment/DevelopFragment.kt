@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.View
 import com.lovejjfg.powerrecycle.PowerAdapter
+import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.DateUtil
@@ -48,7 +49,7 @@ class DevelopFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(DataManager.init().devNews(),
+         DataManager.subscribe(DataManager.init().devNews(),
                 Consumer {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)

@@ -30,6 +30,8 @@ def initGradleEnvironment() {
     gradle.ext.isHasFile = isHasFile
     gradle.ext.user = properties.getProperty('bintray.user')
     gradle.ext.apikey = properties.getProperty('bintray.apikey')
+    gradle.ext.password = properties.getProperty('password')
+    gradle.ext.keyAlias = properties.getProperty('keyAlias')
 }
 
 initGradleEnvironment()
@@ -40,13 +42,13 @@ String initTag() {
 //        def indexOf = versionName.indexOf("-", 0)
 //        versionName = indexOf != -1 ? versionName.substring(0, indexOf) : versionName
         if (version == null || "" == versionName) {
-            return "v0.0.0"
+            return "0.0.0"
         }
         println versionName
         return versionName
     } catch (e) {
         println e.toString()
-        return "v1.0.0"
+        return "0.0.0"
     }
 
 }

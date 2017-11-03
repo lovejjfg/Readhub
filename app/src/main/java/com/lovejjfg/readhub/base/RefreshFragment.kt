@@ -16,7 +16,7 @@
  *
  */
 
-package com.lovejjfg.readhub.view.fragment
+package com.lovejjfg.readhub.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -24,10 +24,10 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +35,7 @@ import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.base.BaseFragment
+import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.RxBus
@@ -53,8 +53,8 @@ abstract class RefreshFragment : BaseFragment() {
     protected var order: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
     protected var adapter: PowerAdapter<DataItem>? = null
-    var floatButton: FloatingActionButton? = null
     var navigation: BottomNavigationView? = null
+    var refresh: SwipeRefreshLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
@@ -74,7 +74,6 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
-        floatButton = (activity as HomeActivity).floatButton
         binding = DataBindingUtil.inflate<LayoutRefreshRecyclerBinding>(inflater, R.layout.layout_refresh_recycler, container, false)
         val root = binding?.root
         return root!!
@@ -82,23 +81,24 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        println("view 创建啦：${toString()}")
         val rvHot = binding?.rvHot
         rvHot?.layoutManager = LinearLayoutManager(activity)
         rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
+        adapter?.setHasStableIds(true)
         adapter?.attachRecyclerView(rvHot!!)
-        val refresh = binding?.container
+        refresh = binding?.container
         adapter?.setLoadMoreListener {
             if (order != null) {
                 loadMore()
             }
         }
         adapter?.totalCount = Int.MAX_VALUE
-        refresh?.isRefreshing = true
-        refresh(refresh)
-        println("isVisible:$tag")
-
-
+        if (TextUtils.equals(tag, Constants.HOT) && adapter!!.list.isEmpty()) {
+            refresh?.isRefreshing = true
+            refresh(refresh)
+        }
         @Suppress("DEPRECATION")
         refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         refresh?.setOnRefreshListener { refresh(refresh) }
@@ -119,7 +119,6 @@ abstract class RefreshFragment : BaseFragment() {
                                 ?.setListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationStart(animation: Animator?) {
                                         isAnimating = true
-                                        floatButton?.hide()
                                     }
 
                                     override fun onAnimationEnd(animation: Animator?) {
@@ -160,7 +159,6 @@ abstract class RefreshFragment : BaseFragment() {
                                     override fun onAnimationEnd(animation: Animator?) {
                                         isVisible = false
                                         isAnimating = false
-                                        floatButton?.show()
                                     }
                                 })
                     }
@@ -176,22 +174,31 @@ abstract class RefreshFragment : BaseFragment() {
 
     abstract fun loadMore()
 
+    override fun onResume() {
+        super.onResume()
+        //refresh time
+        if (!isHidden) {
+            adapter?.notifyDataSetChanged()
+        }
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         RxBus.instance.unSubscribe(this)
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        println("setUserVisibleHint:" + isVisibleToUser)
-
-    }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        Log.e("TAG", "onHiddenChanged:$hidden::$tag")
-        println("onHiddenChanged:" + hidden)
-
+        if (!hidden) {
+            if (adapter!!.list.isEmpty()) {
+                refresh?.isRefreshing = true
+                refresh(refresh)
+            } else {
+                adapter?.notifyDataSetChanged()
+            }
+        }
     }
 
 

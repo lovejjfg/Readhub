@@ -40,7 +40,14 @@ public class DateUtil {
         try {
             SimpleDateFormat sdf = initDateFormat();
             Date d = sdf.parse(date);
-            return DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+            String s = DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+            if (!TextUtils.isEmpty(s) && (TextUtils.equals("0分钟前", s))) {
+                return "刚刚";
+            }
+            if (!TextUtils.isEmpty(s) && TextUtils.equals("0 minutes ago", s)) {
+                return "just now";
+            }
+            return s;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

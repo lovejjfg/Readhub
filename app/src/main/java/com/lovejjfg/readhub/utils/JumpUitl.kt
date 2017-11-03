@@ -80,4 +80,13 @@ object JumpUitl {
         intent.putExtra(Constants.EXTRA, extra)
         context!!.startActivity(intent)
     }
+
+    fun backHome(context: Context?) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_MAIN
+        intent.addCategory(Intent.CATEGORY_HOME)
+        context!!.startActivity(intent)
+    }
+
+
 }

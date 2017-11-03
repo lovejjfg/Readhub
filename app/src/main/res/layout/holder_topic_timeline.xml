@@ -14,7 +14,7 @@
         <com.lovejjfg.readhub.view.widget.ConnectorView
             android:id="@+id/connector"
             android:layout_width="5dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="@dimen/normal_margin_padding"/>
 
@@ -32,6 +32,8 @@
         <TextView
             android:id="@+id/tv_content"
             style="@style/Text.TimeLine"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"
             />
 

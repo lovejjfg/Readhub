@@ -22,15 +22,16 @@ package com.lovejjfg.readhub.view
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
-import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.*
-import android.text.TextUtils
+import android.preference.Preference
+import android.preference.PreferenceActivity
+import android.preference.PreferenceFragment
+import android.preference.PreferenceManager
 import android.view.MenuItem
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
+import com.tencent.bugly.beta.Beta
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -94,15 +95,24 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.pref_general)
             setHasOptionsMenu(true)
-
             bindPreferenceSummaryToValue(findPreference(getString(R.string.browser_use)))
+            val checkUpdate = findPreference(getString(R.string.manual_update))//手动更新
+//            checkUpdate.isEnabled = Beta.getStrategyTask() != null
+            checkUpdate.setOnPreferenceClickListener {
+                Beta.checkUpgrade()
+                return@setOnPreferenceClickListener true
+            }
+            checkUpdate?.summary = "当前版本：${BuildConfig.VERSION_NAME}"
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             val id = item.itemId
-            if (id == android.R.id.home) {
-                activity.finish()
-                return true
+            when (id) {
+                android.R.id.home -> {
+                    activity.finish()
+                    return true
+                }
+
             }
             return super.onOptionsItemSelected(item)
         }
