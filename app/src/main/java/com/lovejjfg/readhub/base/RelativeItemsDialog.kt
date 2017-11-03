@@ -46,8 +46,8 @@ class RelativeItemsDialog : DialogFragment() {
         window?.setWindowAnimations(android.R.style.Animation_Translucent)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val relatedItems = arguments.getParcelable<EntityRelatedTopicsItem>(Constants.RELATIVE_ITEMS)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val relatedItems = arguments?.getParcelable<EntityRelatedTopicsItem>(Constants.RELATIVE_ITEMS)
         val layoutBinding = DataBindingUtil.inflate<LayoutRecyclerBinding>(inflater, R.layout.layout_recycler, container, false)
         val rvHot = layoutBinding.rvHot
 

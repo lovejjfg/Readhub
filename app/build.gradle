@@ -33,8 +33,8 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            shrinkResources false
+            minifyEnabled false
             signingConfig signingConfigs.release
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -68,35 +68,37 @@ android {
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.firebase:firebase-core:11.0.2'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.firebase:firebase-core:11.4.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
-    compile "com.android.support:design:${SUPPORT_V7_VERSION}"
-    compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
+    implementation "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_V7_VERSION}"
+    implementation "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
     //    compile "com.android.support:support-emoji:${SUPPORT_V7_VERSION}"
     //    compile "com.android.support:support-emoji-bundled:${SUPPORT_V7_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_V7_VERSION}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "com.android.support:support-v4:${SUPPORT_V7_VERSION}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt "com.android.databinding:compiler:${gradle_version}"
-    compile 'io.reactivex.rxjava2:rxkotlin:2.1.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    compile 'com.lovejjfg.powerrecycle:powerrecycle:1.2.2'
-    compile 'javax.annotation:javax.annotation-api:1.2'
-    compile 'com.github.bumptech.glide:glide:4.0.0'
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'com.lovejjfg.powerrecycle:powerrecycle:1.2.2'
+    implementation 'javax.annotation:javax.annotation-api:1.2'
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
     kapt 'com.github.bumptech.glide:compiler:4.0.0'
-    compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0@aar'
-    compile 'org.jsoup:jsoup:1.10.3'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.0.0@aar'
+    implementation 'org.jsoup:jsoup:1.10.3'
+    testImplementation 'junit:junit:4.12'
     //bugly
-    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
 }
 
 apply plugin: 'com.google.gms.google-services'
