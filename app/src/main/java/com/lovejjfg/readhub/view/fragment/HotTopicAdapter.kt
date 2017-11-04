@@ -76,10 +76,10 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                 }
                 rvItem?.adapter = itemAdapter
                 itemAdapter.setList(t?.newsArray)
-                if (t?.extra?.instantView != null) {
+                if (t?.extra?.instantView!!) {
                     dataBind?.ivTimeLine?.visibility = View.VISIBLE
                     dataBind?.ivTimeLine?.setOnClickListener {
-                        JumpUitl.jumpInstant(context, t.extra)
+                        JumpUitl.jumpInstant(context, t.id)
                     }
 
                 } else {

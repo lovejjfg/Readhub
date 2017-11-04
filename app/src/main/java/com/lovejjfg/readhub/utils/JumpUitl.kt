@@ -75,9 +75,9 @@ object JumpUitl {
         context!!.startActivity(intent)
     }
 
-    fun jumpInstant(context: Context?, extra: Extra?) {
+    fun jumpInstant(context: Context?, id: String?) {
         val intent = Intent(context, InstantActivity::class.java)
-        intent.putExtra(Constants.EXTRA, extra)
+        intent.putExtra(Constants.ID, id)
         context!!.startActivity(intent)
     }
 

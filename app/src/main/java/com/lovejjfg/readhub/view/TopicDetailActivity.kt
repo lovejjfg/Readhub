@@ -41,6 +41,7 @@ class TopicDetailActivity : AppCompatActivity() {
             getData()
         }
         refresh?.isRefreshing = true
+        getData()
         toolbar = topicBind?.toolbar
         topicBind?.toolbar?.setNavigationOnClickListener({ finish() })
         val rvHot = topicBind?.rvDetail
@@ -57,7 +58,6 @@ class TopicDetailActivity : AppCompatActivity() {
                 }
             }
         })
-        getData()
 
 
     }

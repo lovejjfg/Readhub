@@ -18,7 +18,9 @@ package com.lovejjfg.readhub.view
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,7 +29,8 @@ import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.data.topic.Extra
+import com.lovejjfg.readhub.data.DataManager
+import com.lovejjfg.readhub.data.topic.InstantView
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.databinding.ActivityInstantDetailBinding
 import com.lovejjfg.readhub.databinding.HolderImgParseBinding
@@ -37,6 +40,7 @@ import com.lovejjfg.readhub.view.holder.ImageParseHolder
 import com.lovejjfg.readhub.view.holder.TextParseHolder
 import com.lovejjfg.readhub.view.recycerview.ParseItemDerection
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import org.jsoup.Jsoup
 
 /**
@@ -44,12 +48,24 @@ import org.jsoup.Jsoup
  * Email: lovejjfg@gmail.com
  */
 class InstantActivity : BaseActivity() {
+    private var instantbind: ActivityInstantDetailBinding? = null
+    private var refresh: SwipeRefreshLayout? = null
+    private var topicDetailAdapter: InstantAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val extra = intent.getParcelableExtra<Extra>(Constants.EXTRA)
-        val instantbind = DataBindingUtil.setContentView<ActivityInstantDetailBinding>(this, R.layout.activity_instant_detail)
+        val topicId = intent.getStringExtra(Constants.ID)
+        if (TextUtils.isEmpty(topicId)) {
+            finish()
+            return
+        }
+        instantbind = DataBindingUtil.setContentView(this, R.layout.activity_instant_detail)
+        refresh = instantbind?.container
+        refresh?.setOnRefreshListener {
+            getData(topicId)
+        }
+        refresh?.isRefreshing = true
         instantbind?.toolbar?.setNavigationOnClickListener({ finish() })
-        instantbind?.toolbar?.title = extra?.instantView?.title
         val rvHot = instantbind?.rvDetail
         instantbind?.toolbar?.setOnClickListener {
             if (UIUtil.doubleClick()) {
@@ -58,21 +74,38 @@ class InstantActivity : BaseActivity() {
         }
         rvHot?.addItemDecoration(ParseItemDerection())
         rvHot?.layoutManager = LinearLayoutManager(this)
-        val topicDetailAdapter = InstantAdapter()
-        topicDetailAdapter.attachRecyclerView(rvHot!!)
-        if (extra == null) {
+        topicDetailAdapter = InstantAdapter()
+        topicDetailAdapter!!.attachRecyclerView(rvHot!!)
+        getData(topicId)
+
+    }
+
+    private fun getData(topicId: String) {
+        DataManager.subscribe(DataManager.init().topicInstant(topicId), Consumer {
+            handleInstant(it)
+        }, Consumer {
+            it.printStackTrace()
+            refresh?.isRefreshing = false
+        })
+    }
+
+    private fun handleInstant(instantView: InstantView?) {
+        refresh?.isRefreshing = false
+        instantbind?.toolbar?.title = instantView?.title
+        if (instantView == null) {
             Log.e("InstantActivity", "extra is null")
             return
         }
-
         Observable.create<DetailItems> {
-            val body = Jsoup.parse(extra.instantView?.content).body().children()
+            val body = Jsoup.parse(instantView.content).body().children()
             JsoupUtils.parse(body, it, "", 0)
             it.onComplete()
         }
                 .toList()
-                .subscribe({ topicDetailAdapter.setList(it) }, { it.printStackTrace() })
-
+                .subscribe({
+                    topicDetailAdapter!!.clearList()
+                    topicDetailAdapter!!.setList(it)
+                }, { it.printStackTrace() })
 
     }
 

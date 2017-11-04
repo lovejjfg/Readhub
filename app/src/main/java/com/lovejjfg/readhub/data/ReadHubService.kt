@@ -19,6 +19,7 @@
 package com.lovejjfg.readhub.data
 
 import com.lovejjfg.readhub.data.topic.HotTopic
+import com.lovejjfg.readhub.data.topic.InstantView
 import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.data.topic.develop.Develop
 import com.lovejjfg.readhub.data.topic.tech.Tech
@@ -36,6 +37,10 @@ interface ReadHubService {
 
     @GET("topic")
     fun hotTopic(): Observable<Response<HotTopic>>
+
+    //https://api.readhub.me/topic/instantview?topicId=RwOK8HoWNG
+    @GET("topic/instantview")
+    fun topicInstant(@Query("topicId") id: String): Observable<Response<InstantView>>
 
     @GET("topic/{id}")
     fun topicDetail(@Path("id") id: String): Observable<Response<TopicDetail>>

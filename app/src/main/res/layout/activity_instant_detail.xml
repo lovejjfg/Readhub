@@ -46,19 +46,26 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_detail"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:descendantFocusability="beforeDescendants"
-            android:paddingBottom="@dimen/margin_24"
+            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:descendantFocusability="beforeDescendants"
+                android:paddingBottom="@dimen/margin_24"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                >
 
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

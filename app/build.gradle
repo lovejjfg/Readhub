@@ -70,6 +70,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.firebase:firebase-core:11.4.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -99,6 +100,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     //bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

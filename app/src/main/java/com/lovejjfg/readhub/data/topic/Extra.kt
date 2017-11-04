@@ -9,5 +9,5 @@ import javax.annotation.Generated
 @Parcelize
 data class Extra(
         @field:SerializedName("instantView")
-        val instantView: InstantView? = null
+        val instantView: Boolean = false
 ) : Parcelable
