@@ -24,6 +24,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
 import java.util.*
@@ -34,7 +35,7 @@ import java.util.*
  */
 
 class RxBus private constructor() {
-    private val mSubject: Subject<Any> = ReplaySubject.create<Any>().toSerialized()
+    private val mSubject: Subject<Any> = PublishSubject.create<Any>().toSerialized()
     private var mSubscriptionMap: HashMap<String, CompositeDisposable>? = null
 
     /**
