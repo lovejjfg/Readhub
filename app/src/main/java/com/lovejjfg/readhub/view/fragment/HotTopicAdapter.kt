@@ -18,10 +18,7 @@
 
 package com.lovejjfg.readhub.view.fragment
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
-import android.graphics.Bitmap
-import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -35,14 +32,6 @@ import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
 import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
 import com.lovejjfg.readhub.utils.JumpUitl
-import com.tencent.bugly.crashreport.CrashReport
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 /**
  * ReadHub
