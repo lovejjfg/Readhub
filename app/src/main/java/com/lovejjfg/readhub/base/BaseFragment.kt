@@ -19,14 +19,26 @@
 package com.lovejjfg.readhub.base
 
 import android.app.Fragment
+import android.content.Context
 import android.os.Bundle
+import com.lovejjfg.readhub.utils.ErrorUtil
+import com.lovejjfg.readhub.utils.http.ToastUtil
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by Joe on 2016/10/13.
  * Email lovejjfg@gmail.com
  */
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), IBaseView {
+    var mDisposables: CompositeDisposable? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mDisposables?.dispose()
+        mDisposables = CompositeDisposable()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +64,43 @@ abstract class BaseFragment : Fragment() {
         outState!!.putBoolean(ARG_IS_HIDDEN, isHidden)
         super.onSaveInstanceState(outState)
 
+    }
+
+    override fun showToast(toast: String) {
+        ToastUtil.showToast(activity, toast)
+    }
+
+    override fun showToast(stringId: Int) {
+        ToastUtil.showToast(activity, getString(stringId))
+    }
+
+    override fun showLoadingDialog(msg: String) {
+    }
+
+    override fun showLoadingDialog(cancelable: Boolean) {
+    }
+
+
+    override fun closeLoadingDialog() {
+    }
+
+
+    override fun subscribe(subscriber: Disposable) {
+        mDisposables?.add(subscriber)
+    }
+
+    override fun unSubscribe() {
+        mDisposables?.clear()
+    }
+
+    override fun handleError(throwable: Throwable) {
+        ErrorUtil.handleError(activity, throwable)
+    }
+
+    override fun beforeCreate(savedInstanceState: Bundle) {
+    }
+
+    override fun afterCreatedView(savedInstanceState: Bundle) {
     }
 
     companion object {

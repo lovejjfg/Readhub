@@ -40,6 +40,7 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.ScrollEvent
+import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.HomeActivity
 import io.reactivex.functions.Consumer
 
@@ -74,7 +75,7 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
-        binding = DataBindingUtil.inflate<LayoutRefreshRecyclerBinding>(inflater, R.layout.layout_refresh_recycler, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)
         val root = binding?.root
         return root!!
     }
@@ -87,6 +88,7 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
         adapter?.setHasStableIds(true)
+        adapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
         adapter?.attachRecyclerView(rvHot!!)
         refresh = binding?.container
         adapter?.setLoadMoreListener {

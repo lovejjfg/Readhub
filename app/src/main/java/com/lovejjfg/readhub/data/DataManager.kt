@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.data
 
+import com.lovejjfg.readhub.base.IBaseView
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
@@ -76,10 +77,11 @@ object DataManager {
                 }
     }
 
-    fun <R> subscribe(request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>): Disposable {
-        return convert(request)
+    fun <R> subscribe(view: IBaseView, request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>) {
+        val subscribe = convert(request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError)
+        view.subscribe(subscribe)
 
     }
 

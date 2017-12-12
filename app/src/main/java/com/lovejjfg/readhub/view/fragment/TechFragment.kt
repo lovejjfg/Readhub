@@ -49,7 +49,7 @@ class TechFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(DataManager.init().tech(),
+        DataManager.subscribe(this, DataManager.init().tech(),
                 Consumer {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
@@ -59,12 +59,14 @@ class TechFragment : RefreshFragment() {
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)
+                    adapter?.showError()
+                    handleError(it)
                     refresh?.isRefreshing = false
                 })
     }
 
     override fun loadMore() {
-        DataManager.subscribe(DataManager.init().techMore(order!!, 10),
+        DataManager.subscribe(this, DataManager.init().techMore(order!!, 10),
                 Consumer {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)

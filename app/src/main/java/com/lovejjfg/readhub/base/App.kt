@@ -24,6 +24,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 
@@ -55,9 +56,11 @@ class App : Application() {
         Beta.showInterruptedStrategy = false
         Beta.autoCheckUpgrade = notify
         Beta.autoDownloadOnWifi = autoDownload
-        Beta.smallIconId = R.mipmap.ic_notify
+        Beta.smallIconId = R.mipmap.ic_launcher_foreground
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         Beta.init(this, BuildConfig.IS_DEBUG)
+
+        ToastUtil.initToast(this)
 
     }
 }

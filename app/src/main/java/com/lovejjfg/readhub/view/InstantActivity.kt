@@ -50,7 +50,7 @@ import org.jsoup.Jsoup
 class InstantActivity : BaseActivity() {
     private var instantbind: ActivityInstantDetailBinding? = null
     private var refresh: SwipeRefreshLayout? = null
-    private var topicDetailAdapter: InstantAdapter? = null
+    private var instantAdapter: InstantAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,18 +74,20 @@ class InstantActivity : BaseActivity() {
         }
         rvHot?.addItemDecoration(ParseItemDerection())
         rvHot?.layoutManager = LinearLayoutManager(this)
-        topicDetailAdapter = InstantAdapter()
-        topicDetailAdapter!!.attachRecyclerView(rvHot!!)
+        instantAdapter = InstantAdapter()
+        instantAdapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
+        instantAdapter!!.attachRecyclerView(rvHot!!)
         getData(topicId)
 
     }
 
     private fun getData(topicId: String) {
-        DataManager.subscribe(DataManager.init().topicInstant(topicId), Consumer {
+        DataManager.subscribe(this, DataManager.init().topicInstant(topicId), Consumer {
             handleInstant(it)
         }, Consumer {
-            it.printStackTrace()
+            instantAdapter?.showError()
             refresh?.isRefreshing = false
+            handleError(it)
         })
     }
 
@@ -103,9 +105,12 @@ class InstantActivity : BaseActivity() {
         }
                 .toList()
                 .subscribe({
-                    topicDetailAdapter!!.clearList()
-                    topicDetailAdapter!!.setList(it)
-                }, { it.printStackTrace() })
+                    instantAdapter!!.clearList()
+                    instantAdapter!!.setList(it)
+                }, {
+                    handleError(it)
+
+                })
 
     }
 

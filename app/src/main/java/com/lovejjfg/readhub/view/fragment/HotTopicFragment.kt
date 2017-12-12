@@ -48,7 +48,7 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(DataManager.init().hotTopic(),
+        DataManager.subscribe(this, DataManager.init().hotTopic(),
                 Consumer {
                     val data = it.data
                     order = data?.last()?.order
@@ -58,12 +58,14 @@ class HotTopicFragment : RefreshFragment() {
                 },
                 Consumer {
                     it.printStackTrace()
+                    adapter?.showError()
+                    handleError(it)
                     refresh?.isRefreshing = false
                 })
     }
 
     override fun loadMore() {
-        DataManager.subscribe(DataManager.init().hotTopicMore(order!!, 10),
+        DataManager.subscribe(this, DataManager.init().hotTopicMore(order!!, 10),
                 Consumer {
                     val data = it.data
                     order = data?.last()?.order

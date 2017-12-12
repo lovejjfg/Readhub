@@ -40,7 +40,6 @@
                 app:navigationIcon="?homeAsUpIndicator"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/app_name"
                 app:titleTextColor="#fff"
                 />
 

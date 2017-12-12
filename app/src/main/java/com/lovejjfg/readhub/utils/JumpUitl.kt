@@ -58,7 +58,7 @@ object JumpUitl {
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             CrashReport.postCatchedException(e)
         }
     }
