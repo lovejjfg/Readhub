@@ -55,9 +55,6 @@ class TopicDetailActivity : BaseActivity() {
                 Constants.TYPE_NEWS -> {
                     JumpUitl.jumpWeb(this, item?.newsItem?.mobileUrl)
                 }
-//                Constants.TYPE_TIMELINE -> {
-//                    JumpUitl.jumpTimeLine(this, item?.timeLine?.id,)
-//                }
             }
         })
 

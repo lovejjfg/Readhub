@@ -68,11 +68,6 @@ abstract class RefreshFragment : BaseFragment() {
 
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)

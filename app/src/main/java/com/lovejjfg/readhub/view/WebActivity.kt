@@ -76,7 +76,7 @@ class WebActivity : AppCompatActivity() {
         webSettings.blockNetworkImage = false
         webSettings.displayZoomControls = false
         //        mWeb.setWebViewClient(new WebViewClient());
-        mWeb!!.setWebChromeClient(object : WebChromeClient() {
+        mWeb!!.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
                 toolbar?.title = s
@@ -89,8 +89,8 @@ class WebActivity : AppCompatActivity() {
                     loading?.visibility = View.GONE
 
             }
-        })
-        mWeb!!.setWebViewClient(object : WebViewClient() {
+        }
+        mWeb!!.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 //                loading?.show()
                 loading?.visibility = View.VISIBLE
@@ -117,7 +117,7 @@ class WebActivity : AppCompatActivity() {
                 loading?.visibility = View.GONE
             }
 
-        })
+        }
 
         mWeb!!.loadUrl(url)
     }

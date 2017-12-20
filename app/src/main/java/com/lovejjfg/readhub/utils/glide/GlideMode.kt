@@ -29,7 +29,7 @@ import com.bumptech.glide.request.RequestOptions
  * Email: lovejjfg@gmail.com
  */
 @GlideModule
-public class GlideMode : AppGlideModule() {
+class GlideMode : AppGlideModule() {
     override fun applyOptions(context: Context?, builder: GlideBuilder?) {
         val defaultOptions = RequestOptions()
         defaultOptions.format(DecodeFormat.PREFER_ARGB_8888)

@@ -184,8 +184,8 @@ object JsoupUtils {
 
         val img = element.select("a")
         val html = element.outerHtml()
-        if (img != null && !img!!.isEmpty()) {
-            val ee = img!!.get(0)
+        if (img != null && !img.isEmpty()) {
+            val ee = img.get(0)
             val s = ee.outerHtml()//图片的标签地址
             val substring = html.split(Pattern.quote(s).toRegex(), 2).toTypedArray()//图片见面的text
             if (substring.size == 0) {//没有可以切割的

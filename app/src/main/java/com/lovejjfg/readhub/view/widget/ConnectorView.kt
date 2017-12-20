@@ -19,7 +19,7 @@ class ConnectorView : View {
     private var innerR: Int = 0
     private var transitionY: Int = 0
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
     private val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rootPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -45,7 +45,7 @@ class ConnectorView : View {
         clearPaint.xfermode = CLEAR_XFER_MODE
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onDraw(canvas: Canvas) {
         val width = width

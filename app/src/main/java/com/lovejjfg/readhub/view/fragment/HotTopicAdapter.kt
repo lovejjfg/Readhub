@@ -85,7 +85,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                 } else {
                     dataBind?.ivTimeLine?.visibility = View.GONE
                 }
-                if (TextUtils.isEmpty(t?.id)) {
+                if (TextUtils.isEmpty(t.id)) {
                     dataBind?.ivShow?.visibility = View.GONE
                 } else {
                     dataBind?.ivShow?.visibility = View.VISIBLE

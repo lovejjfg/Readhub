@@ -42,13 +42,7 @@ class CustomFab : FloatingActionButton {
 
     override fun show(listener: OnVisibilityChangedListener?) {
         super.show(object : OnVisibilityChangedListener() {
-            override fun onShown(fab: FloatingActionButton?) {
-                super.onShown(fab)
-            }
 
-            override fun onHidden(fab: FloatingActionButton?) {
-                super.onHidden(fab)
-            }
         })
     }
 
