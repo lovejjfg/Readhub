@@ -18,8 +18,9 @@ package com.lovejjfg.readhub.utils
 
 import android.content.Context
 import android.util.Log
+import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.utils.http.ToastUtil
-import com.tencent.bugly.crashreport.CrashReport
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -35,22 +36,21 @@ object ErrorUtil {
 
     fun handleError(context: Context, throwable: Throwable) {
         Log.e("ErrorUtil", "handleError: ", throwable)
-        CrashReport.postCatchedException(throwable)
+      //  CrashReport.postCatchedException(throwable)
         //        view.showErrorView();
-        if (throwable is HttpException) {
+        if (throwable is ReadhubException) {
             val code = throwable.code()
-
             if (code == 504) {
-                ToastUtil.showToast(context, "请确认你的网络连接")
+                ToastUtil.showToast(context, context.getString(R.string.net_unavailable))
             }
             return
         }
         if (throwable is SocketTimeoutException) {
-            ToastUtil.showToast(context, "网络连接超时!")
+            ToastUtil.showToast(context, context.getString(R.string.net_time_out))
             return
         }
-        if (throwable is ConnectException || throwable is UnknownHostException) {
-            ToastUtil.showToast(context, "网络连接出问题啦!")
+        if (throwable is ConnectException || throwable is UnknownHostException || throwable is HttpException) {
+            ToastUtil.showToast(context, context.getString(R.string.net_error2))
         }
     }
 }

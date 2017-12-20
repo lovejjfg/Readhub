@@ -16,37 +16,19 @@
 
 package com.lovejjfg.readhub.base
 
-import android.os.Bundle
-import android.support.annotation.StringRes
-import io.reactivex.disposables.Disposable
-
-
 /**
- * Created by Joe on 2016/11/13.
+ * Created by Joe on 2017/1/5.
  * Email lovejjfg@gmail.com
  */
 
-interface IBaseView {
-    fun showToast(toast: String)
+class ReadhubException(private val code: Int, val msg: String) : RuntimeException("Code:$code;Message:$msg") {
 
-    fun showToast(@StringRes stringId: Int)
+    fun code(): Int {
+        return code
+    }
 
-    //显示dialog
-    fun showLoadingDialog(msg: String)
-
-    //显示dialog
-    fun showLoadingDialog(cancelable: Boolean)
-
-    fun closeLoadingDialog()
-
-    fun subscribe(subscriber: Disposable)
-
-    fun unSubscribe()
-
-    fun handleError(throwable: Throwable)
-
-    fun beforeCreate(savedInstanceState: Bundle?)
-
-    fun afterCreatedView(savedInstanceState: Bundle?)
+    fun message(): String {
+        return msg
+    }
 
 }

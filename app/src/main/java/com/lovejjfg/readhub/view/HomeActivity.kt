@@ -23,9 +23,9 @@ import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
 import com.lovejjfg.readhub.utils.*
@@ -35,7 +35,7 @@ import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.tencent.bugly.crashreport.CrashReport
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     val TAG = "HOME"
     var viewBind: ActivityHomeBinding? = null
@@ -89,8 +89,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         checkPermissions()
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)

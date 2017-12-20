@@ -18,8 +18,11 @@
 
 package com.lovejjfg.readhub.data
 
+import com.lovejjfg.readhub.base.App
 import com.lovejjfg.readhub.base.IBaseView
+import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
+import com.lovejjfg.readhub.utils.http.CacheControlInterceptor
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
 import io.reactivex.Observable
@@ -27,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -34,6 +38,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 /**
  * ReadHub
@@ -47,12 +52,19 @@ object DataManager {
 
     fun <T> init(clazz: Class<T>): T {
         if (retrofit == null) {
+            val cacheSize = 10 * 1024 * 1024L
+            val cache = Cache(App.cacheDirectory!!, cacheSize)
             retrofit = Retrofit.Builder()
                     .baseUrl(API_RELEASE)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient.Builder()
-                            .addInterceptor({ chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) })
+                            .cache(cache)
+                            .connectTimeout(30, TimeUnit.SECONDS)
+                            .readTimeout(30, TimeUnit.SECONDS)
+                            .writeTimeout(30, TimeUnit.SECONDS)
+                            .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
+                            .addInterceptor(CacheControlInterceptor())
                             .addInterceptor(LoggingInterceptor())
                             .build()
                     )
@@ -73,7 +85,11 @@ object DataManager {
                     (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
                 })
                 .map { t: Response<R> ->
-                    t.body()!!
+                    return@map if (t.isSuccessful) {
+                        t.body()!!
+                    } else {
+                        throw ReadhubException(t.code(), t.message())
+                    }
                 }
     }
 

@@ -41,8 +41,10 @@ abstract class BaseFragment : Fragment(), IBaseView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         initFragments(savedInstanceState, this)
+        afterCreatedView(savedInstanceState)
     }
 
 
@@ -97,10 +99,10 @@ abstract class BaseFragment : Fragment(), IBaseView {
         ErrorUtil.handleError(activity, throwable)
     }
 
-    override fun beforeCreate(savedInstanceState: Bundle) {
+    override fun beforeCreate(savedInstanceState: Bundle?) {
     }
 
-    override fun afterCreatedView(savedInstanceState: Bundle) {
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
     }
 
     companion object {

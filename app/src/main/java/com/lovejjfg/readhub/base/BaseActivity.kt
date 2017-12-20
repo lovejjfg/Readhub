@@ -2,10 +2,14 @@ package com.lovejjfg.readhub.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.ErrorUtil
+import com.lovejjfg.readhub.utils.RxBus
+import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 
 /**
  * Created by joe on 2017/9/28.
@@ -15,9 +19,9 @@ import io.reactivex.disposables.Disposable
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
     var mDisposables: CompositeDisposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
-        mDisposables?.clear()
-        mDisposables = CompositeDisposable()
+        afterCreatedView(savedInstanceState)
 
     }
 
@@ -52,10 +56,22 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
         ErrorUtil.handleError(this, throwable)
     }
 
-    override fun beforeCreate(savedInstanceState: Bundle) {
+    override fun beforeCreate(savedInstanceState: Bundle?) {
+        mDisposables?.clear()
+        mDisposables = CompositeDisposable()
     }
 
-    override fun afterCreatedView(savedInstanceState: Bundle) {
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        RxBus.instance.addSubscription(this, NoNetEvent::class.java, Consumer {
+            showToast(R.string.net_unavailable)
+        }, Consumer {
+            it.printStackTrace()
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        RxBus.instance.unSubscribe(this)
     }
 
 
