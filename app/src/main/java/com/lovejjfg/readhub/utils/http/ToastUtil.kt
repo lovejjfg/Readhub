@@ -66,9 +66,14 @@ object ToastUtil {
     }
 
     private fun safeShow(context: Context?, msg: String, duration: Int) {
-        initToast(context)
-        TOAST!!.setText(msg)
-        TOAST!!.duration = duration
-        TOAST!!.show()
+        try {
+            initToast(context)
+            TOAST!!.setText(msg)
+            TOAST!!.duration = duration
+            TOAST!!.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            CrashReport.postCatchedException(e)
+        }
     }
 }

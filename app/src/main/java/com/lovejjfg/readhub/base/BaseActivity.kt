@@ -17,7 +17,7 @@ import io.reactivex.functions.Consumer
  */
 
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
-    var mDisposables: CompositeDisposable? = null
+    private var mDisposables: CompositeDisposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
