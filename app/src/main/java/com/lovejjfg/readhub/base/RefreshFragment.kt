@@ -20,14 +20,12 @@ package com.lovejjfg.readhub.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -92,9 +90,15 @@ abstract class RefreshFragment : BaseFragment() {
             }
         }
         adapter?.totalCount = Int.MAX_VALUE
-        if (TextUtils.equals(tag, Constants.HOT) && adapter!!.list.isEmpty()) {
-            refresh?.isRefreshing = true
-            refresh(refresh)
+        println("tag:${tag};;isHidden:${isHidden}")
+        if (savedInstanceState == null) {
+            if (!isHidden && adapter!!.list.isEmpty()) {
+                refresh?.isRefreshing = true
+                refresh(refresh)
+            }
+        } else {
+            val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
+            adapter?.setList(mList)
         }
         @Suppress("DEPRECATION")
         refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
@@ -196,6 +200,13 @@ abstract class RefreshFragment : BaseFragment() {
                 adapter?.notifyDataSetChanged()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
+            outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+        }
+        super.onSaveInstanceState(outState)
     }
 
 

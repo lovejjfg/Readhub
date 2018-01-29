@@ -18,10 +18,13 @@
 
 package com.lovejjfg.readhub.data.topic
 
-import javax.annotation.Generated
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
+@Parcelize
 data class HotTopic(
 
 	@field:SerializedName("totalItems")
@@ -35,4 +38,4 @@ data class HotTopic(
 
 	@field:SerializedName("pageSize")
 	val pageSize: Int? = null
-)
+) : Parcelable

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
     >
 
@@ -42,20 +43,22 @@
                 />
 
 
-            <TextView
+            <com.lovejjfg.powertext.ExpandableTextView
                 android:id="@+id/tv_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1"
-                android:maxLines="@{topic.isExband?1000:3}"
-                android:text="@{topic.summary}"
+                android:lineSpacingExtra="1dp"
                 android:textColor="@color/theme_color_text_g4"
                 android:textSize="@dimen/text_des"
-                android:visibility="@{TextUtils.isEmpty(topic.summary)?View.GONE:View.VISIBLE}"
-                tools:text="这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了"
+                app:defaultLineCount="3"
+                app:defaultMoreHint="查看更多"
+                app:moreHintColor="@color/colorAccent"
+                android:clickable="false"
+                android:focusable="false"
                 />
+
 
             <TextView
                 android:id="@+id/tv_relative"

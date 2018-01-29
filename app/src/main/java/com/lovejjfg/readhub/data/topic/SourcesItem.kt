@@ -18,10 +18,13 @@
 
 package com.lovejjfg.readhub.data.topic
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
+@Parcelize
 data class SourcesItem(
 
         @field:SerializedName("name")
@@ -32,4 +35,4 @@ data class SourcesItem(
 
         @field:SerializedName("url")
         val url: String? = null
-)
+) : Parcelable

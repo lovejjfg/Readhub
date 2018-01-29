@@ -18,12 +18,11 @@
 
 package com.lovejjfg.readhub.data.topic
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import javax.annotation.Generated
+import kotlinx.android.parcel.Parcelize
 
-@Generated("com.robohorse.robopojogenerator")
+@Parcelize
 data class DataItem(
         @field:SerializedName("isExband")
         var isExband: Boolean? = false,
@@ -34,8 +33,8 @@ data class DataItem(
         @field:SerializedName("createdAt")
         val createdAt: String? = null,
 
-        @field:SerializedName("relatedTopicArray")
-        val relatedTopicArray: List<Any?>? = null,
+//        @field:SerializedName("relatedTopicArray")
+//        val relatedTopicArray: List<EntityRelatedTopicsItem?>? = null,
 
         @field:SerializedName("nelData")
         val nelData: NelData? = null,
@@ -74,49 +73,4 @@ data class DataItem(
         val extra: Extra? = null
 
 
-) : Parcelable {
-    companion object {
-        @JvmField val CREATOR: Parcelable.Creator<DataItem> = object : Parcelable.Creator<DataItem> {
-            override fun createFromParcel(source: Parcel): DataItem = DataItem(source)
-            override fun newArray(size: Int): Array<DataItem?> = arrayOfNulls(size)
-        }
-    }
-
-    constructor(source: Parcel) : this(
-            source.readValue(Boolean::class.java.classLoader) as Boolean?,
-            source.readString(),
-            source.readString(),
-            ArrayList<Any?>().apply { source.readList(this, Any::class.java.classLoader) },
-            source.readParcelable<NelData>(NelData::class.java.classLoader),
-            source.readString(),
-            source.readString(),
-            ArrayList<NewsArrayItem?>().apply { source.readList(this, NewsArrayItem::class.java.classLoader) },
-            source.readString(),
-            source.createTypedArrayList(EntityRelatedTopicsItem.CREATOR),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeValue(isExband)
-        dest.writeString(summary)
-        dest.writeString(createdAt)
-        dest.writeList(relatedTopicArray)
-        dest.writeParcelable(nelData, 0)
-        dest.writeString(publishDate)
-        dest.writeString(id)
-        dest.writeList(newsArray)
-        dest.writeString(title)
-        dest.writeTypedList(entityRelatedTopics)
-        dest.writeString(order)
-        dest.writeString(updatedAt)
-        dest.writeString(authorName)
-        dest.writeString(siteName)
-        dest.writeString(url)
-    }
-}
+) : Parcelable

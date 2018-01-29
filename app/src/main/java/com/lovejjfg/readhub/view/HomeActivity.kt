@@ -44,7 +44,7 @@ class HomeActivity : BaseActivity() {
     var developFragment: Fragment? = null
     var navigation: BottomNavigationView? = null
     var mFirebaseAnalytics: FirebaseAnalytics? = null
-    var currentId: Int = 0
+    var currentId: Int =  R.id.navigation_home
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->

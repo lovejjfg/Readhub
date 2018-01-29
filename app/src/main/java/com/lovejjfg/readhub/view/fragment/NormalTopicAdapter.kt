@@ -40,15 +40,24 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
         return NormalTopicHolder(topicBinding)
     }
 
+    override fun getItemId(position: Int): Long {
+        return if (position > 0 && position < list.size) {
+            position.toLong()
+        } else {
+            super.getItemId(position)
+        }
+    }
+
     override fun onViewHolderBind(holder: PowerHolder<DataItem>?, position: Int) {
-        holder!!.onBind(list?.get(position))
+        println("onViewHolderBind::+${position}")
+        holder!!.onBind(list[position])
     }
 
     inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {
         var itemBinding: HolderNormalTopicBinding? = itemView
         override fun onBind(t: DataItem?) {
+            println("title:" + t?.title)
             itemBinding!!.topic = t
-
             val text: String? = if (TextUtils.isEmpty(t?.authorName)) {
                 t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
             } else {
@@ -56,7 +65,14 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
 
             }
             itemBinding!!.tvRelative.text = text
-
+            itemBinding!!.tvDes.setOnExpandChangeListener {
+                t?.isExband = it
+            }
+            itemBinding!!.tvDes.setOriginalText(t?.summary)
+            itemBinding!!.tvDes.isExpanded = t?.isExband!!
+            itemBinding!!.tvDes.setOnClickListener{
+                itemView.performClick()
+            }
 
         }
 

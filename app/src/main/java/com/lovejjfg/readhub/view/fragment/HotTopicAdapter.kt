@@ -53,7 +53,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
     override fun getItemId(position: Int): Long {
         return if (position >= 0 && position < list.size) {
-            list[position].order!!.toLong()
+            list[position].id?.hashCode()!!.toLong()
         } else {
             super.getItemId(position)
         }

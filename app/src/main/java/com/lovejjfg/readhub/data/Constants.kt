@@ -34,6 +34,7 @@ object Constants {
     val EXTRA: String = "extra"
     val TAB_ID: String = "tab_id"
     val SHOW_PROMISSION: String = "SHOW_PROMISSION"
+    val DATA: String = "data"
     //
     val TYPE_HEADER = 1
     val TYPE_NEWS = 2

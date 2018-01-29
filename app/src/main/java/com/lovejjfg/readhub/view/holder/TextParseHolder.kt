@@ -94,7 +94,7 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
                 }
             }
             mContent.text = builder
-            mContent.textSize = (if (h1) 17 else if (h6) 13 else 15).toFloat()
+            mContent.textSize = (if (h1) 18 else if (h6) 14 else 16).toFloat()
         }
 
     }

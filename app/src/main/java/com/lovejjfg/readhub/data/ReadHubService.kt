@@ -60,4 +60,5 @@ interface ReadHubService {
     @GET("technews")
     fun devNewsMore(@Query("lastCursor") lastId: String, @Query("pageSize") size: Int): Observable<Response<Develop>>
 
+
 }

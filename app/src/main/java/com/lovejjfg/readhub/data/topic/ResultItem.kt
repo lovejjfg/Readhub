@@ -18,10 +18,13 @@
 
 package com.lovejjfg.readhub.data.topic
 
-import javax.annotation.Generated
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
+@Parcelize
 data class ResultItem(
 
 	@field:SerializedName("data")
@@ -38,4 +41,4 @@ data class ResultItem(
 
 	@field:SerializedName("eventType")
 	val eventType: Int? = null
-)
+) : Parcelable

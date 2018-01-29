@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/normal_margin_padding"
+            android:gravity="center"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_des"
             tools:text="9-19"

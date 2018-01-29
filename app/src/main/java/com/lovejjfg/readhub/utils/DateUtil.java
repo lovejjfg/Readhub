@@ -78,7 +78,7 @@ public class DateUtil {
 
     public static String parseTimeFormate(String date) {
         try {
-            String formate = isTheSameYear(date) ? "MM-dd" : "yyyy-M-d";
+            String formate = isTheSameYear(date) ? "MM-dd" : "M-d\nyyyy";
             SimpleDateFormat sdf = initDateFormat();
             Date parse = sdf.parse(date);
             return new SimpleDateFormat(formate, Locale.getDefault()).format(parse);
