@@ -102,7 +102,7 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.lovejjfg.powertext:lib:0.0.3'
+    implementation 'com.lovejjfg.powertext:lib:0.0.4'
 }
 
 apply plugin: 'com.google.gms.google-services'

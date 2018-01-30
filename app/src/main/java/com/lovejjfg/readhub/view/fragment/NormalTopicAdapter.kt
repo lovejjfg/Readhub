@@ -70,7 +70,7 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
             }
             itemBinding!!.tvDes.setOriginalText(t?.summary)
             itemBinding!!.tvDes.isExpanded = t?.isExband!!
-            itemBinding!!.tvDes.setOnClickListener{
+            itemBinding!!.tvDes.setOnClickListener {
                 itemView.performClick()
             }
 
