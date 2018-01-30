@@ -28,7 +28,11 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
-import com.lovejjfg.readhub.utils.*
+import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.RxBus
+import com.lovejjfg.readhub.utils.SharedPrefsUtil
+import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment

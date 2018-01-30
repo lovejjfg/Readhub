@@ -36,9 +36,9 @@ import com.lovejjfg.readhub.databinding.ActivityInstantDetailBinding
 import com.lovejjfg.readhub.databinding.HolderImgParseBinding
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.UIUtil
-import com.lovejjfg.readhub.view.holder.ImageParseHolder
-import com.lovejjfg.readhub.view.holder.TextParseHolder
 import com.lovejjfg.readhub.view.recycerview.ParseItemDerection
+import com.lovejjfg.readhub.view.recycerview.holder.ImageParseHolder
+import com.lovejjfg.readhub.view.recycerview.holder.TextParseHolder
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import org.jsoup.Jsoup

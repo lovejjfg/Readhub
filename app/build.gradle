@@ -81,10 +81,10 @@ dependencies {
     //    compile "com.android.support:support-emoji:${SUPPORT_V7_VERSION}"
     //    compile "com.android.support:support-emoji-bundled:${SUPPORT_V7_VERSION}"
     implementation "com.android.support:support-v4:${SUPPORT_V7_VERSION}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     kapt "com.android.databinding:compiler:${gradle_version}"
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger:${dagger_version}"
+    kapt "com.google.dagger:dagger-compiler:${dagger_version}"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'

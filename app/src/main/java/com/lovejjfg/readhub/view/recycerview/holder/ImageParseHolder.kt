@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.readhub.view.holder
+package com.lovejjfg.readhub.view.recycerview.holder
 
 import android.text.TextUtils
 import android.view.View

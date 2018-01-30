@@ -15,6 +15,7 @@ import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.databinding.ActivityTopicDetailBinding
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.view.recycerview.TopicDetailAdapter
 import com.lovejjfg.readhub.view.widget.ConnectorView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

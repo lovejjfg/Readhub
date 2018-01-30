@@ -16,7 +16,7 @@
  *
  */
 
-package com.lovejjfg.readhub.utils
+package com.lovejjfg.readhub.utils.event
 
 /**
  * ReadHub

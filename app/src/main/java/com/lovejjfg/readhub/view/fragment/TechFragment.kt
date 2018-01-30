@@ -28,6 +28,7 @@ import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.view.recycerview.NormalTopicAdapter
 import io.reactivex.functions.Consumer
 
 

@@ -1,4 +1,4 @@
-package com.lovejjfg.readhub.view.holder
+package com.lovejjfg.readhub.view.recycerview.holder
 
 import android.view.View
 

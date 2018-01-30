@@ -37,8 +37,8 @@ import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.ScrollEvent
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
 import io.reactivex.functions.Consumer
 

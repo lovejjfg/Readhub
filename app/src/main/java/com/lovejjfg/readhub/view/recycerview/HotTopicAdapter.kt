@@ -16,7 +16,7 @@
  *
  */
 
-package com.lovejjfg.readhub.view.fragment
+package com.lovejjfg.readhub.view.recycerview
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager

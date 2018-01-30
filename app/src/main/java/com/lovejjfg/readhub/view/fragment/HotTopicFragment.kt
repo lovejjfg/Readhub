@@ -26,6 +26,7 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
+import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
 
 
