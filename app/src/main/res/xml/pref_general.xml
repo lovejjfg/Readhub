@@ -28,7 +28,7 @@
 
         <SwitchPreference
             android:id="@+id/auto_download"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="auto_download"
             android:summary="@string/auto_download_des"
             android:title="@string/auto_download"/>

@@ -15,6 +15,7 @@ android {
         //只保留对应的国际化
         resConfigs "zh"
         buildConfigField "String", "BUGLY", '"b8676c281b"'
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -36,7 +37,7 @@ android {
             shrinkResources false //default true
             minifyEnabled false //default true
             signingConfig signingConfigs.release
-            debuggable true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "IS_DEBUG", "true"//default false
             ndk {

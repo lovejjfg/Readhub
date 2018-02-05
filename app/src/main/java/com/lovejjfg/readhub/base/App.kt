@@ -47,7 +47,7 @@ class App : Application() {
 
         val autoDownload = PreferenceManager
                 .getDefaultSharedPreferences(this)
-                .getBoolean("auto_download", false)
+                .getBoolean("auto_download", true)
         Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
 
         Log.i("APP", "自动下载：$autoDownload")
