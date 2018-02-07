@@ -23,6 +23,7 @@ import android.animation.AnimatorListenerAdapter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -50,10 +51,14 @@ import io.reactivex.functions.Consumer
 abstract class RefreshFragment : BaseFragment() {
     protected val TAG = "HotTopicFragment"
     protected var order: String? = null
+    protected var latestOrder: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
     protected var adapter: PowerAdapter<DataItem>? = null
     var navigation: BottomNavigationView? = null
     var refresh: SwipeRefreshLayout? = null
+    var mIsVisible = true
+    var mIsAnimating = false
+    var mSnackbar: Snackbar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
@@ -107,65 +112,67 @@ abstract class RefreshFragment : BaseFragment() {
             item.isExband = !item.isExband!!
             adapter?.notifyItemChanged(position)
         }
-        var isVisible = true
-        var isAnimating = false
         rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (mSnackbar != null && mSnackbar?.isShown!!) {
+                    mSnackbar?.dismiss()
+                    return
+                }
                 if (recyclerView?.layoutManager is LinearLayoutManager) {
                     val first = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     if (first == 0) {
-                        navigation?.animate()
-                                ?.translationY(0f)
-                                ?.setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationStart(animation: Animator?) {
-                                        isAnimating = true
-                                    }
-
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        isAnimating = false
-                                        isVisible = true
-                                        super.onAnimationEnd(animation)
-                                    }
-                                })
-                                ?.start()
+                        showNav()
                     }
 
-                    if (!isAnimating && dy < 0 && !isVisible) {
-                        navigation?.animate()
-                                ?.translationY(0f)
-                                ?.setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationStart(animation: Animator?) {
-//                                        floatButton?.hide()
-                                        isAnimating = true
-                                    }
-
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        super.onAnimationEnd(animation)
-                                        isAnimating = false
-                                        isVisible = true
-                                    }
-                                })
-                                ?.start()
+                    if (!mIsAnimating && dy < 0 && !mIsVisible) {
+                        showNav()
                     }
-                    if (!isAnimating && dy > 0 && isVisible) {
-                        navigation?.animate()
-                                ?.translationY(navigation?.height!! + 0.5f)
-                                ?.setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationStart(animation: Animator?) {
-                                        isAnimating = true
-//                                        isVisible = true
-                                    }
-
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        isVisible = false
-                                        isAnimating = false
-                                    }
-                                })
+                    if (!mIsAnimating && dy > 0 && mIsVisible) {
+                        hideNav()
                     }
                 }
             }
         })
+    }
+
+    protected fun showNav() {
+        navigation?.animate()
+                ?.translationY(0f)
+                ?.setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
+                        mIsAnimating = true
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+                        mIsAnimating = false
+                        mIsVisible = true
+                    }
+                })
+                ?.start()
+    }
+
+    protected fun hideNav() {
+        hideNav(null)
+    }
+
+    protected fun hideNav(listenerAdapter: AnimatorListenerAdapter?) {
+        navigation?.animate()
+                ?.translationY(navigation?.height!! + 0.5f)
+                ?.setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
+                        mIsAnimating = true
+                        listenerAdapter?.onAnimationStart(animation)
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        mIsAnimating = false
+                        mIsVisible = false
+                        listenerAdapter?.onAnimationEnd(animation)
+                    }
+                })
+                ?.start()
     }
 
     abstract fun createAdapter(): PowerAdapter<DataItem>?

@@ -42,4 +42,6 @@ object Constants {
     val TYPE_DIVIDER = 4
     val TYPE_PARSE_IMG = 5
     val TYPE_PARSE_TEXT = 6
+
+    val TYPE_ALREADY_READ = 0xff0001
 }

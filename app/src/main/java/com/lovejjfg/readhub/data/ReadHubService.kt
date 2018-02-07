@@ -20,6 +20,7 @@ package com.lovejjfg.readhub.data
 
 import com.lovejjfg.readhub.data.topic.HotTopic
 import com.lovejjfg.readhub.data.topic.InstantView
+import com.lovejjfg.readhub.data.topic.NewCount
 import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.data.topic.develop.Develop
 import com.lovejjfg.readhub.data.topic.tech.Tech
@@ -59,6 +60,9 @@ interface ReadHubService {
 
     @GET("technews")
     fun devNewsMore(@Query("lastCursor") lastId: String, @Query("pageSize") size: Int): Observable<Response<Develop>>
+
+    @GET("topic/newCount")
+    fun newCount(@Query("latestCursor") lastId: String): Observable<Response<NewCount>>
 
 
 }

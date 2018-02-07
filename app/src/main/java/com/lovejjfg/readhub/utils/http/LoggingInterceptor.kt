@@ -41,8 +41,8 @@ class LoggingInterceptor : Interceptor {
             return chain.proceed(request)
         }
         val t1 = System.nanoTime()
-        Log.i(TAG, String.format("Sending request %s on %s%n%s",
-                request.url(), chain.connection(), request.headers()))
+        Log.i(TAG, String.format("Sending request method:%s  url:%s%n%s",
+                request.method(), request.url(), request.headers()))
         try {
             val copy = request.newBuilder().build()
             val buffer = Buffer()

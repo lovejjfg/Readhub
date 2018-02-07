@@ -27,11 +27,14 @@ import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
 import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
 
 /**
  * ReadHub
@@ -44,16 +47,30 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
 
     override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
-        val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_hot_topic, parent, false)
-        val hotTopicHolder = HotTopicHolder(inflate)
-        hotTopicHolder.dataBind = inflate
-        return hotTopicHolder
+        return when (viewType) {
+            Constants.TYPE_ALREADY_READ -> {
+                AlreadyReadHolder(UIUtil.inflate(R.layout.holder_already_read, parent!!))
+            }
+            else -> {
+                val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_hot_topic, parent, false)
+                val hotTopicHolder = HotTopicHolder(inflate)
+                hotTopicHolder.dataBind = inflate
+                hotTopicHolder
+            }
+        }
 
+    }
+
+    override fun getItemViewTypes(position: Int): Int {
+        if (TextUtils.isEmpty(list[position].id)) {
+            return Constants.TYPE_ALREADY_READ
+        }
+        return super.getItemViewTypes(position)
     }
 
     override fun getItemId(position: Int): Long {
         return if (position >= 0 && position < list.size) {
-            list[position].id?.hashCode()!!.toLong()
+            position.toLong()
         } else {
             super.getItemId(position)
         }
