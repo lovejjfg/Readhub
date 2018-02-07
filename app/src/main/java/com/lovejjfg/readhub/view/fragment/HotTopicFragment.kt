@@ -106,6 +106,7 @@ class HotTopicFragment : RefreshFragment() {
                     .setAction(R.string.refresh, {
                         rv_hot?.scrollToPosition(0)
                         refresh?.isRefreshing = true
+                        refresh(refresh)
                     })
 
         }

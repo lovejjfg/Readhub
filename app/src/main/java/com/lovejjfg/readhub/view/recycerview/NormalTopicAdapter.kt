@@ -73,6 +73,10 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
             itemBinding!!.tvDes.setOnClickListener {
                 itemView.performClick()
             }
+            itemBinding!!.tvDes.setOnLongClickListener {
+                itemView.performLongClick()
+            }
+
 
         }
 

@@ -1,5 +1,6 @@
 package com.lovejjfg.readhub.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.lovejjfg.readhub.R
@@ -72,6 +73,10 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     override fun onDestroy() {
         super.onDestroy()
         RxBus.instance.unSubscribe(this)
+    }
+
+    override fun getMyContext(): Context? {
+        return this
     }
 
 

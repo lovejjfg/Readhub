@@ -30,4 +30,10 @@
     <string name="net_error2">网络连接出问题啦</string>
     <string name="refresh">刷新</string>
     <string name="read_over">看完了，等下吧</string>
+    <string-array name="share_hints">
+        <item>都说这是一个大新闻，赶紧告诉小伙伴～～</item>
+        <item>原来都出新闻了，我居然还不知道～～</item>
+        <item>内容鉴定完毕，差点儿交了智商税0.0</item>
+        <item>要分享就赶紧的，看什么看～～</item>
+    </string-array>
 </resources>

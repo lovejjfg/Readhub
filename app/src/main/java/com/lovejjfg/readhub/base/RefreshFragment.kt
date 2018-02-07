@@ -20,17 +20,22 @@ package com.lovejjfg.readhub.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.view.toBitmap
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
@@ -42,6 +47,10 @@ import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.layout_refresh_recycler.*
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 
 /**
@@ -59,8 +68,11 @@ abstract class RefreshFragment : BaseFragment() {
     var mIsVisible = true
     var mIsAnimating = false
     var mSnackbar: Snackbar? = null
+    var mShareDialog: AlertDialog? = null
+    var hintArrays: Array<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hintArrays = resources.getStringArray(R.array.share_hints)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
                 Consumer {
                     if (isVisible) {
@@ -85,6 +97,7 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.layoutManager = LinearLayoutManager(activity)
         rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
+        handleLongClick()
         adapter?.setHasStableIds(true)
         adapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
         adapter?.attachRecyclerView(rvHot!!)
@@ -134,6 +147,48 @@ abstract class RefreshFragment : BaseFragment() {
                 }
             }
         })
+    }
+
+    private fun handleLongClick() {
+        adapter?.setOnItemLongClickListener { itemView, position, item ->
+            if (mShareDialog == null) {
+                mShareDialog = AlertDialog.Builder(mContext!!)
+                        .setTitle("分享")
+                        .setMessage("内容鉴定完毕，立即通知小伙伴？")
+                        .setNegativeButton("不发了", { _, _ ->
+                        }).create()
+            }
+            if (hintArrays != null) {
+                val d = Math.random() * 100
+                mShareDialog!!.setMessage(hintArrays!![d.toInt() % hintArrays!!.size])
+            }
+            mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, "发送", { _, _ ->
+                share(position)
+            })
+
+            mShareDialog!!.show()
+            return@setOnItemLongClickListener true
+        }
+    }
+
+    private fun share(position: Int): Boolean {
+        try {
+            val bitmap = rv_hot.findViewHolderForAdapterPosition(position)?.itemView?.toBitmap(Bitmap.Config.ARGB_8888)
+            val file = File(mContext?.externalCacheDir, String.format("readhub_%s", System.currentTimeMillis().toString()))
+            val os = BufferedOutputStream(FileOutputStream(file))
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, os)
+            os.close()
+            bitmap?.recycle()
+            val uriToImage = Uri.fromFile(file)
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage)
+            shareIntent.type = "image/jpeg"
+            startActivity(Intent.createChooser(shareIntent, "分享图片"))
+        } catch (e: Exception) {
+            return true
+        }
+        return false
     }
 
     protected fun showNav() {
@@ -215,6 +270,7 @@ abstract class RefreshFragment : BaseFragment() {
         if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
             outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
         }
+        mShareDialog?.dismiss()
         super.onSaveInstanceState(outState)
     }
 

@@ -33,9 +33,11 @@ import io.reactivex.disposables.Disposable
 
 abstract class BaseFragment : Fragment(), IBaseView {
     var mDisposables: CompositeDisposable? = null
+    var mContext: Context? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        mContext = context
         mDisposables?.dispose()
         mDisposables = CompositeDisposable()
     }
@@ -103,6 +105,10 @@ abstract class BaseFragment : Fragment(), IBaseView {
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
+    }
+
+    override fun getMyContext(): Context? {
+        return mContext
     }
 
     companion object {

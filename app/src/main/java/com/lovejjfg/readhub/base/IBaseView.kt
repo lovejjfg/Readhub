@@ -16,6 +16,7 @@
 
 package com.lovejjfg.readhub.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import io.reactivex.disposables.Disposable
@@ -48,5 +49,7 @@ interface IBaseView {
     fun beforeCreate(savedInstanceState: Bundle?)
 
     fun afterCreatedView(savedInstanceState: Bundle?)
+
+    fun getMyContext() : Context?
 
 }
