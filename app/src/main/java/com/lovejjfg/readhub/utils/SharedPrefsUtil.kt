@@ -18,7 +18,7 @@ package com.lovejjfg.readhub.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
+import androidx.content.edit
 
 
 internal object SharedPrefsUtil {
@@ -33,9 +33,9 @@ internal object SharedPrefsUtil {
      */
     fun putValue(context: Context, key: String,
                  value: Int) {
-        val sp = getEditor(context)
-        sp.putInt(key, value)
-        sp.commit()
+        getSharedPreferences(context).edit {
+            putInt(key, value)
+        }
     }
 
     /**
@@ -47,9 +47,9 @@ internal object SharedPrefsUtil {
      */
     fun putValue(context: Context, key: String,
                  value: Boolean) {
-        val sp = getEditor(context)
-        sp.putBoolean(key, value)
-        sp.commit()
+        getSharedPreferences(context).edit {
+            putBoolean(key, value)
+        }
     }
 
     /**
@@ -61,9 +61,9 @@ internal object SharedPrefsUtil {
      */
     fun putValue(context: Context, key: String,
                  value: String) {
-        val sp = getEditor(context)
-        sp.putString(key, value)
-        sp.commit()
+        getSharedPreferences(context).edit {
+            putString(key, value)
+        }
     }
 
     /**
@@ -75,9 +75,9 @@ internal object SharedPrefsUtil {
      */
     fun putValue(context: Context, key: String,
                  value: Float) {
-        val sp = getEditor(context)
-        sp.putFloat(key, value)
-        sp.commit()
+        getSharedPreferences(context).edit {
+            putFloat(key, value)
+        }
     }
 
     /**
@@ -89,9 +89,9 @@ internal object SharedPrefsUtil {
      */
     fun putValue(context: Context, key: String,
                  value: Long) {
-        val sp = getEditor(context)
-        sp.putLong(key, value)
-        sp.commit()
+        getSharedPreferences(context).edit {
+            putLong(key, value)
+        }
     }
 
     /**
@@ -163,10 +163,10 @@ internal object SharedPrefsUtil {
         return sp.getLong(key, defValue)
     }
 
-    //获取Editor实例
-    private fun getEditor(context: Context): Editor {
-        return getSharedPreferences(context).edit()
-    }
+//    //获取Editor实例
+//    private fun getEditor(context: Context): Editor {
+//        return getSharedPreferences(context).edit()
+//    }
 
     //获取SharedPreferences实例
     private fun getSharedPreferences(context: Context): SharedPreferences {
@@ -179,9 +179,9 @@ internal object SharedPrefsUtil {
      * @param context
      */
     fun deletePref(context: Context) {
-        val editor = getEditor(context)
-        editor.clear()
-        editor.commit()
+        getSharedPreferences(context).edit {
+            clear()
+        }
     }
 
     /**
@@ -191,8 +191,8 @@ internal object SharedPrefsUtil {
      * @param key
      */
     fun removeKey(context: Context, key: String) {
-        val editor = getEditor(context)
-        editor.remove(key)
-        editor.commit()
+        getSharedPreferences(context).edit {
+            remove(key)
+        }
     }
 }

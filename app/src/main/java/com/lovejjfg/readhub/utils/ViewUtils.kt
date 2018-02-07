@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import androidx.view.doOnPreDraw
 import java.text.DecimalFormat
 
 /**
@@ -156,38 +157,24 @@ object ViewUtils {
     }
 
     fun calculateMaxLines(textView: TextView) {
-        val observer = textView.viewTreeObserver
-        observer.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                val maxLines = textView.height / textView.lineHeight
-                textView.maxLines = maxLines
-                textView.viewTreeObserver.removeOnPreDrawListener(
-                        this)
-                return false
-            }
-
-        })
+        textView.doOnPreDraw {
+            val maxLines = textView.height / textView.lineHeight
+            textView.maxLines = maxLines
+        }
     }
 
     fun calculateTag1(first: TextView, second: TextView, text: String) {
-        val observer = first.viewTreeObserver
-        observer.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                val layout = first.layout
-                val lineStart = layout.getLineStart(0)
-                val lineEnd = layout.getLineEnd(0)
-                val substring = text.substring(lineStart, lineEnd)
-                val substring1 = text.substring(lineEnd, text.length)
-                Log.e("TAG", "onGlobalLayout: first:" + lineStart + "second:" + lineEnd)
-                Log.e("TAG", "onGlobalLayout: 第一行的内容：：" + substring)
-                //                first.setText(substring);
-                second.text = substring1
-                first.viewTreeObserver.removeOnPreDrawListener(
-                        this)
-                return false
-            }
-        })
-
+        first.doOnPreDraw {
+            val layout = first.layout
+            val lineStart = layout.getLineStart(0)
+            val lineEnd = layout.getLineEnd(0)
+            val substring = text.substring(lineStart, lineEnd)
+            val substring1 = text.substring(lineEnd, text.length)
+            Log.e("TAG", "onGlobalLayout: first:" + lineStart + "second:" + lineEnd)
+            Log.e("TAG", "onGlobalLayout: 第一行的内容：：" + substring)
+            //                first.setText(substring);
+            second.text = substring1
+        }
     }
 
     fun calculateTag2(tag: TextView, second: TextView, text: String) {

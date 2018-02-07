@@ -26,7 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="已经看到这里"
+        android:text="@string/read_over"
         android:textSize="@dimen/text_small"
         android:textColor="@color/colorAccent"
         />

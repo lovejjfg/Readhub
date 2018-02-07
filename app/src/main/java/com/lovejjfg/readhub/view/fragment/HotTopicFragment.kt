@@ -43,9 +43,7 @@ import kotlinx.android.synthetic.main.layout_refresh_recycler.*
  */
 class HotTopicFragment : RefreshFragment() {
 
-    var refreshCount: Int = 0
-
-
+    private var refreshCount: Int = 0
     override fun createAdapter(): PowerAdapter<DataItem>? {
         return HotTopicAdapter()
     }
@@ -107,7 +105,7 @@ class HotTopicFragment : RefreshFragment() {
                     .setActionTextColor(resources.getColor(R.color.colorAccent))
                     .setAction(R.string.refresh, {
                         rv_hot?.scrollToPosition(0)
-                        refresh(refresh)
+                        refresh?.isRefreshing = true
                     })
 
         }
@@ -146,7 +144,7 @@ class HotTopicFragment : RefreshFragment() {
                         } catch (e: Exception) {
                             //nothing to do
                         }
-                        latestOrder = data?.first()?.order
+                        latestOrder = data.first()?.order
                         adapter?.setList(data)
                     }
                     refresh?.isRefreshing = false
@@ -165,7 +163,7 @@ class HotTopicFragment : RefreshFragment() {
                     val data = it.data
                     order = data?.last()?.order
                     adapter?.appendList(data)
-                    Log.e(TAG, "loadMore:order:" + order)
+                    Log.i(TAG, "loadMore:order:" + order)
                 },
                 Consumer {
                     it.printStackTrace()

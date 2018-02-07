@@ -158,7 +158,9 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     protected fun hideNav(listenerAdapter: AnimatorListenerAdapter?) {
-        navigation?.animate()
+        val animate = navigation?.animate()
+
+        animate
                 ?.translationY(navigation?.height!! + 0.5f)
                 ?.setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator?) {

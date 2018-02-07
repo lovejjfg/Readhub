@@ -29,4 +29,5 @@
     <string name="net_time_out">网络连接超时</string>
     <string name="net_error2">网络连接出问题啦</string>
     <string name="refresh">刷新</string>
+    <string name="read_over">看完了，等下吧</string>
 </resources>
