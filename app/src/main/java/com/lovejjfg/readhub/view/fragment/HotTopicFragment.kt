@@ -35,7 +35,6 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.*
-import java.util.*
 
 
 /**
@@ -129,23 +128,12 @@ class HotTopicFragment : RefreshFragment() {
         DataManager.subscribe(this, DataManager.init().hotTopic(),
                 Consumer {
                     if (it.data?.isNotEmpty()!!) {
-                        adapter?.clearList()
-                        val data = ArrayList(it.data)
-                        order = data.last()?.order
-                        //todo 如果有置顶的情况 这里的判断估计有问题呢
-                        val first = data.firstOrNull {
+                        order = it.data.last()?.order
+                        adapter?.setList(it.data)
+                        handleAlreadRead(it.data,{
                             TextUtils.equals(it?.order, latestOrder)
-                        }
-                        if (first != null) {
-                            val indexOf = data.indexOf(first)
-                            if (indexOf != 0) {
-                                println("插入更新位置：$indexOf")
-                                val element = DataItem()
-                                data.add(indexOf, element)
-                            }
-                        }
-                        latestOrder = data.first()?.order
-                        adapter?.setList(data)
+                        })
+                        latestOrder = it.data.first()?.order
                     }
                     refresh?.isRefreshing = false
                 },

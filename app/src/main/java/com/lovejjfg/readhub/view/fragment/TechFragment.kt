@@ -20,6 +20,7 @@ package com.lovejjfg.readhub.view.fragment
 
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import com.lovejjfg.powerrecycle.PowerAdapter
@@ -52,14 +53,19 @@ class TechFragment : RefreshFragment() {
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().tech(),
                 Consumer {
-                    val data = it.data
-                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
-                    Log.e(TAG, "order:" + order)
-                    adapter?.setList(data)
+
+                    if (it.data?.isNotEmpty()!!) {
+                        order = DateUtil.parseTimeToMillis(it.data.last()?.publishDate)
+                        adapter?.setList(it.data)
+                        handleAlreadRead(it.data, {
+                            TextUtils.equals(it?.id, latestOrder)
+                        })
+                        latestOrder = it.data.first()?.id
+                    }
                     refresh?.isRefreshing = false
                 },
                 Consumer {
-                    Log.e(TAG, "error:", it)
+                    Log.i(TAG, "error:", it)
                     adapter?.showError()
                     handleError(it)
                     refresh?.isRefreshing = false
@@ -72,7 +78,7 @@ class TechFragment : RefreshFragment() {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
                     adapter?.appendList(data)
-                    Log.e(TAG, "order:" + order)
+                    Log.i(TAG, "order:" + order)
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)

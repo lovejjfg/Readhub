@@ -42,6 +42,7 @@ import androidx.util.tryWrite
 import androidx.view.toBitmap
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
+import com.lovejjfg.powerrecycle.manager.FixedLinearLayoutManager
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
@@ -100,7 +101,7 @@ abstract class RefreshFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         println("view 创建啦：${toString()}")
         val rvHot = binding?.rvHot
-        rvHot?.layoutManager = LinearLayoutManager(activity)
+        rvHot?.layoutManager = FixedLinearLayoutManager(activity)
         rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
         handleLongClick()
@@ -302,6 +303,57 @@ abstract class RefreshFragment : BaseFragment() {
             mShareDialog?.dismiss()
             super.onSaveInstanceState(outState)
         } catch (e: Exception) {
+        }
+    }
+
+//    protected fun handleAlreadRead(data: List<DataItem?>) {
+//        //todo 如果有置顶的情况 这里的判断估计有问题呢
+//        try {
+//            val first = data.firstOrNull {
+//                TextUtils.equals(it?.order, latestOrder)
+//            }
+//            if (first != null) {
+//                val indexOf = data.indexOf(first)
+//                if (indexOf == 0 || indexOf == -1) {
+//                    val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
+//                    if (position != -1) {
+//                        adapter?.removeItem(position!!)
+//                    }
+//                } else {
+//                    println("插入更新位置：$indexOf")
+//                    val element = DataItem()
+//                    adapter?.insertItem(indexOf, element)
+//                }
+//            }
+//        } catch (e: Exception) {
+//            CrashReport.postCatchedException(e)
+//        }
+//    }
+
+    protected inline fun handleAlreadRead(data: List<DataItem?>, check: (item: DataItem?) -> Boolean) {
+        //todo 如果有置顶的情况 这里的判断估计有问题呢
+        try {
+            val first = data.firstOrNull {
+                check(it)
+            }
+            println(first?.id)
+            if (first != null) {
+                val indexOf = data.indexOf(first)
+                println("获取到的位置：$indexOf")
+                if (indexOf == 0 || indexOf == -1) {
+                    println("位置不满足条件：$indexOf")
+                    val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
+                    if (position != -1) {
+                        adapter?.removeItem(position!!)
+                    }
+                } else {
+                    println("插入更新位置：$indexOf")
+                    val element = DataItem()
+                    adapter?.insertItem(indexOf, element)
+                }
+            }
+        } catch (e: Exception) {
+            CrashReport.postCatchedException(e)
         }
     }
 

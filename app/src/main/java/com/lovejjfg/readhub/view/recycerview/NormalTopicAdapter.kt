@@ -25,9 +25,12 @@ import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.HolderNormalTopicBinding
 import com.lovejjfg.readhub.utils.DateUtil
+import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
 
 /**
  * ReadHub
@@ -36,27 +39,43 @@ import com.lovejjfg.readhub.utils.DateUtil
 
 class NormalTopicAdapter : PowerAdapter<DataItem>() {
     override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
-        val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_normal_topic, parent, false)
-        return NormalTopicHolder(topicBinding)
+        return when (viewType) {
+            Constants.TYPE_ALREADY_READ -> {
+                AlreadyReadHolder(UIUtil.inflate(R.layout.holder_already_read, parent!!))
+            }
+            else -> {
+                val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_normal_topic, parent, false)
+                return NormalTopicHolder(topicBinding)
+            }
+        }
+    }
+
+    override fun getItemViewTypes(position: Int): Int {
+        if (TextUtils.isEmpty(list[position].id)) {
+            return Constants.TYPE_ALREADY_READ
+        }
+        return super.getItemViewTypes(position)
     }
 
     override fun getItemId(position: Int): Long {
-        return if (position > 0 && position < list.size) {
-            position.toLong()
-        } else {
+        return try {
+            if (position >= 0 && position < list.size) {
+                list[position].id!!.hashCode().toLong()
+            } else {
+                super.getItemId(position)
+            }
+        } catch (e: Exception) {
             super.getItemId(position)
         }
     }
 
     override fun onViewHolderBind(holder: PowerHolder<DataItem>?, position: Int) {
-        println("onViewHolderBind::+${position}")
         holder!!.onBind(list[position])
     }
 
     inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {
         var itemBinding: HolderNormalTopicBinding? = itemView
         override fun onBind(t: DataItem?) {
-            println("title:" + t?.title)
             itemBinding!!.topic = t
             val text: String? = if (TextUtils.isEmpty(t?.authorName)) {
                 t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)

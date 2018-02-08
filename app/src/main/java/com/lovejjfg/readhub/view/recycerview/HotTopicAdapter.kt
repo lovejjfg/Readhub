@@ -69,12 +69,15 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
     }
 
     override fun getItemId(position: Int): Long {
-        return if (position >= 0 && position < list.size) {
-            position.toLong()
-        } else {
+        return try {
+            if (position >= 0 && position < list.size) {
+                list[position].id!!.hashCode().toLong()
+            } else {
+                super.getItemId(position)
+            }
+        } catch (e: Exception) {
             super.getItemId(position)
         }
-
     }
 
     inner class HotTopicHolder(itemView: HolderHotTopicBinding) : PowerHolder<DataItem>(itemView.root) {
