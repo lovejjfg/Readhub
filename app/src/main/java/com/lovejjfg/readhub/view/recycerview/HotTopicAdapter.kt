@@ -87,7 +87,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                 val rvItem = dataBind?.rvItem
                 rvItem?.layoutManager = LinearLayoutManager(context)
                 val itemAdapter = HotTopicItemAdapter()
-                itemAdapter.setOnItemClickListener { itemView, position, item ->
+                itemAdapter.setOnItemClickListener { _, position, _ ->
                     val mobileUrl = t?.newsArray!![position]?.mobileUrl
                     JumpUitl.jumpWeb(context, mobileUrl)
                 }

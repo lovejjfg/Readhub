@@ -23,11 +23,11 @@ import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
+import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.SharedPrefsUtil
@@ -37,25 +37,24 @@ import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
-import com.tencent.bugly.crashreport.CrashReport
 
 class HomeActivity : BaseActivity() {
 
+    @Suppress("PropertyName")
     val TAG = "HOME"
-    var viewBind: ActivityHomeBinding? = null
-    var hotTopicFragment: Fragment? = null
-    var techFragment: Fragment? = null
-    var developFragment: Fragment? = null
+    private var viewBind: ActivityHomeBinding? = null
+    private var hotTopicFragment: Fragment? = null
+    private var techFragment: Fragment? = null
+    private var developFragment: Fragment? = null
     var navigation: BottomNavigationView? = null
-    var mFirebaseAnalytics: FirebaseAnalytics? = null
-    var currentId: Int = R.id.navigation_home
+    private var currentId: Int = R.id.navigation_home
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         currentId = item.itemId
         when (item.itemId) {
             R.id.navigation_home -> {
-                logEvent("热门服务")
+                logEvent(this, getString(R.string.title_home))
                 fragmentManager.beginTransaction()
                         .show(hotTopicFragment)
                         .hide(techFragment)
@@ -64,7 +63,7 @@ class HomeActivity : BaseActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                logEvent("科技动态")
+                logEvent(this, getString(R.string.title_tech))
                 fragmentManager.beginTransaction()
                         .show(techFragment)
                         .hide(hotTopicFragment)
@@ -73,7 +72,7 @@ class HomeActivity : BaseActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-                logEvent("开发资讯")
+                logEvent(this, getString(R.string.title_dev))
                 fragmentManager.beginTransaction()
                         .show(developFragment)
                         .hide(hotTopicFragment)
@@ -86,7 +85,7 @@ class HomeActivity : BaseActivity() {
             }
         }
     }
-    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener { item ->
+    private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener {
         if (UIUtil.doubleClick()) {
             RxBus.instance.post(ScrollEvent())
         }
@@ -96,8 +95,7 @@ class HomeActivity : BaseActivity() {
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
         checkPermissions()
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        viewBind = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
+        viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         val navigation1 = viewBind?.navigation
         navigation = navigation1
         val toolbar = viewBind?.toolbar
@@ -149,23 +147,10 @@ class HomeActivity : BaseActivity() {
             RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .subscribe({
                         SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
-                        if (it) {
-                            logEvent("授权成功！")
-                        }
                     }, { it.printStackTrace() })
         }
     }
 
-    fun logEvent(name: String) {
-        try {
-            val params = Bundle()
-            params.putString("tab", name)
-            mFirebaseAnalytics?.logEvent("tab点击", params)
-        } catch (e: Exception) {
-            CrashReport.postCatchedException(e)
-        }
-
-    }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         if (currentId != 0) {

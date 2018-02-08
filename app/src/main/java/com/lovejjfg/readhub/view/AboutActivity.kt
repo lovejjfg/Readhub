@@ -51,7 +51,7 @@ class AboutActivity : AppCompatActivity() {
         recyclerView?.layoutManager = LinearLayoutManager(this)
         aboutAdapter?.attachRecyclerView(recyclerView!!)
         initData()
-        aboutAdapter?.setOnItemClickListener({ itemView, position, item ->
+        aboutAdapter?.setOnItemClickListener({ _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
         })
     }

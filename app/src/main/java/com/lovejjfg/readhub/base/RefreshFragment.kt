@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.base
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
@@ -25,16 +26,19 @@ import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.AtomicFile
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.util.tryWrite
 import androidx.view.toBitmap
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
@@ -42,15 +46,16 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
+import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
+import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.*
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 
 /**
@@ -58,18 +63,19 @@ import java.io.FileOutputStream
  * Created by Joe at 2017/7/30.
  */
 abstract class RefreshFragment : BaseFragment() {
+    @Suppress("PropertyName")
     protected val TAG = "HotTopicFragment"
     protected var order: String? = null
     protected var latestOrder: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
     protected var adapter: PowerAdapter<DataItem>? = null
-    var navigation: BottomNavigationView? = null
+    private var navigation: BottomNavigationView? = null
     var refresh: SwipeRefreshLayout? = null
     var mIsVisible = true
     var mIsAnimating = false
-    var mSnackbar: Snackbar? = null
-    var mShareDialog: AlertDialog? = null
-    var hintArrays: Array<String>? = null
+    var mSnackBar: Snackbar? = null
+    private var mShareDialog: AlertDialog? = null
+    private var hintArrays: Array<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hintArrays = resources.getStringArray(R.array.share_hints)
@@ -108,7 +114,7 @@ abstract class RefreshFragment : BaseFragment() {
             }
         }
         adapter?.totalCount = Int.MAX_VALUE
-        println("tag:${tag};;isHidden:${isHidden}")
+        println("tag:$tag;;isHidden:$isHidden")
         if (savedInstanceState == null) {
             if (!isHidden && adapter!!.list.isEmpty()) {
                 refresh?.isRefreshing = true
@@ -128,8 +134,8 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (mSnackbar != null && mSnackbar?.isShown!!) {
-                    mSnackbar?.dismiss()
+                if (mSnackBar != null && mSnackBar?.isShown!!) {
+                    mSnackBar?.dismiss()
                     return
                 }
                 if (recyclerView?.layoutManager is LinearLayoutManager) {
@@ -150,45 +156,67 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun handleLongClick() {
-        adapter?.setOnItemLongClickListener { itemView, position, item ->
-            if (mShareDialog == null) {
-                mShareDialog = AlertDialog.Builder(mContext!!)
-                        .setTitle("分享")
-                        .setMessage("内容鉴定完毕，立即通知小伙伴？")
-                        .setNegativeButton("不发了", { _, _ ->
-                        }).create()
+        adapter?.setOnItemLongClickListener { _, position, _ ->
+            val quick = PreferenceManager
+                    .getDefaultSharedPreferences(mContext)
+                    .getBoolean(getString(R.string.quick_share), false)
+            if (!quick) {
+                showShareDialog(position)
+            } else {
+                shareWithCheck(position)
             }
-            if (hintArrays != null) {
-                val d = Math.random() * 100
-                mShareDialog!!.setMessage(hintArrays!![d.toInt() % hintArrays!!.size])
-            }
-            mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, "发送", { _, _ ->
-                share(position)
-            })
-
-            mShareDialog!!.show()
             return@setOnItemLongClickListener true
         }
     }
 
-    private fun share(position: Int): Boolean {
+    private fun showShareDialog(position: Int) {
+        if (mShareDialog == null) {
+            mShareDialog = AlertDialog.Builder(mContext!!)
+                    .setTitle(getString(R.string.share))
+                    .setMessage(getString(R.string.share_hint_default))
+                    .setNegativeButton(getString(R.string.not_send), { _, _ ->
+                    }).create()
+        }
+        if (hintArrays != null) {
+            val d = Math.random() * 100
+            mShareDialog!!.setMessage(hintArrays!![d.toInt() % hintArrays!!.size])
+        }
+        mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send), { _, _ ->
+            shareWithCheck(position)
+        })
+
+        mShareDialog!!.show()
+    }
+
+    private fun shareWithCheck(position: Int) {
+        RxPermissions(activity).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe({
+                    if (!it) {
+                        showToast(getString(R.string.maybe_fail_hint))
+                    }
+                    doShare(position)
+                }, { it.printStackTrace() })
+    }
+
+    private fun doShare(position: Int) {
         try {
             val bitmap = rv_hot.findViewHolderForAdapterPosition(position)?.itemView?.toBitmap(Bitmap.Config.ARGB_8888)
-            val file = File(mContext?.externalCacheDir, String.format("readhub_%s", System.currentTimeMillis().toString()))
-            val os = BufferedOutputStream(FileOutputStream(file))
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, os)
-            os.close()
-            bitmap?.recycle()
+            val file = File(mContext?.externalCacheDir, String.format(getString(R.string.img_name), System.currentTimeMillis().toString()))
+            AtomicFile(file).tryWrite {
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+                bitmap?.recycle()
+            }
             val uriToImage = Uri.fromFile(file)
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage)
-            shareIntent.type = "image/jpeg"
-            startActivity(Intent.createChooser(shareIntent, "分享图片"))
+            shareIntent.type = Constants.IMAGE_TYPE
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_news)))
+            FirebaseUtils.logEvent(mContext!!, getString(R.string.share), Pair(Constants.NEWS_ID, adapter?.list!![position]?.id))
         } catch (e: Exception) {
-            return true
+            e.printStackTrace()
+            CrashReport.postCatchedException(e)
         }
-        return false
     }
 
     protected fun showNav() {
@@ -267,11 +295,14 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
-            outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+        try {
+            if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
+                outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+            }
+            mShareDialog?.dismiss()
+            super.onSaveInstanceState(outState)
+        } catch (e: Exception) {
         }
-        mShareDialog?.dismiss()
-        super.onSaveInstanceState(outState)
     }
 
 

@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.view
 
+import android.annotation.SuppressLint
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.http.SslError
@@ -28,6 +29,7 @@ import android.text.TextUtils
 import android.view.View
 import android.webkit.*
 import android.widget.ProgressBar
+import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityWebBinding
@@ -35,10 +37,11 @@ import com.lovejjfg.readhub.utils.UIUtil
 
 class WebActivity : AppCompatActivity() {
 
-    var mWeb: WebView? = null
+    private var mWeb: WebView? = null
     var loading: ProgressBar? = null
     var toolbar: Toolbar? = null
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -49,7 +52,7 @@ class WebActivity : AppCompatActivity() {
         loading = viewBind.pb
         toolbar = viewBind?.toolbar
         toolbar?.setNavigationOnClickListener({ finish() })
-        toolbar?.setOnClickListener{
+        toolbar?.setOnClickListener {
             if (UIUtil.doubleClick()) {
                 onTitleDoubleClick()
             }
@@ -62,9 +65,7 @@ class WebActivity : AppCompatActivity() {
         }
         mWeb!!.isVerticalScrollBarEnabled = false
         mWeb!!.isHorizontalScrollBarEnabled = false
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        //            WebView.setWebContentsDebuggingEnabled(true);
-        //        }
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG)
         val webSettings = mWeb!!.settings
         webSettings!!.javaScriptEnabled = true
         //        webSettings.setUseWideViewPort(true);

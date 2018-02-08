@@ -9,12 +9,15 @@
         开源地址：https://github.com/lovejjfg/Readhub\n\n
         联系我：lovejjfg@gmail.com\n\n
         这不是官方客户端</string>
-
+    <!--setting-->
     <string name="pref_browser">浏览器</string>
     <string name="pref_browser_des">是否使用系统自带浏览器浏览</string>
+    <string name="pref_share">快速分享</string>
+    <string name="pref_share_des">不展示弹窗直接分享</string>
     <string name="normal">通用</string>
     <string name="download">下载</string>
     <string name="browser_use">browser_use</string>
+    <string name="quick_share">quick_share</string>
     <string name="home_first">home_first</string>
     <string name="pref_update_des">有版本更新是否弹窗提醒</string>
     <string name="pref_update">更新提醒</string>
@@ -23,6 +26,8 @@
     <string name="manual_update">manual_update</string>
     <string name="auto_download">自动下载更新</string>
     <string name="auto_download_des">WI-FI 网络自动下载更新</string>
+
+
     <string name="cancel">取消</string>
     <string name="confirm">立即下载</string>
     <string name="net_unavailable">请确认你的网络连接</string>
@@ -30,8 +35,17 @@
     <string name="net_error2">网络连接出问题啦</string>
     <string name="refresh">刷新</string>
     <string name="read_over">看完了，等下吧</string>
+
+    <!--share-->
+    <string name="share">分享</string>
+    <string name="send">发送</string>
+    <string name="not_send">不发了</string>
+    <string name="share_hint_default">内容鉴定完毕，立即通知小伙伴～～</string>
+    <string name="maybe_fail_hint">文件读写权限无法获取，分享可能失败。。。</string>
+    <string name="share_news">分享新闻</string>
+    <string name="img_name">readhub_%s.jpg</string>
     <string-array name="share_hints">
-        <item>都说这是一个大新闻，赶紧告诉小伙伴～～</item>
+        <item>@string/share_hint_default</item>
         <item>原来都出新闻了，我居然还不知道～～</item>
         <item>内容鉴定完毕，差点儿交了智商税0.0</item>
         <item>要分享就赶紧的，看什么看～～</item>

@@ -17,6 +17,11 @@ android {
         buildConfigField "String", "BUGLY", '"b8676c281b"'
         multiDexEnabled true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 
     signingConfigs {
         release {
@@ -92,7 +97,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    implementation 'com.lovejjfg.powerrecycle:powerrecycle:1.2.2'
+    implementation 'com.lovejjfg.powerrecycle:powerrecycle:1.2.3-1'
     implementation 'javax.annotation:javax.annotation-api:1.2'
     implementation 'com.github.bumptech.glide:glide:4.0.0'
     kapt 'com.github.bumptech.glide:compiler:4.0.0'

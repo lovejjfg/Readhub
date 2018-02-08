@@ -20,7 +20,6 @@ import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
-import okio.Buffer
 import okio.BufferedSource
 import java.io.IOException
 import java.nio.charset.Charset
@@ -43,14 +42,7 @@ class LoggingInterceptor : Interceptor {
         val t1 = System.nanoTime()
         Log.i(TAG, String.format("Sending request method:%s  url:%s%n%s",
                 request.method(), request.url(), request.headers()))
-        try {
-            val copy = request.newBuilder().build()
-            val buffer = Buffer()
-            val body = copy.body()
-            if (body != null) {
-                body.writeTo(buffer)
-                val s = buffer.readUtf8()
-            }
+        return try {
             val response = chain.proceed(request)
             if (response.isSuccessful) {
                 logResponse(t1, response)
@@ -58,10 +50,10 @@ class LoggingInterceptor : Interceptor {
                 logResponse(t1, response)
                 Log.e(TAG, "code:" + response.code() + " msg:" + response.message())
             }
-            return response
+            response
         } catch (e: IOException) {
             Log.e(TAG, "intercept: ", e)
-            return chain.proceed(request)
+            chain.proceed(request)
         }
     }
 

@@ -42,6 +42,7 @@ class App : Application() {
         val notify = PreferenceManager
                 .getDefaultSharedPreferences(this)
                 .getBoolean("auto_update", true)
+
         Log.i("APP", "自动更新：$notify")
 
 

@@ -67,7 +67,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-       //todo add padding
         val childCount = childCount
         val w = View.MeasureSpec.getSize(widthMeasureSpec)
         measureChildren(widthMeasureSpec, heightMeasureSpec)

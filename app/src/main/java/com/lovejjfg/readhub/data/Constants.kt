@@ -23,25 +23,27 @@ package com.lovejjfg.readhub.data
  * Created by Joe at 2017/8/4.
  */
 object Constants {
-    val API_RELEASE = "https://api.readhub.me/"
+    const val API_RELEASE = "https://api.readhub.me/"
 
-    val RELATIVE_ITEMS = "relative_items"
-    val URL: String = "url"
-    val HOT: String = "hotTopic"
-    val TECH: String = "tech"
-    val DEV: String = "developer"
-    val ID: String = "id"
-    val EXTRA: String = "extra"
-    val TAB_ID: String = "tab_id"
-    val SHOW_PROMISSION: String = "SHOW_PROMISSION"
-    val DATA: String = "data"
+    const val RELATIVE_ITEMS = "relative_items"
+    const val URL: String = "url"
+    const val HOT: String = "hotTopic"
+    const val TECH: String = "tech"
+    const val DEV: String = "developer"
+    const val ID: String = "id"
+//    const val EXTRA: String = "extra"
+    const val TAB_ID: String = "tab_id"
+    const val SHOW_PROMISSION: String = "SHOW_PROMISSION"
+    const val DATA: String = "data"
+    const val NEWS_ID = "newsId"
+    const val IMAGE_TYPE = "image/jpeg"
     //
-    val TYPE_HEADER = 1
-    val TYPE_NEWS = 2
-    val TYPE_TIMELINE = 3
-    val TYPE_DIVIDER = 4
-    val TYPE_PARSE_IMG = 5
-    val TYPE_PARSE_TEXT = 6
+    const val TYPE_HEADER = 1
+    const val TYPE_NEWS = 2
+    const val TYPE_TIMELINE = 3
+    const val TYPE_DIVIDER = 4
+    const val TYPE_PARSE_IMG = 5
+    const val TYPE_PARSE_TEXT = 6
 
-    val TYPE_ALREADY_READ = 0xff0001
+    const val TYPE_ALREADY_READ = 0xff0001
 }

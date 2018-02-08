@@ -35,6 +35,7 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.*
+import java.util.*
 
 
 /**
@@ -100,8 +101,9 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     private fun makeSnack(callback: BaseTransientBottomBar.BaseCallback<Snackbar>?) {
-        if (mSnackbar == null) {
-            mSnackbar = Snackbar.make(view, "有${refreshCount}条更新", Snackbar.LENGTH_INDEFINITE)
+        if (mSnackBar == null) {
+            @Suppress("DEPRECATION")
+            mSnackBar = Snackbar.make(view, "有${refreshCount}条更新", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(resources.getColor(R.color.colorAccent))
                     .setAction(R.string.refresh, {
                         rv_hot?.scrollToPosition(0)
@@ -111,10 +113,10 @@ class HotTopicFragment : RefreshFragment() {
 
         }
         if (callback != null) {
-            mSnackbar!!.addCallback(callback)
+            mSnackBar!!.addCallback(callback)
         }
-        mSnackbar!!.setText("有${refreshCount}条更新")
-        mSnackbar!!.show()
+        mSnackBar!!.setText("有${refreshCount}条更新")
+        mSnackBar!!.show()
     }
 
     override fun onResume() {
@@ -123,27 +125,24 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        mSnackbar?.dismiss()
-        adapter?.clearList()
+        mSnackBar?.dismiss()
         DataManager.subscribe(this, DataManager.init().hotTopic(),
                 Consumer {
                     if (it.data?.isNotEmpty()!!) {
+                        adapter?.clearList()
                         val data = ArrayList(it.data)
                         order = data.last()?.order
-                        try {
-                            val first = data.firstOrNull {
-                                TextUtils.equals(it?.order, latestOrder)
+                        //todo 如果有置顶的情况 这里的判断估计有问题呢
+                        val first = data.firstOrNull {
+                            TextUtils.equals(it?.order, latestOrder)
+                        }
+                        if (first != null) {
+                            val indexOf = data.indexOf(first)
+                            if (indexOf != 0) {
+                                println("插入更新位置：$indexOf")
+                                val element = DataItem()
+                                data.add(indexOf, element)
                             }
-                            if (first != null) {
-                                val indexOf = data.indexOf(first)
-                                if (indexOf != 0) {
-                                    println("插入更新位置：$indexOf")
-                                    val element = DataItem()
-                                    data.add(indexOf, element)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            //nothing to do
                         }
                         latestOrder = data.first()?.order
                         adapter?.setList(data)

@@ -29,7 +29,6 @@ class TopicDetailActivity : BaseActivity() {
     private var topicDetailAdapter: PowerAdapter<DetailItems>? = null
     var toolbar: Toolbar? = null
     private var refresh: SwipeRefreshLayout? = null
-    //todo loadmoreActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         id = intent.getStringExtra(Constants.ID)
@@ -51,14 +50,13 @@ class TopicDetailActivity : BaseActivity() {
         topicDetailAdapter = TopicDetailAdapter()
         topicDetailAdapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
         topicDetailAdapter!!.attachRecyclerView(rvHot!!)
-        topicDetailAdapter!!.setOnItemClickListener({ itemView, position, item ->
+        topicDetailAdapter!!.setOnItemClickListener({ _, position, item ->
             when (topicDetailAdapter!!.getItemViewTypes(position)) {
                 Constants.TYPE_NEWS -> {
                     JumpUitl.jumpWeb(this, item?.newsItem?.mobileUrl)
                 }
             }
         })
-
 
     }
 
