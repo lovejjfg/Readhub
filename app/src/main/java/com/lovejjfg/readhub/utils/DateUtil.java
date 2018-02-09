@@ -41,11 +41,11 @@ public class DateUtil {
             SimpleDateFormat sdf = initDateFormat();
             Date d = sdf.parse(date);
             String s = DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
-            if (!TextUtils.isEmpty(s) && (s.startsWith("0分钟"))) {
+            if (!TextUtils.isEmpty(s) && s.startsWith("0分钟")) {
                 return "刚刚";
             }
-            if (!TextUtils.isEmpty(s) && TextUtils.equals("0 minutes ago", s)) {
-                return "just now";
+            if (!TextUtils.isEmpty(s) && s.startsWith("0 minutes")) {
+                return "Just Now";
             }
             return s;
         } catch (Exception e) {
