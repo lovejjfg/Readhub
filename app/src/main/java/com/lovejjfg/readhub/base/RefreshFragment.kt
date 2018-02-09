@@ -68,13 +68,14 @@ abstract class RefreshFragment : BaseFragment() {
     protected val TAG = "HotTopicFragment"
     protected var order: String? = null
     protected var latestOrder: String? = null
+    protected var preOrder: String? = null
     protected var binding: LayoutRefreshRecyclerBinding? = null
     protected var adapter: PowerAdapter<DataItem>? = null
     private var navigation: BottomNavigationView? = null
     var refresh: SwipeRefreshLayout? = null
     var mIsVisible = true
     var mIsAnimating = false
-    var mSnackBar: Snackbar? = null
+    //    var mSnackBar: Snackbar? = null
     private var mShareDialog: AlertDialog? = null
     private var hintArrays: Array<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +96,14 @@ abstract class RefreshFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)
         val root = binding?.root
         return root!!
+    }
+
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
+        if (savedInstanceState != null) {
+            latestOrder = savedInstanceState.getString(Constants.CURRENT_ID)
+            preOrder = savedInstanceState.getString(Constants.PRE_ID)
+        }
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -135,22 +144,24 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (mSnackBar != null && mSnackBar?.isShown!!) {
-                    mSnackBar?.dismiss()
+                if (mSnackBar != null && mSnackBar!!.isShown) {
+                    mSnackBar!!.dismiss()
                     return
                 }
                 if (recyclerView?.layoutManager is LinearLayoutManager) {
                     val first = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     if (first == 0) {
                         showNav()
+                        return
                     }
-
-                    if (!mIsAnimating && dy < 0 && !mIsVisible) {
-                        showNav()
-                    }
-                    if (!mIsAnimating && dy > 0 && mIsVisible) {
-                        hideNav()
-                    }
+                }
+                if (!mIsAnimating && dy < 0 && !mIsVisible) {
+                    showNav()
+                    return
+                }
+                if (!mIsAnimating && dy > 0 && mIsVisible) {
+                    hideNav()
+                    return
                 }
             }
         })
@@ -242,9 +253,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     protected fun hideNav(listenerAdapter: AnimatorListenerAdapter?) {
-        val animate = navigation?.animate()
-
-        animate
+        navigation?.animate()
                 ?.translationY(navigation?.height!! + 0.5f)
                 ?.setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator?) {
@@ -280,6 +289,7 @@ abstract class RefreshFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         RxBus.instance.unSubscribe(this)
+        mSnackBar = null
     }
 
 
@@ -299,6 +309,8 @@ abstract class RefreshFragment : BaseFragment() {
         try {
             if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
                 outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+                outState?.putString(Constants.CURRENT_ID, latestOrder)
+                outState?.putString(Constants.PRE_ID, preOrder)
             }
             mShareDialog?.dismiss()
             super.onSaveInstanceState(outState)
@@ -306,32 +318,9 @@ abstract class RefreshFragment : BaseFragment() {
         }
     }
 
-//    protected fun handleAlreadRead(data: List<DataItem?>) {
-//        //todo 如果有置顶的情况 这里的判断估计有问题呢
-//        try {
-//            val first = data.firstOrNull {
-//                TextUtils.equals(it?.order, latestOrder)
-//            }
-//            if (first != null) {
-//                val indexOf = data.indexOf(first)
-//                if (indexOf == 0 || indexOf == -1) {
-//                    val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
-//                    if (position != -1) {
-//                        adapter?.removeItem(position!!)
-//                    }
-//                } else {
-//                    println("插入更新位置：$indexOf")
-//                    val element = DataItem()
-//                    adapter?.insertItem(indexOf, element)
-//                }
-//            }
-//        } catch (e: Exception) {
-//            CrashReport.postCatchedException(e)
-//        }
-//    }
-
-    protected inline fun handleAlreadRead(data: List<DataItem?>, check: (item: DataItem?) -> Boolean) {
+    protected inline fun handleAlreadRead(loadMore: Boolean, data: List<DataItem?>, check: (item: DataItem?) -> Boolean) {
         //todo 如果有置顶的情况 这里的判断估计有问题呢
+        println("currentId:$latestOrder;;preId::$preOrder")
         try {
             val first = data.firstOrNull {
                 check(it)
@@ -339,22 +328,42 @@ abstract class RefreshFragment : BaseFragment() {
             println(first?.id)
             if (first != null) {
                 val indexOf = data.indexOf(first)
-                println("获取到的位置：$indexOf")
-                if (indexOf == 0 || indexOf == -1) {
-                    println("位置不满足条件：$indexOf")
-                    val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
-                    if (position != -1) {
-                        adapter?.removeItem(position!!)
+                if (indexOf == -1) {
+                    return
+                }
+                if (indexOf == 0) {
+                    println("没有新的更新：$indexOf")
+                    if (!loadMore) {
+                        removeRead()
+                        showToast(getString(R.string.wait_away))
                     }
                 } else {
+                    removeRead()
                     println("插入更新位置：$indexOf")
                     val element = DataItem()
                     adapter?.insertItem(indexOf, element)
+                    preOrder = latestOrder
                 }
             }
         } catch (e: Exception) {
             CrashReport.postCatchedException(e)
         }
+    }
+
+    fun removeRead() {
+        try {
+            val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
+            if (position != -1) {
+                adapter?.removeItem(position!!)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        @Volatile
+        var mSnackBar: Snackbar? = null
     }
 
 

@@ -62,7 +62,7 @@ class HomeActivity : BaseActivity() {
                         .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_tech -> {
                 logEvent(this, getString(R.string.title_tech))
                 fragmentManager.beginTransaction()
                         .show(techFragment)
@@ -71,7 +71,7 @@ class HomeActivity : BaseActivity() {
                         .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_dev -> {
                 logEvent(this, getString(R.string.title_dev))
                 fragmentManager.beginTransaction()
                         .show(developFragment)
@@ -166,6 +166,15 @@ class HomeActivity : BaseActivity() {
             super.onBackPressed()
         }
 
+    }
+
+    fun selectItem(navigationId: Int) {
+        if (currentId != navigationId) {
+            currentId = navigationId
+            viewBind?.navigation?.selectedItemId = navigationId
+        } else {
+            println("相同的id值")
+        }
     }
 
 

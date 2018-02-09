@@ -37,6 +37,8 @@ object Constants {
     const val DATA: String = "data"
     const val NEWS_ID = "newsId"
     const val IMAGE_TYPE = "image/jpeg"
+    const val PRE_ID = "PRE_ID"
+    const val CURRENT_ID = "CURRENT_ID"
     //
     const val TYPE_HEADER = 1
     const val TYPE_NEWS = 2

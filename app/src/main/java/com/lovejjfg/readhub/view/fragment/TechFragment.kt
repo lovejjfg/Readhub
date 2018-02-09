@@ -53,14 +53,14 @@ class TechFragment : RefreshFragment() {
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().tech(),
                 Consumer {
-
                     if (it.data?.isNotEmpty()!!) {
+                        preOrder = latestOrder
+                        latestOrder = it.data.first()?.id
                         order = DateUtil.parseTimeToMillis(it.data.last()?.publishDate)
                         adapter?.setList(it.data)
-                        handleAlreadRead(it.data, {
-                            TextUtils.equals(it?.id, latestOrder)
+                        handleAlreadRead(false, it.data, {
+                            TextUtils.equals(it?.id, preOrder)
                         })
-                        latestOrder = it.data.first()?.id
                     }
                     refresh?.isRefreshing = false
                 },
@@ -78,6 +78,9 @@ class TechFragment : RefreshFragment() {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
                     adapter?.appendList(data)
+                    handleAlreadRead(true, adapter?.list!!, {
+                        TextUtils.equals(it?.id, preOrder)
+                    })
                     Log.i(TAG, "order:" + order)
                 },
                 Consumer {

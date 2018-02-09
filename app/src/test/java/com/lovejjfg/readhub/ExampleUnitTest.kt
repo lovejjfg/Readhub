@@ -18,4 +18,25 @@ class ExampleUnitTest {
         println(child.outerHtml())
 
     }
+
+    @Test
+    fun testTranslate() {
+        var s1 = "xxxx"
+        var s2 = s1
+        println(s2)
+        s1 = "xxxx2"
+        println(s1)
+        println(s2)
+
+        var t1 = TestModel("test")
+        val t2 = t1
+        println(t2.name)
+        t1 = TestModel("test changed")
+        println(t1.name)
+        println(t2.name)
+
+    }
+
+    data class TestModel(var name: String? = null)
+
 }

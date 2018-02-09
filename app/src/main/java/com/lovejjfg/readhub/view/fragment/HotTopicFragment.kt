@@ -32,6 +32,7 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
+import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.*
@@ -100,27 +101,33 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     private fun makeSnack(callback: BaseTransientBottomBar.BaseCallback<Snackbar>?) {
+        if (mSnackBar != null && mSnackBar!!.isShown) {
+            mSnackBar!!.dismiss()
+        }
         if (mSnackBar == null) {
             @Suppress("DEPRECATION")
-            mSnackBar = Snackbar.make(view, "有${refreshCount}条更新", Snackbar.LENGTH_INDEFINITE)
+            mSnackBar = Snackbar.make(view, "热门话题有${refreshCount}条更新", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(resources.getColor(R.color.colorAccent))
                     .setAction(R.string.refresh, {
                         rv_hot?.scrollToPosition(0)
                         refresh?.isRefreshing = true
                         refresh(refresh)
+                        (activity as HomeActivity).selectItem(R.id.navigation_home)
                     })
 
         }
         if (callback != null) {
             mSnackBar!!.addCallback(callback)
         }
-        mSnackBar!!.setText("有${refreshCount}条更新")
+        mSnackBar!!.setText("热门话题有${refreshCount}条更新")
         mSnackBar!!.show()
     }
 
     override fun onResume() {
         super.onResume()
+//        if (!isHidden) {
         checkNews()
+//        }
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
@@ -128,12 +135,13 @@ class HotTopicFragment : RefreshFragment() {
         DataManager.subscribe(this, DataManager.init().hotTopic(),
                 Consumer {
                     if (it.data?.isNotEmpty()!!) {
+                        preOrder = latestOrder
+                        latestOrder = it.data.first()?.order
                         order = it.data.last()?.order
                         adapter?.setList(it.data)
-                        handleAlreadRead(it.data,{
-                            TextUtils.equals(it?.order, latestOrder)
+                        handleAlreadRead(false, it.data, {
+                            TextUtils.equals(it?.order, preOrder)
                         })
-                        latestOrder = it.data.first()?.order
                     }
                     refresh?.isRefreshing = false
                 },
@@ -151,6 +159,9 @@ class HotTopicFragment : RefreshFragment() {
                     val data = it.data
                     order = data?.last()?.order
                     adapter?.appendList(data)
+                    handleAlreadRead(true, adapter?.list!!, {
+                        TextUtils.equals(it?.order, preOrder)
+                    })
                     Log.i(TAG, "loadMore:order:" + order)
                 },
                 Consumer {
