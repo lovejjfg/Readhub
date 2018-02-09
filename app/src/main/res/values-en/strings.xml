@@ -65,6 +65,7 @@
         <item>@string/share_hint_default</item>
         <item>Why not share as fast as you can?</item>
         <item>Just share it</item>
+        <item>Tip:You can jump this hint in the Setting Menu</item>
     </string-array>
 
 </resources>
