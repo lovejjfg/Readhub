@@ -44,7 +44,7 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
-        contentView?.tvVersoin?.text = String.format("版本：%s", BuildConfig.VERSION_NAME)
+        contentView?.tvVersoin?.text = String.format(getString(R.string.version_at), BuildConfig.VERSION_NAME)
         contentView?.toolbar?.setNavigationOnClickListener({ finish() })
         aboutAdapter = AboutAdapter()
         val recyclerView = contentView?.recyclerView
@@ -59,7 +59,7 @@ class AboutActivity : AppCompatActivity() {
     private fun initData() {
         Observable.create<Library> {
             it.onNext(Library("Readhub",
-                    "Readhub Android 客户端",
+                    "Readhub Android Client",
                     "https://github.com/lovejjfg/Readhub"))
             it.onNext(Library("Android support libraries",
                     "The Android support libraries offer a number of features that are not built into the framework.",

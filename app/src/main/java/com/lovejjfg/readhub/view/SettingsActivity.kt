@@ -102,7 +102,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                 Beta.checkUpgrade()
                 return@setOnPreferenceClickListener true
             }
-            checkUpdate?.summary = "当前版本：${BuildConfig.VERSION_NAME}"
+            checkUpdate?.summary = getString(R.string.current_version)+BuildConfig.VERSION_NAME
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {

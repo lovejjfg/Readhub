@@ -57,7 +57,7 @@
                 android:textColor="@color/theme_color_text_g4"
                 android:textSize="@dimen/text_des"
                 app:defaultLineCount="3"
-                app:defaultMoreHint="查看更多"
+                app:defaultMoreHint="@string/show_more"
                 app:moreHintColor="@color/colorAccent"
                 />
 

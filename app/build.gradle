@@ -13,7 +13,7 @@ android {
         versionName project.gitTag
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //只保留对应的国际化
-        resConfigs "zh"
+        resConfigs "zh", "en"
         buildConfigField "String", "BUGLY", '"b8676c281b"'
         multiDexEnabled true
     }
