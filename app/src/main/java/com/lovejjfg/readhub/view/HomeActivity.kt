@@ -169,12 +169,8 @@ class HomeActivity : BaseActivity() {
     }
 
     fun selectItem(navigationId: Int) {
-        if (currentId != navigationId) {
-            currentId = navigationId
-            viewBind?.navigation?.selectedItemId = navigationId
-        } else {
-            println("相同的id值")
-        }
+        currentId = navigationId
+        viewBind?.navigation?.selectedItemId = navigationId
     }
 
 
