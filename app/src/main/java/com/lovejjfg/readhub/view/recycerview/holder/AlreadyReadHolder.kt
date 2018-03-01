@@ -24,4 +24,12 @@ import com.lovejjfg.readhub.data.topic.DataItem
  * Created by joe on 2018/2/5.
  * Email: lovejjfg@gmail.com
  */
-class AlreadyReadHolder(view: View) : PowerHolder<DataItem>(view, false)
+class AlreadyReadHolder(view: View) : PowerHolder<DataItem>(view, false) {
+
+    override fun onBind(t: DataItem?) {
+        super.onBind(t)
+        itemView.setOnLongClickListener {
+            return@setOnLongClickListener false
+        }
+    }
+}

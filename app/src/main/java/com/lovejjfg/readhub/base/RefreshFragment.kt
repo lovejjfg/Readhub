@@ -125,15 +125,7 @@ abstract class RefreshFragment : BaseFragment() {
         }
         adapter?.totalCount = Int.MAX_VALUE
         println("tag:$tag;;isHidden:$isHidden")
-        if (savedInstanceState == null) {
-            if (!isHidden && adapter!!.list.isEmpty()) {
-                refresh?.isRefreshing = true
-                refresh(refresh)
-            }
-        } else {
-            val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
-            adapter?.setList(mList)
-        }
+        initDataOrRefresh(savedInstanceState)
         @Suppress("DEPRECATION")
         refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         refresh?.setOnRefreshListener { refresh(refresh) }
@@ -167,6 +159,23 @@ abstract class RefreshFragment : BaseFragment() {
         })
     }
 
+    private fun initDataOrRefresh(savedInstanceState: Bundle?) {
+        try {
+            if (savedInstanceState == null) {
+                if (!isHidden && adapter!!.list.isEmpty()) {
+                    refresh?.isRefreshing = true
+                    refresh(refresh)
+                }
+            } else {
+                val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
+                adapter?.setList(mList)
+            }
+        } catch (e: Exception) {
+            refresh?.isRefreshing = true
+            refresh(refresh)
+        }
+    }
+
     private fun handleLongClick() {
         adapter?.setOnItemLongClickListener { _, position, _ ->
             val quick = PreferenceManager
@@ -197,7 +206,9 @@ abstract class RefreshFragment : BaseFragment() {
             shareWithCheck(position)
         })
 
-        mShareDialog!!.show()
+        if (!activity.isFinishing) {
+            mShareDialog!!.show()
+        }
     }
 
     private fun shareWithCheck(position: Int) {
@@ -307,14 +318,18 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         try {
-            if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
-                outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
-                outState?.putString(Constants.CURRENT_ID, latestOrder)
-                outState?.putString(Constants.PRE_ID, preOrder)
-            }
+            saveData(outState)
             mShareDialog?.dismiss()
             super.onSaveInstanceState(outState)
         } catch (e: Exception) {
+        }
+    }
+
+    private fun saveData(outState: Bundle?) {
+        if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
+            outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+            outState?.putString(Constants.CURRENT_ID, latestOrder)
+            outState?.putString(Constants.PRE_ID, preOrder)
         }
     }
 
