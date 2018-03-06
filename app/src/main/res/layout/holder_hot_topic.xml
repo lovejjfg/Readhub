@@ -62,8 +62,8 @@
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
                     android:id="@+id/iv_show"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
                     android:background="?actionBarItemBackground"
                     android:gravity="center"
@@ -74,8 +74,8 @@
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
                     android:id="@+id/iv_time_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
                     android:background="?actionBarItemBackground"
                     android:gravity="center"
@@ -86,8 +86,8 @@
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
                     android:id="@+id/iv_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
                     android:background="?actionBarItemBackground"
                     android:gravity="center"
