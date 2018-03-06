@@ -224,7 +224,10 @@ abstract class RefreshFragment : BaseFragment() {
 
     private fun doShare(position: Int) {
         try {
-            val bitmap = rv_hot.findViewHolderForAdapterPosition(position)?.itemView?.toBitmap(Bitmap.Config.ARGB_8888)
+            val itemView = rv_hot.findViewHolderForAdapterPosition(position)?.itemView
+            itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.INVISIBLE
+            val bitmap = itemView?.toBitmap(Bitmap.Config.ARGB_8888)
+            itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.VISIBLE
             val file = File(mContext?.externalCacheDir, String.format(getString(R.string.img_name), System.currentTimeMillis().toString()))
             AtomicFile(file).tryWrite {
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
@@ -362,7 +365,7 @@ abstract class RefreshFragment : BaseFragment() {
                 } else {
                     removeRead()
                     println("插入更新位置：$indexOf")
-                    showToast(String.format("更新%d新闻", indexOf))
+                    showToast(String.format(getString(R.string.update_news_with_count), indexOf))
                     val element = DataItem()
                     adapter?.insertItem(indexOf, element)
                     preOrder = latestOrder

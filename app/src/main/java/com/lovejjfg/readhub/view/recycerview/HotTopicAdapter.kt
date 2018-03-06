@@ -119,6 +119,9 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                         JumpUitl.jumpTimeLine(context, t.id)
                     }
                 }
+                itemView.iv_share.setOnClickListener {
+                    itemView.performLongClick()
+                }
             } else {
                 dataBind?.topic = t
             }

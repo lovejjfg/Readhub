@@ -31,6 +31,7 @@ import com.lovejjfg.readhub.databinding.HolderNormalTopicBinding
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
+import kotlinx.android.synthetic.main.holder_normal_topic.view.*
 
 /**
  * ReadHub
@@ -93,6 +94,9 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
                 itemView.performClick()
             }
             itemBinding!!.tvDes.setOnLongClickListener {
+                itemView.performLongClick()
+            }
+            itemView.iv_share.setOnClickListener {
                 itemView.performLongClick()
             }
 
