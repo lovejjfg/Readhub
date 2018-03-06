@@ -39,12 +39,12 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources false //default true
-            minifyEnabled false //default true
+            shrinkResources true //default true
+            minifyEnabled true //default true
             signingConfig signingConfigs.release
-            debuggable true //default false
+            debuggable false //default false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "IS_DEBUG", "true"//default false
+            buildConfigField "boolean", "IS_DEBUG", "false"//default false
             ndk {
                 //设置支持的SO库架构
                 abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
