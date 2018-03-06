@@ -7,7 +7,7 @@ import javax.annotation.Generated
 data class NewCount(
 
         @field:SerializedName("count")
-        val count: Int? = null
+        val count: Int = 0
 //        @field:SerializedName("data")
 //        val data: List<TopicDetail>? = null
 

@@ -33,6 +33,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.AtomicFile
 import android.util.Log
 import android.view.LayoutInflater
@@ -334,11 +335,17 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     protected inline fun handleAlreadRead(loadMore: Boolean, data: List<DataItem?>, check: (item: DataItem?) -> Boolean) {
-        //todo 如果有置顶的情况 这里的判断估计有问题呢
         println("currentId:$latestOrder;;preId::$preOrder")
         try {
+            if (TextUtils.equals(latestOrder, preOrder)) {
+                if (!loadMore) {
+                    removeRead()
+                    showToast(getString(R.string.wait_away))
+                }
+                return
+            }
             val first = data.firstOrNull {
-                check(it)
+                it != null && !it.isTop && check(it)
             }
             println(first?.id)
             if (first != null) {

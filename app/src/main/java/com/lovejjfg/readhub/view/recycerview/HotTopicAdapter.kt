@@ -32,9 +32,11 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
 import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
+import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
+import kotlinx.android.synthetic.main.holder_hot_topic.view.*
 
 /**
  * ReadHub
@@ -85,18 +87,22 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
         var dataBind: HolderHotTopicBinding? = itemView
 
         override fun onBind(t: DataItem?) {
-            if (dataBind?.topic?.order != t?.order) {
+            if (t == null) {
+                return
+            }
+
+            if (dataBind?.topic?.order != t.order) {
                 dataBind?.topic = t
                 val rvItem = dataBind?.rvItem
                 rvItem?.layoutManager = LinearLayoutManager(context)
                 val itemAdapter = HotTopicItemAdapter()
                 itemAdapter.setOnItemClickListener { _, position, _ ->
-                    val mobileUrl = t?.newsArray!![position]?.mobileUrl
+                    val mobileUrl = t.newsArray!![position]?.mobileUrl
                     JumpUitl.jumpWeb(context, mobileUrl)
                 }
                 rvItem?.adapter = itemAdapter
-                itemAdapter.setList(t?.newsArray)
-                if (t?.extra?.instantView!!) {
+                itemAdapter.setList(t.newsArray)
+                if (t.extra?.instantView!!) {
                     dataBind?.ivTimeLine?.visibility = View.VISIBLE
                     dataBind?.ivTimeLine?.setOnClickListener {
                         JumpUitl.jumpInstant(context, t.id)
@@ -115,6 +121,11 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                 }
             } else {
                 dataBind?.topic = t
+            }
+            if (t.isTop) {
+                itemView.tv_publish?.text = "置顶"
+            } else {
+                itemView.tv_publish?.text = DateUtil.parseTime(t.createdAt)
             }
         }
     }

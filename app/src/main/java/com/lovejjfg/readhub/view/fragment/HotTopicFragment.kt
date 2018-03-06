@@ -70,13 +70,16 @@ class HotTopicFragment : RefreshFragment() {
         if (adapter?.list?.isEmpty()!!) {
             return
         }
-        latestOrder = adapter?.list?.first()?.order
         if (TextUtils.isEmpty(latestOrder)) {
             return
         }
+        //todo 如果有置顶操作，似乎获取的数量包含了置顶操作那个 要后续研究了（iPhone X 微信用户破10亿 就这两次有置顶操作 ）
         DataManager.subscribe(this, DataManager.init().newCount(latestOrder!!), Consumer {
-            if (it.count!! > 0) {
-                refreshCount = it.count
+            refreshCount = it.count
+            if (adapter?.list?.first()!!.isTop) {
+                refreshCount--
+            }
+            if (refreshCount > 0) {
                 showHint()
             }
         }, Consumer { it.printStackTrace() })
@@ -137,6 +140,12 @@ class HotTopicFragment : RefreshFragment() {
                     if (it.data?.isNotEmpty()!!) {
                         preOrder = latestOrder
                         latestOrder = it.data.first()?.order
+                        if (!TextUtils.isEmpty(latestOrder) && latestOrder!!.startsWith("10")) {
+                            latestOrder = it.data[1]?.order
+                            it.data.first()?.isTop = true
+                        } else {
+                            it.data.first()?.isTop = false
+                        }
                         order = it.data.last()?.order
                         adapter?.setList(it.data)
                         handleAlreadRead(false, it.data, {

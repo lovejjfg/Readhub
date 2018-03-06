@@ -66,6 +66,7 @@ object DataManager {
                             .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
                             .addInterceptor(CacheControlInterceptor())
                             .addInterceptor(LoggingInterceptor())
+//                            .sslSocketFactory()
                             .build()
                     )
                     .build()

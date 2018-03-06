@@ -70,7 +70,9 @@ data class DataItem(
         val url: String? = null,
 
         @field:SerializedName("extra")
-        val extra: Extra? = null
+        val extra: Extra? = null,
+
+        var isTop: Boolean = false
 
 
 ) : Parcelable
