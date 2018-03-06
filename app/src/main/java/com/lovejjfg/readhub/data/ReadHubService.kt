@@ -64,5 +64,9 @@ interface ReadHubService {
     @GET("topic/newCount")
     fun newCount(@Query("latestCursor") lastId: String): Observable<Response<NewCount>>
 
+    //https://api.readhub.me/blockchain?lastCursor=1520307600000&pageSize=10
+    @GET("blockchain")
+    fun blockchain(@Query("lastCursor") lastId: String, @Query("pageSize") size: Int): Observable<Response<Develop>>
+
 
 }

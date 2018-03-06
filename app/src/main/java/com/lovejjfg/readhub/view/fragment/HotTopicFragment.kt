@@ -109,7 +109,7 @@ class HotTopicFragment : RefreshFragment() {
         }
         if (mSnackBar == null) {
             @Suppress("DEPRECATION")
-            mSnackBar = Snackbar.make(view, "热门话题有${refreshCount}条更新", Snackbar.LENGTH_INDEFINITE)
+            mSnackBar = Snackbar.make(view, String.format(getString(R.string.hot_topic_update), refreshCount), Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(resources.getColor(R.color.colorAccent))
                     .setAction(R.string.refresh, {
                         rv_hot?.scrollToPosition(0)
@@ -122,7 +122,7 @@ class HotTopicFragment : RefreshFragment() {
         if (callback != null) {
             mSnackBar!!.addCallback(callback)
         }
-        mSnackBar!!.setText("热门话题有${refreshCount}条更新")
+        mSnackBar!!.setText(String.format(getString(R.string.hot_topic_update, refreshCount)))
         mSnackBar!!.show()
     }
 
