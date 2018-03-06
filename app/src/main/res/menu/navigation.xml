@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_dev_black"
         android:title="@string/title_dev"/>
 
+    <item
+        android:id="@+id/navigation_block_chain"
+        android:icon="@drawable/ic_linear_scale"
+        android:title="@string/title_block_chain"/>
+
 </menu>

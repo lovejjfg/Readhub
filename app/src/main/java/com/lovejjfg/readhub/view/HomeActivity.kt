@@ -33,6 +33,7 @@ import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.SharedPrefsUtil
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
+import com.lovejjfg.readhub.view.fragment.BlockChainFragment
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
@@ -46,6 +47,7 @@ class HomeActivity : BaseActivity() {
     private var hotTopicFragment: Fragment? = null
     private var techFragment: Fragment? = null
     private var developFragment: Fragment? = null
+    private var blockChainFragment: Fragment? = null
     var navigation: BottomNavigationView? = null
     private var currentId: Int = R.id.navigation_home
 
@@ -59,6 +61,7 @@ class HomeActivity : BaseActivity() {
                         .show(hotTopicFragment)
                         .hide(techFragment)
                         .hide(developFragment)
+                        .hide(blockChainFragment)
                         .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
@@ -68,6 +71,7 @@ class HomeActivity : BaseActivity() {
                         .show(techFragment)
                         .hide(hotTopicFragment)
                         .hide(developFragment)
+                        .hide(blockChainFragment)
                         .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
@@ -77,11 +81,19 @@ class HomeActivity : BaseActivity() {
                         .show(developFragment)
                         .hide(hotTopicFragment)
                         .hide(techFragment)
+                        .hide(blockChainFragment)
                         .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             else -> {
-                return@OnNavigationItemSelectedListener false
+                logEvent(this, getString(R.string.title_block_chain))
+                fragmentManager.beginTransaction()
+                        .show(blockChainFragment)
+                        .hide(hotTopicFragment)
+                        .hide(techFragment)
+                        .hide(developFragment)
+                        .commitAllowingStateLoss()
+                return@OnNavigationItemSelectedListener true
             }
         }
     }
@@ -124,17 +136,21 @@ class HomeActivity : BaseActivity() {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
             developFragment = DevelopFragment()
+            blockChainFragment = BlockChainFragment()
             fragmentManager.beginTransaction()
                     .add(R.id.content, hotTopicFragment, Constants.HOT)
                     .add(R.id.content, techFragment, Constants.TECH)
                     .add(R.id.content, developFragment, Constants.DEV)
+                    .add(R.id.content, blockChainFragment, Constants.BLOCK_CHAIN)
                     .hide(techFragment)
                     .hide(developFragment)
+                    .hide(blockChainFragment)
                     .commitAllowingStateLoss()
         } else {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
             developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
+            blockChainFragment = fragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN)
             if (currentId != 0) {
                 navigation1?.selectedItemId = currentId
             }
