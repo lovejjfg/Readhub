@@ -1,6 +1,7 @@
 ### Readhub
 ![icon](https://raw.githubusercontent.com/lovejjfg/Readhub/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
+
 无码科技 [冯大辉](https://github.com/Fenng) 的 [Readhub](https://readhub.me/) Android 客户端。说句废话，**这不是官方的App** 。
 
 ### Release 
@@ -8,6 +9,8 @@
 [更新记录](https://github.com/lovejjfg/Readhub/releases)
 
 [下载地址](https://fir.im/readHub)
+
+<a href='https://play.google.com/store/apps/details?id=com.lovejjfg.readhub&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img  height='62' width='161' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
 
 ![QR](https://raw.githubusercontent.com/lovejjfg/screenshort/e7499040ff9ed18f3577d94b80e76b440e1781eb/qr_readhub.png)
 
