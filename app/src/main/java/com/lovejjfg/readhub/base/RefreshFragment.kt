@@ -179,9 +179,13 @@ abstract class RefreshFragment : BaseFragment() {
 
     private fun handleLongClick() {
         adapter?.setOnItemLongClickListener { _, position, _ ->
-            val quick = PreferenceManager
-                    .getDefaultSharedPreferences(mContext)
-                    .getBoolean(getString(R.string.quick_share), false)
+            val quick = try {
+                PreferenceManager
+                        .getDefaultSharedPreferences(mContext)
+                        .getBoolean(getString(R.string.quick_share), false)
+            } catch (e: Exception) {
+                false
+            }
             if (!quick) {
                 showShareDialog(position)
             } else {
