@@ -65,6 +65,11 @@ class HotTopicFragment : RefreshFragment() {
         }
     }
 
+    override fun saveListData(): Boolean {
+        return true
+    }
+
+
     private fun checkNews() {
         refreshCount = 0
         if (adapter?.list?.isEmpty()!!) {

@@ -103,8 +103,17 @@ abstract class RefreshFragment : BaseFragment() {
         super.afterCreatedView(savedInstanceState)
         if (savedInstanceState != null) {
             latestOrder = savedInstanceState.getString(Constants.CURRENT_ID)
-            preOrder = savedInstanceState.getString(Constants.PRE_ID)
+//            preOrder = savedInstanceState.getString(Constants.PRE_ID)
         }
+    }
+
+    protected open fun saveListData(): Boolean {
+        return false
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        println("onActivityCreated")
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -163,15 +172,23 @@ abstract class RefreshFragment : BaseFragment() {
     private fun initDataOrRefresh(savedInstanceState: Bundle?) {
         try {
             if (savedInstanceState == null) {
-                if (!isHidden && adapter!!.list.isEmpty()) {
-                    refresh?.isRefreshing = true
-                    refresh(refresh)
-                }
+                doFreshWithCheck()
             } else {
                 val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
-                adapter?.setList(mList)
+                if (mList != null && mList.isNotEmpty()) {
+                    adapter?.setList(mList)
+                } else {
+                    doFreshWithCheck()
+                }
             }
         } catch (e: Exception) {
+            refresh?.isRefreshing = true
+            refresh(refresh)
+        }
+    }
+
+    private fun doFreshWithCheck() {
+        if (!isHidden && adapter!!.list.isEmpty()) {
             refresh?.isRefreshing = true
             refresh(refresh)
         }
@@ -334,10 +351,9 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun saveData(outState: Bundle?) {
-        if (adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
+        if (saveListData() && adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
             outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
             outState?.putString(Constants.CURRENT_ID, latestOrder)
-            outState?.putString(Constants.PRE_ID, preOrder)
         }
     }
 
