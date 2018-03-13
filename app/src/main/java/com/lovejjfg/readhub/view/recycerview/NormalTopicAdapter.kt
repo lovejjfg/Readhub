@@ -77,6 +77,8 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
     inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {
         var itemBinding: HolderNormalTopicBinding? = itemView
         override fun onBind(t: DataItem?) {
+            itemBinding!!.tvRelative.text = null
+            itemBinding!!.tvRelative.requestLayout()
             itemBinding!!.topic = t
             val text: String? = if (TextUtils.isEmpty(t?.authorName)) {
                 t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
