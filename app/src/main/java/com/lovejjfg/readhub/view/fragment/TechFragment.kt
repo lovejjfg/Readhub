@@ -66,7 +66,7 @@ class TechFragment : RefreshFragment() {
                 },
                 Consumer {
                     Log.i(TAG, "error:", it)
-                    adapter?.showError()
+                    adapter?.showError(false)
                     handleError(it)
                     refresh?.isRefreshing = false
                 })

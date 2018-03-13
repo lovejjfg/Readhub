@@ -49,6 +49,7 @@ object DataManager {
 
     private var retrofit: Retrofit? = null
     private val isDebug = true
+    private const val TIME_OUT = 10L
 
     fun <T> init(clazz: Class<T>): T {
         if (retrofit == null) {
@@ -60,9 +61,9 @@ object DataManager {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient.Builder()
                             .cache(cache)
-                            .connectTimeout(30, TimeUnit.SECONDS)
-                            .readTimeout(30, TimeUnit.SECONDS)
-                            .writeTimeout(30, TimeUnit.SECONDS)
+                            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+                            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+                            .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
                             .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
                             .addInterceptor(CacheControlInterceptor())
                             .addInterceptor(LoggingInterceptor())

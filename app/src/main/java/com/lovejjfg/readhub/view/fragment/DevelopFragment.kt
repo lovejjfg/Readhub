@@ -66,7 +66,7 @@ class DevelopFragment : RefreshFragment() {
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)
-                    adapter?.showError()
+                    adapter?.showError(false)
                     handleError(it)
                     refresh?.isRefreshing = false
                 })
