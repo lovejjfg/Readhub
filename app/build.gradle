@@ -114,7 +114,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.lovejjfg.powertext:lib:0.0.4'
-    implementation 'androidx.core:core-ktx:0.1'
+    implementation 'androidx.core:core-ktx:0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
