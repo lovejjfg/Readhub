@@ -30,8 +30,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center_vertical"
+            android:orientation="vertical"
             android:padding="8dp">
 
 
@@ -39,7 +39,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{topic.title}"
+                android:text="@{TextUtils.isEmpty(topic.title)?null:topic.title.trim()}"
                 android:textColor="@color/theme_color_text"
                 android:textSize="@dimen/text_title"
                 tools:text="xxxxxxxxxxx"
