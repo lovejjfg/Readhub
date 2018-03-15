@@ -18,11 +18,14 @@
 
 package com.lovejjfg.readhub.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.text.TextUtils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.data.Constants
@@ -52,11 +55,11 @@ object JumpUitl {
             if (!default) {
                 val intent = Intent(context, WebActivity::class.java)
                 intent.putExtra(Constants.URL, url)
-                context.startActivity(intent)
+                startActivity(context, intent)
             } else {
                 val uri = Uri.parse(url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
-                context.startActivity(intent)
+                startActivity(context, intent)
             }
         } catch (e: Throwable) {
             CrashReport.postCatchedException(e)
@@ -65,24 +68,24 @@ object JumpUitl {
 
     fun jumpSetting(context: Context) {
         val intent = Intent(context, SettingsActivity::class.java)
-        context.startActivity(intent)
+        startActivity(context, intent)
     }
 
     fun jumpAbout(context: Context) {
         val intent = Intent(context, AboutActivity::class.java)
-        context.startActivity(intent)
+        startActivity(context, intent)
     }
 
     fun jumpTimeLine(context: Context?, id: String?) {
         val intent = Intent(context, TopicDetailActivity::class.java)
         intent.putExtra(Constants.ID, id)
-        context!!.startActivity(intent)
+        startActivity(context!!, intent)
     }
 
     fun jumpInstant(context: Context?, id: String?) {
         val intent = Intent(context, InstantActivity::class.java)
         intent.putExtra(Constants.ID, id)
-        context!!.startActivity(intent)
+        startActivity(context!!, intent)
     }
 
     fun backHome(context: Context?) {
@@ -90,6 +93,15 @@ object JumpUitl {
         intent.action = Intent.ACTION_MAIN
         intent.addCategory(Intent.CATEGORY_HOME)
         context!!.startActivity(intent)
+    }
+
+    fun startActivity(context: Context, intent: Intent) {
+        if (context is Activity) {
+            val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(context)
+            ActivityCompat.startActivity(context, intent, activityOptions.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
     }
 
 
