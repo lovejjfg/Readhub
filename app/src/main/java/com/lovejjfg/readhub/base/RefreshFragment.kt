@@ -18,7 +18,6 @@
 
 package com.lovejjfg.readhub.base
 
-import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
@@ -53,7 +52,6 @@ import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
-import com.tbruyelle.rxpermissions2.RxPermissions
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.*
@@ -234,13 +232,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun shareWithCheck(position: Int) {
-        RxPermissions(activity).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe({
-                    if (!it) {
-                        showToast(getString(R.string.maybe_fail_hint))
-                    }
-                    doShare(position)
-                }, { it.printStackTrace() })
+        doShare(position)
     }
 
     private fun doShare(position: Int) {
@@ -264,6 +256,7 @@ abstract class RefreshFragment : BaseFragment() {
         } catch (e: Exception) {
             e.printStackTrace()
             CrashReport.postCatchedException(e)
+            showToast(getString(R.string.share_error))
         }
     }
 

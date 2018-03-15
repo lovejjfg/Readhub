@@ -55,6 +55,7 @@ class App : Application() {
         Log.i("APP", "自动下载：$autoDownload")
         Beta.autoInit = true
         Beta.enableHotfix = false
+        Beta.canAutoPatch = false
         Beta.canShowApkInfo = false
         Beta.upgradeDialogLayoutId = R.layout.dialog_update
         Beta.showInterruptedStrategy = false
