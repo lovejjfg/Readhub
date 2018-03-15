@@ -39,6 +39,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        mApp = this
         val notify = PreferenceManager
                 .getDefaultSharedPreferences(this)
                 .getBoolean("auto_update", true)
@@ -70,5 +71,6 @@ class App : Application() {
 
     companion object {
         var cacheDirectory: File? = null
+        var mApp: App? = null
     }
 }

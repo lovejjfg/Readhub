@@ -47,6 +47,7 @@
     <string name="net_unavailable">Please confirm the network connection</string>
     <string name="net_time_out">Network connection timeout</string>
     <string name="net_error2">There is something wrong with the network</string>
+    <string name="net_error_proxy">Proxy Network Not Limit</string>
     <string name="refresh">Refresh</string>
     <string name="read_over">These have been read</string>
 

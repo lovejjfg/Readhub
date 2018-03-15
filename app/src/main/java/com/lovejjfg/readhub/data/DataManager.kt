@@ -18,10 +18,12 @@
 
 package com.lovejjfg.readhub.data
 
+import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.App
 import com.lovejjfg.readhub.base.IBaseView
 import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
+import com.lovejjfg.readhub.utils.SSLUtil
 import com.lovejjfg.readhub.utils.http.CacheControlInterceptor
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
@@ -48,13 +50,22 @@ object DataManager {
 
 
     private var retrofit: Retrofit? = null
-    private val isDebug = true
+    private val isDebug = false
     private const val TIME_OUT = 10L
 
     fun <T> init(clazz: Class<T>): T {
+
         if (retrofit == null) {
             val cacheSize = 10 * 1024 * 1024L
             val cache = Cache(App.cacheDirectory!!, cacheSize)
+
+            val openRawResource =
+                    if (isDebug) {
+                        App.mApp?.resources?.openRawResource(R.raw.charles)
+                    } else {
+                        null
+                    }
+            val openRawResource1 = App.mApp?.resources?.openRawResource(R.raw.readhub)
             retrofit = Retrofit.Builder()
                     .baseUrl(API_RELEASE)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -67,7 +78,7 @@ object DataManager {
                             .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
                             .addInterceptor(CacheControlInterceptor())
                             .addInterceptor(LoggingInterceptor())
-//                            .sslSocketFactory()
+                            .sslSocketFactory(SSLUtil.getSSLSocketFactory(openRawResource1, openRawResource), SSLUtil.getTrustManager())
                             .build()
                     )
                     .build()

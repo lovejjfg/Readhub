@@ -25,6 +25,8 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.security.cert.CertPathValidatorException
+import javax.net.ssl.SSLHandshakeException
 
 /**
  * Created by Joe on 2017/1/5.
@@ -36,7 +38,7 @@ object ErrorUtil {
 
     fun handleError(context: Context, throwable: Throwable) {
         Log.e("ErrorUtil", "handleError: ", throwable)
-      //  CrashReport.postCatchedException(throwable)
+        //  CrashReport.postCatchedException(throwable)
         //        view.showErrorView();
         if (throwable is ReadhubException) {
             val code = throwable.code()
@@ -49,6 +51,11 @@ object ErrorUtil {
             ToastUtil.showToast(context, context.getString(R.string.net_time_out))
             return
         }
+        if (throwable is CertPathValidatorException || throwable is SSLHandshakeException) {
+            ToastUtil.showToast(context, context.getString(R.string.net_error_proxy))
+            return
+        }
+
         if (throwable is ConnectException || throwable is UnknownHostException || throwable is HttpException) {
             ToastUtil.showToast(context, context.getString(R.string.net_error2))
         }

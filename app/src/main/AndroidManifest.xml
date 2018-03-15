@@ -19,7 +19,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/net_work_security"
+        >
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1"/>

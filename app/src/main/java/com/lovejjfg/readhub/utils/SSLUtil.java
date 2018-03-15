@@ -25,12 +25,15 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Arrays;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by Joe on 2016/3/13.
@@ -50,6 +53,25 @@ public class SSLUtil {
         return getSSLSocketFactory(null, certificates);
     }
 
+    public static X509TrustManager getTrustManager() {
+
+        try {
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((KeyStore) null);
+            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+            if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                throw new IllegalStateException("Unexpected default trust managers:"
+                        + Arrays.toString(trustManagers));
+            }
+            return (X509TrustManager) trustManagers[0];
+        } catch (NoSuchAlgorithmException | KeyStoreException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
 
     /**
      * 双向认证
@@ -66,11 +88,13 @@ public class SSLUtil {
             keyStore.load(null);
             int index = 0;
             for (InputStream certificate : certificates) {
+                if (certificate == null) {
+                    continue;
+                }
                 String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
                 try {
-                    if (certificate != null)
-                        certificate.close();
+                    certificate.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
