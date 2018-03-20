@@ -25,7 +25,7 @@ import android.widget.ImageView
 object GlideUtils {
     fun into(url: String?, iv: ImageView?) {
         try {
-            GlideApp.with(iv?.context)
+            GlideApp.with(iv!!.context!!)
                     .load(url)
                     .centerCrop()
                     .into(iv)
