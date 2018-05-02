@@ -1,12 +1,8 @@
 package com.lovejjfg.readhub.base
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.transition.Slide
-import android.view.Gravity
-import android.view.Window
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.ErrorUtil
 import com.lovejjfg.readhub.utils.RxBus
@@ -24,11 +20,6 @@ import io.reactivex.functions.Consumer
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
     private var mDisposables: CompositeDisposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-            window.enterTransition = Slide(Gravity.RIGHT)
-            window.exitTransition = Slide(Gravity.LEFT)
-        }
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         afterCreatedView(savedInstanceState)

@@ -28,6 +28,7 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.data.Constants.ITEM_MAX_COUNT
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
@@ -36,7 +37,8 @@ import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
-import kotlinx.android.synthetic.main.holder_hot_topic.view.*
+import kotlinx.android.synthetic.main.holder_hot_topic.view.iv_share
+import kotlinx.android.synthetic.main.holder_hot_topic.view.tv_publish
 
 /**
  * ReadHub
@@ -47,20 +49,23 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
         holder?.onBind(list[position])
     }
 
-
     override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
                 AlreadyReadHolder(UIUtil.inflate(R.layout.holder_already_read, parent!!))
             }
             else -> {
-                val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_hot_topic, parent, false)
+                val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(
+                    LayoutInflater.from(parent?.context),
+                    R.layout.holder_hot_topic,
+                    parent,
+                    false
+                )
                 val hotTopicHolder = HotTopicHolder(inflate)
                 hotTopicHolder.dataBind = inflate
                 hotTopicHolder
             }
         }
-
     }
 
     override fun getItemViewTypes(position: Int): Int {
@@ -101,13 +106,17 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
                     JumpUitl.jumpWeb(context, mobileUrl)
                 }
                 rvItem?.adapter = itemAdapter
-                itemAdapter.setList(t.newsArray)
+                val array = if (t.newsArray!!.size > ITEM_MAX_COUNT) {
+                    t.newsArray.subList(0, ITEM_MAX_COUNT)
+                } else {
+                    t.newsArray
+                }
+                itemAdapter.setList(array)
                 if (t.extra?.instantView!!) {
                     dataBind?.ivTimeLine?.visibility = View.VISIBLE
                     dataBind?.ivTimeLine?.setOnClickListener {
                         JumpUitl.jumpInstant(context, t.id)
                     }
-
                 } else {
                     dataBind?.ivTimeLine?.visibility = View.GONE
                 }
@@ -135,23 +144,24 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
     inner class HotTopicItemAdapter : PowerAdapter<NewsArrayItem>() {
         override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<NewsArrayItem> {
-            val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(LayoutInflater.from(parent?.context), R.layout.holder_hot_topic_item, parent, false)
+            val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(
+                LayoutInflater.from(parent?.context),
+                R.layout.holder_hot_topic_item,
+                parent,
+                false
+            )
             return HotTopicItemHolder(itemBinding)
-
         }
 
         override fun onViewHolderBind(holder: PowerHolder<NewsArrayItem>?, position: Int) {
             holder!!.onBind(list[position])
         }
-
     }
 
     inner class HotTopicItemHolder(itemView: HolderHotTopicItemBinding) : PowerHolder<NewsArrayItem>(itemView.root) {
-        var itemBinding: HolderHotTopicItemBinding? = itemView
+        private var itemBinding: HolderHotTopicItemBinding? = itemView
         override fun onBind(t: NewsArrayItem?) {
             itemBinding!!.news = t
         }
-
     }
-
 }

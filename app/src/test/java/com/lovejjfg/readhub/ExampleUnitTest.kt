@@ -37,6 +37,21 @@ class ExampleUnitTest {
 
     }
 
+    @Test
+    fun testHash() {
+        val key = 7
+        var h: Int
+        h = key.hashCode()
+        println("before:$h")
+        println("向右移动:${h.ushr(16)}")
+
+        println(h xor h.ushr(16))
+        val message = h xor h.ushr(16)
+        println(message and 15)
+
+
+    }
+
     data class TestModel(var name: String? = null)
 
 }

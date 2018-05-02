@@ -48,7 +48,6 @@ import java.util.concurrent.TimeUnit
  */
 object DataManager {
 
-
     private var retrofit: Retrofit? = null
     private val isDebug = false
     private const val TIME_OUT = 10L

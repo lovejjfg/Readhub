@@ -32,7 +32,7 @@ object Constants {
     const val DEV: String = "developer"
     const val BLOCK_CHAIN: String = "block_chain"
     const val ID: String = "id"
-//    const val EXTRA: String = "extra"
+    //    const val EXTRA: String = "extra"
     const val TAB_ID: String = "tab_id"
     const val SHOW_PROMISSION: String = "SHOW_PROMISSION"
     const val DATA: String = "data"
@@ -49,4 +49,6 @@ object Constants {
     const val TYPE_PARSE_TEXT = 6
 
     const val TYPE_ALREADY_READ = 0xff0001
+
+    const val ITEM_MAX_COUNT = 3
 }

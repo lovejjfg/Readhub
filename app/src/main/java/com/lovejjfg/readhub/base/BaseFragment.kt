@@ -34,6 +34,7 @@ import io.reactivex.disposables.Disposable
 abstract class BaseFragment : Fragment(), IBaseView {
     var mDisposables: CompositeDisposable? = null
     var mContext: Context? = null
+    val TAG = "name"
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -48,7 +49,6 @@ abstract class BaseFragment : Fragment(), IBaseView {
         initFragments(savedInstanceState, this)
         afterCreatedView(savedInstanceState)
     }
-
 
     fun initFragments(savedInstanceState: Bundle?, fragment: BaseFragment) {
         if (savedInstanceState == null) {
@@ -67,7 +67,6 @@ abstract class BaseFragment : Fragment(), IBaseView {
     override fun onSaveInstanceState(outState: Bundle?) {
         outState!!.putBoolean(ARG_IS_HIDDEN, isHidden)
         super.onSaveInstanceState(outState)
-
     }
 
     override fun showToast(toast: String) {
@@ -84,10 +83,8 @@ abstract class BaseFragment : Fragment(), IBaseView {
     override fun showLoadingDialog(cancelable: Boolean) {
     }
 
-
     override fun closeLoadingDialog() {
     }
-
 
     override fun subscribe(subscriber: Disposable) {
         mDisposables?.add(subscriber)
@@ -114,5 +111,4 @@ abstract class BaseFragment : Fragment(), IBaseView {
     companion object {
         val ARG_IS_HIDDEN = "ARG_IS_HIDDEN"
     }
-
 }

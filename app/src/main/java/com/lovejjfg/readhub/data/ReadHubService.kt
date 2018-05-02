@@ -70,6 +70,4 @@ interface ReadHubService {
 
     @GET("blockchain")
     fun blockchainMore(@Query("lastCursor") lastId: String, @Query("pageSize") size: Int): Observable<Response<Develop>>
-
-
 }

@@ -35,8 +35,7 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.layout_refresh_recycler.*
-
+import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
 
 /**
  * ReadHub
@@ -133,9 +132,7 @@ class HotTopicFragment : RefreshFragment() {
 
     override fun onResume() {
         super.onResume()
-//        if (!isHidden) {
         checkNews()
-//        }
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {

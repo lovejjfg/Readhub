@@ -33,13 +33,15 @@ import com.lovejjfg.readhub.databinding.ActivityAboutBinding
 import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
 import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.Observable
-
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 
 /**
  * ReadHub
  * Created by Joe at 2017/9/5.
  */
 class AboutActivity : AppCompatActivity() {
+    private val mDisposables: CompositeDisposable = CompositeDisposable()
     private var aboutAdapter: PowerAdapter<Library>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,53 +60,104 @@ class AboutActivity : AppCompatActivity() {
 
     private fun initData() {
         Observable.create<Library> {
-            it.onNext(Library("Readhub",
+            it.onNext(
+                Library(
+                    "Readhub",
                     "Readhub Android Client",
-                    "https://github.com/lovejjfg/Readhub"))
-            it.onNext(Library("Android support libraries",
+                    "https://github.com/lovejjfg/Readhub"
+                )
+            )
+            it.onNext(
+                Library(
+                    "Android support libraries",
                     "The Android support libraries offer a number of features that are not built into the framework.",
-                    "https://developer.android.com/topic/libraries/support-library"))
-            it.onNext(Library("OkHttp",
+                    "https://developer.android.com/topic/libraries/support-library"
+                )
+            )
+            it.onNext(
+                Library(
+                    "OkHttp",
                     "An HTTP & HTTP/2 client for Android and Java applications.",
-                    "http://square.github.io/okhttp/"))
-            it.onNext(Library("RxKotlin",
+                    "http://square.github.io/okhttp/"
+                )
+            )
+            it.onNext(
+                Library(
+                    "RxKotlin",
                     "RxJava bindings for Kotlin.",
-                    "https://github.com/ReactiveX/RxKotlin"))
-            it.onNext(Library("PowerRecyclerView",
+                    "https://github.com/ReactiveX/RxKotlin"
+                )
+            )
+            it.onNext(
+                Library(
+                    "PowerRecyclerView",
                     "Easy for RecyclerView to pull refresh and load more.",
-                    "https://github.com/lovejjfg/PowerRecyclerView"))
-            it.onNext(Library("Retrofit",
+                    "https://github.com/lovejjfg/PowerRecyclerView"
+                )
+            )
+            it.onNext(
+                Library(
+                    "Retrofit",
                     "A type-safe HTTP client for Android and Java.",
-                    "http://square.github.io/retrofit/"))
-            it.onNext(Library("RxAndroid",
+                    "http://square.github.io/retrofit/"
+                )
+            )
+            it.onNext(
+                Library(
+                    "RxAndroid",
                     "RxJava bindings for Android.",
-                    "https://github.com/ReactiveX/RxAndroid"))
-            it.onNext(Library("RxJava",
+                    "https://github.com/ReactiveX/RxAndroid"
+                )
+            )
+            it.onNext(
+                Library(
+                    "RxJava",
                     "RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.",
-                    "https://github.com/ReactiveX/RxJava"))
-            it.onNext(Library("Gson",
+                    "https://github.com/ReactiveX/RxJava"
+                )
+            )
+            it.onNext(
+                Library(
+                    "Gson",
                     "A Java serialization/deserialization library to convert Java Objects into JSON and back",
-                    "https://github.com/google/gson"))
+                    "https://github.com/google/gson"
+                )
+            )
 
-            it.onNext(Library("Glide",
+            it.onNext(
+                Library(
+                    "Glide",
                     "An image loading and caching library for Android focused on smooth scrolling.",
-                    "https://github.com/bumptech/glide"))
+                    "https://github.com/bumptech/glide"
+                )
+            )
 
-            it.onNext(Library("JSoup",
+            it.onNext(
+                Library(
+                    "JSoup",
                     "Java HTML Parser, with best of DOM, CSS, and jquery.",
-                    "https://github.com/jhy/jsoup/"))
-            it.onNext(Library("RxPermissions",
+                    "https://github.com/jhy/jsoup/"
+                )
+            )
+            it.onNext(
+                Library(
+                    "RxPermissions",
                     "Android runtime permissions powered by RxJava",
-                    "https://github.com/tbruyelle/RxPermissions"))
+                    "https://github.com/tbruyelle/RxPermissions"
+                )
+            )
             it.onComplete()
         }.toSortedList({ t, t1 ->
             t.name!!.compareTo(t1.name!!)
         })
-                .subscribe({ aboutAdapter?.setList(it) }, { it.printStackTrace() })
-
-
+            .subscribe({ aboutAdapter?.setList(it) }, { it.printStackTrace() })
+            .addTo(mDisposables)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mDisposables.dispose()
+    }
 
     class AboutAdapter : PowerAdapter<Library>() {
         override fun onViewHolderBind(holder: PowerHolder<Library>?, position: Int) {
@@ -112,10 +165,14 @@ class AboutActivity : AppCompatActivity() {
         }
 
         override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<Library>? {
-            val infoBinding = DataBindingUtil.inflate<HolderAboutInfoBinding>(LayoutInflater.from(parent.context), R.layout.holder_about_info, parent, false)
+            val infoBinding = DataBindingUtil.inflate<HolderAboutInfoBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.holder_about_info,
+                parent,
+                false
+            )
             return AboutHolder(infoBinding)
         }
-
     }
 
     class AboutHolder(itemView: HolderAboutInfoBinding) : PowerHolder<Library>(itemView.root) {

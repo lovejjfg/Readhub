@@ -54,9 +54,8 @@ import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.layout_refresh_recycler.*
+import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
 import java.io.File
-
 
 /**
  * ReadHub
@@ -64,7 +63,6 @@ import java.io.File
  */
 abstract class RefreshFragment : BaseFragment() {
     @Suppress("PropertyName")
-    protected val TAG = "HotTopicFragment"
     protected var order: String? = null
     protected var latestOrder: String? = null
     protected var preOrder: String? = null
@@ -81,13 +79,12 @@ abstract class RefreshFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         hintArrays = resources.getStringArray(R.array.share_hints)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
-                Consumer {
-                    if (isVisible) {
-                        binding?.rvHot?.scrollToPosition(0)
-                    }
-                },
-                Consumer { Log.e(TAG, "error:", it) })
-
+            Consumer {
+                if (isVisible) {
+                    binding?.rvHot?.scrollToPosition(0)
+                }
+            },
+            Consumer { Log.e(TAG, "error:", it) })
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -149,7 +146,8 @@ abstract class RefreshFragment : BaseFragment() {
                     return
                 }
                 if (recyclerView?.layoutManager is LinearLayoutManager) {
-                    val first = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+                    val first =
+                        (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     if (first == 0) {
                         showNav()
                         return
@@ -196,8 +194,8 @@ abstract class RefreshFragment : BaseFragment() {
         adapter?.setOnItemLongClickListener { _, position, _ ->
             val quick = try {
                 PreferenceManager
-                        .getDefaultSharedPreferences(mContext)
-                        .getBoolean(getString(R.string.quick_share), false)
+                    .getDefaultSharedPreferences(mContext)
+                    .getBoolean(getString(R.string.quick_share), false)
             } catch (e: Exception) {
                 false
             }
@@ -213,10 +211,10 @@ abstract class RefreshFragment : BaseFragment() {
     private fun showShareDialog(position: Int) {
         if (mShareDialog == null) {
             mShareDialog = AlertDialog.Builder(mContext!!)
-                    .setTitle(getString(R.string.share))
-                    .setMessage(getString(R.string.share_hint_default))
-                    .setNegativeButton(getString(R.string.not_send), { _, _ ->
-                    }).create()
+                .setTitle(getString(R.string.share))
+                .setMessage(getString(R.string.share_hint_default))
+                .setNegativeButton(getString(R.string.not_send), { _, _ ->
+                }).create()
         }
         if (hintArrays != null) {
             val d = Math.random() * 100
@@ -241,7 +239,10 @@ abstract class RefreshFragment : BaseFragment() {
             itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.INVISIBLE
             val bitmap = itemView?.toBitmap(Bitmap.Config.ARGB_8888)
             itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.VISIBLE
-            val file = File(mContext?.externalCacheDir, String.format(getString(R.string.img_name), System.currentTimeMillis().toString()))
+            val file = File(
+                mContext?.externalCacheDir,
+                String.format(getString(R.string.img_name), System.currentTimeMillis().toString())
+            )
             AtomicFile(file).tryWrite {
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
                 bitmap?.recycle()
@@ -252,7 +253,11 @@ abstract class RefreshFragment : BaseFragment() {
             shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage)
             shareIntent.type = Constants.IMAGE_TYPE
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_news)))
-            FirebaseUtils.logEvent(mContext!!, getString(R.string.share), Pair(Constants.NEWS_ID, adapter?.list!![position]?.id))
+            FirebaseUtils.logEvent(
+                mContext!!,
+                getString(R.string.share),
+                Pair(Constants.NEWS_ID, adapter?.list!![position]?.id)
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             CrashReport.postCatchedException(e)
@@ -262,19 +267,19 @@ abstract class RefreshFragment : BaseFragment() {
 
     protected fun showNav() {
         navigation?.animate()
-                ?.translationY(0f)
-                ?.setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        mIsAnimating = true
-                    }
+            ?.translationY(0f)
+            ?.setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    mIsAnimating = true
+                }
 
-                    override fun onAnimationEnd(animation: Animator?) {
-                        super.onAnimationEnd(animation)
-                        mIsAnimating = false
-                        mIsVisible = true
-                    }
-                })
-                ?.start()
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    mIsAnimating = false
+                    mIsVisible = true
+                }
+            })
+            ?.start()
     }
 
     protected fun hideNav() {
@@ -283,26 +288,25 @@ abstract class RefreshFragment : BaseFragment() {
 
     protected fun hideNav(listenerAdapter: AnimatorListenerAdapter?) {
         navigation?.animate()
-                ?.translationY(navigation?.height!! + 0.5f)
-                ?.setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        mIsAnimating = true
-                        listenerAdapter?.onAnimationStart(animation)
-                    }
+            ?.translationY(navigation?.height!! + 0.5f)
+            ?.setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    mIsAnimating = true
+                    listenerAdapter?.onAnimationStart(animation)
+                }
 
-                    override fun onAnimationEnd(animation: Animator?) {
-                        mIsAnimating = false
-                        mIsVisible = false
-                        listenerAdapter?.onAnimationEnd(animation)
-                    }
-                })
-                ?.start()
+                override fun onAnimationEnd(animation: Animator?) {
+                    mIsAnimating = false
+                    mIsVisible = false
+                    listenerAdapter?.onAnimationEnd(animation)
+                }
+            })
+            ?.start()
     }
 
     abstract fun createAdapter(): PowerAdapter<DataItem>?
 
     abstract fun refresh(refresh: SwipeRefreshLayout?)
-
 
     abstract fun loadMore()
 
@@ -312,7 +316,6 @@ abstract class RefreshFragment : BaseFragment() {
         if (!isHidden) {
             adapter?.notifyDataSetChanged()
         }
-
     }
 
     override fun onDestroy() {
@@ -320,7 +323,6 @@ abstract class RefreshFragment : BaseFragment() {
         RxBus.instance.unSubscribe(this)
         mSnackBar = null
     }
-
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -350,7 +352,11 @@ abstract class RefreshFragment : BaseFragment() {
         }
     }
 
-    protected inline fun handleAlreadRead(loadMore: Boolean, data: List<DataItem?>, check: (item: DataItem?) -> Boolean) {
+    protected inline fun handleAlreadRead(
+        loadMore: Boolean,
+        data: List<DataItem?>,
+        check: (item: DataItem?) -> Boolean
+    ) {
         println("currentId:$latestOrder;;preId::$preOrder")
         try {
             if (TextUtils.equals(latestOrder, preOrder)) {
@@ -404,6 +410,4 @@ abstract class RefreshFragment : BaseFragment() {
         @Volatile
         var mSnackBar: Snackbar? = null
     }
-
-
 }

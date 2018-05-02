@@ -25,9 +25,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import java.util.*
+import java.util.HashMap
 
 /**
  * Created by Joe on 2017/1/2.
@@ -87,17 +86,17 @@ class RxBus private constructor() {
     </T> */
     fun <T> doSubscribe(type: Class<T>, next: Consumer<T>, error: Consumer<Throwable>): Disposable {
         return toObservable(type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next, error)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(next, error)
     }
 
     fun <T> addSubscription(o: Any, type: Class<T>, next: Consumer<T>, error: Consumer<Throwable>) {
         val disposable = toObservable(type)
-                .subscribeOn(Schedulers.io())
-                .distinct()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next, error)
+            .subscribeOn(Schedulers.io())
+            .distinct()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(next, error)
         addSubscription(o, disposable)
     }
 
@@ -110,7 +109,7 @@ class RxBus private constructor() {
      */
     fun addSubscription(o: Any, subscription: Disposable) {
         if (mSubscriptionMap == null) {
-            mSubscriptionMap = HashMap<String, CompositeDisposable>()
+            mSubscriptionMap = HashMap()
         }
         val key = o.toString()
         if (mSubscriptionMap!![key] != null) {
@@ -118,7 +117,7 @@ class RxBus private constructor() {
         } else {
             val compositeSubscription = CompositeDisposable()
             compositeSubscription.add(subscription)
-            mSubscriptionMap!!.put(key, compositeSubscription)
+            mSubscriptionMap!![key] = compositeSubscription
         }
     }
 
@@ -144,7 +143,8 @@ class RxBus private constructor() {
     }
 
     companion object {
-        @Volatile private var INSTANCE: RxBus? = null
+        @Volatile
+        private var INSTANCE: RxBus? = null
 
         val instance: RxBus
             get() {

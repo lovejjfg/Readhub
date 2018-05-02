@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-
 import java.lang.reflect.Method;
 
 /**
@@ -122,7 +121,7 @@ public class UIUtil {
      * 双击事件、多击事件
      */
     //存储时间的数组
-    static long[] mHits = new long[2];
+    private static long[] mHits = new long[2];
 
     public static boolean doubleClick() {
         // 双击事件响应

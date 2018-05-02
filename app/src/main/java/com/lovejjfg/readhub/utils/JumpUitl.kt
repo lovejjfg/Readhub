@@ -18,20 +18,20 @@
 
 package com.lovejjfg.readhub.utils
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
 import android.text.TextUtils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.view.*
+import com.lovejjfg.readhub.view.AboutActivity
+import com.lovejjfg.readhub.view.InstantActivity
+import com.lovejjfg.readhub.view.SettingsActivity
+import com.lovejjfg.readhub.view.TopicDetailActivity
+import com.lovejjfg.readhub.view.WebActivity
 import com.tencent.bugly.crashreport.CrashReport
-
 
 /**
  * ReadHub
@@ -49,8 +49,8 @@ object JumpUitl {
             bundle.putString("链接", url)
             FirebaseAnalytics.getInstance(context).logEvent("点击", bundle)
             val default = PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                    .getBoolean("browser_use", false)
+                .getDefaultSharedPreferences(context)
+                .getBoolean("browser_use", false)
 
             if (!default) {
                 val intent = Intent(context, WebActivity::class.java)
@@ -96,13 +96,6 @@ object JumpUitl {
     }
 
     fun startActivity(context: Context, intent: Intent) {
-        if (context is Activity) {
-            val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(context)
-            ActivityCompat.startActivity(context, intent, activityOptions.toBundle())
-        } else {
-            context.startActivity(intent)
-        }
+        context.startActivity(intent)
     }
-
-
 }
