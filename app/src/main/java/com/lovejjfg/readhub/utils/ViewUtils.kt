@@ -13,7 +13,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
-import androidx.view.doOnPreDraw
+import androidx.core.view.doOnPreDraw
 import java.text.DecimalFormat
 
 /**

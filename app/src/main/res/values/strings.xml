@@ -1,5 +1,7 @@
-<resources>
-    <string name="app_name">Readhub</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name"
+        tools:ignore="MissingTranslation">
+        >Readhub</string>
     <string name="title_home">热门话题</string>
     <string name="title_tech">科技动态</string>
     <string name="title_dev">开发资讯</string>
@@ -17,14 +19,24 @@
     <string name="pref_share_des">不展示弹窗直接分享</string>
     <string name="normal">通用</string>
     <string name="download">下载</string>
-    <string name="browser_use">browser_use</string>
-    <string name="quick_share">quick_share</string>
-    <string name="home_first">home_first</string>
+    <string name="browser_use"
+        tools:ignore="MissingTranslation"
+        >browser_use</string>
+    <string name="quick_share"
+        tools:ignore="MissingTranslation"
+        >quick_share</string>
+    <string name="home_first"
+        tools:ignore="MissingTranslation"
+        >home_first</string>
     <string name="pref_update_des">有版本更新是否弹窗提醒</string>
     <string name="pref_update">更新提醒</string>
     <string name="pref_update_manual">检测更新</string>
-    <string name="auto_update">auto_update</string>
-    <string name="manual_update">manual_update</string>
+    <string name="auto_update"
+        tools:ignore="MissingTranslation"
+        >auto_update</string>
+    <string name="manual_update"
+        tools:ignore="MissingTranslation"
+        >manual_update</string>
     <string name="auto_download">自动下载更新</string>
     <string name="auto_download_des">WI-FI 网络自动下载更新</string>
 

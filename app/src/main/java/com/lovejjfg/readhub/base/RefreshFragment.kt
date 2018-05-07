@@ -38,8 +38,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.util.tryWrite
-import androidx.view.toBitmap
+import androidx.core.util.tryWrite
+import androidx.core.view.toBitmap
 import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.manager.FixedLinearLayoutManager
@@ -89,7 +89,7 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
-        binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)
+        binding = DataBindingUtil.inflate(inflater!!, R.layout.layout_refresh_recycler, container, false)
         val root = binding?.root
         return root!!
     }

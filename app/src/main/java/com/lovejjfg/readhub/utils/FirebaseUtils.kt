@@ -17,7 +17,7 @@
 package com.lovejjfg.readhub.utils
 
 import android.content.Context
-import androidx.os.bundleOf
+import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.bugly.crashreport.CrashReport
 

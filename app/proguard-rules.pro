@@ -24,9 +24,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 # okhttp
+-dontwarn okhttp3.**
 -dontwarn okio.**
--dontwarn javax.annotation.Nullable
--dontwarn javax.annotation.ParametersAreNonnullByDefault
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
 
 
 #retrofit

@@ -18,8 +18,7 @@ package com.lovejjfg.readhub.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.content.edit
-
+import androidx.core.content.edit
 
 internal object SharedPrefsUtil {
     private val SHARE_PRESNAME = "SharedPreferences"
@@ -31,8 +30,10 @@ internal object SharedPrefsUtil {
      * @param key     键
      * @param value   值
      */
-    fun putValue(context: Context, key: String,
-                 value: Int) {
+    fun putValue(
+        context: Context, key: String,
+        value: Int
+    ) {
         getSharedPreferences(context).edit {
             putInt(key, value)
         }
@@ -45,8 +46,10 @@ internal object SharedPrefsUtil {
      * @param key     键
      * @param value   值
      */
-    fun putValue(context: Context, key: String,
-                 value: Boolean) {
+    fun putValue(
+        context: Context, key: String,
+        value: Boolean
+    ) {
         getSharedPreferences(context).edit {
             putBoolean(key, value)
         }
@@ -59,8 +62,10 @@ internal object SharedPrefsUtil {
      * @param key     键
      * @param value   值
      */
-    fun putValue(context: Context, key: String,
-                 value: String) {
+    fun putValue(
+        context: Context, key: String,
+        value: String
+    ) {
         getSharedPreferences(context).edit {
             putString(key, value)
         }
@@ -73,8 +78,10 @@ internal object SharedPrefsUtil {
      * @param key     键
      * @param value   值
      */
-    fun putValue(context: Context, key: String,
-                 value: Float) {
+    fun putValue(
+        context: Context, key: String,
+        value: Float
+    ) {
         getSharedPreferences(context).edit {
             putFloat(key, value)
         }
@@ -87,8 +94,10 @@ internal object SharedPrefsUtil {
      * @param key     键
      * @param value   值
      */
-    fun putValue(context: Context, key: String,
-                 value: Long) {
+    fun putValue(
+        context: Context, key: String,
+        value: Long
+    ) {
         getSharedPreferences(context).edit {
             putLong(key, value)
         }
@@ -102,8 +111,10 @@ internal object SharedPrefsUtil {
      * @param defValue 如果读取不成功则使用默认值
      * @return 返回读取的值
      */
-    fun getValue(context: Context, key: String,
-                 defValue: Int): Int {
+    fun getValue(
+        context: Context, key: String,
+        defValue: Int
+    ): Int {
         val sp = getSharedPreferences(context)
         return sp.getInt(key, defValue)
     }
@@ -115,8 +126,10 @@ internal object SharedPrefsUtil {
      * @param defValue 如果读取不成功则使用默认值
      * @return 返回读取的值
      */
-    fun getValue(context: Context, key: String,
-                 defValue: Boolean): Boolean {
+    fun getValue(
+        context: Context, key: String,
+        defValue: Boolean
+    ): Boolean {
         val sp = getSharedPreferences(context)
         return sp.getBoolean(key, defValue)
     }
@@ -129,8 +142,10 @@ internal object SharedPrefsUtil {
      * @param defValue 如果读取不成功则使用默认值
      * @return 返回读取的值
      */
-    fun getValue(context: Context, key: String,
-                 defValue: String): String? {
+    fun getValue(
+        context: Context, key: String,
+        defValue: String
+    ): String? {
         val sp = getSharedPreferences(context)
         return sp.getString(key, defValue)
     }
@@ -143,8 +158,10 @@ internal object SharedPrefsUtil {
      * @param defValue 如果读取不成功则使用默认值
      * @return 返回读取的值
      */
-    fun getValue(context: Context, key: String,
-                 defValue: Float): Float {
+    fun getValue(
+        context: Context, key: String,
+        defValue: Float
+    ): Float {
         val sp = getSharedPreferences(context)
         return sp.getFloat(key, defValue)
     }
@@ -157,8 +174,10 @@ internal object SharedPrefsUtil {
      * @param defValue 如果读取不成功则使用默认值
      * @return 返回读取的值
      */
-    fun getValue(context: Context, key: String,
-                 defValue: Long): Long {
+    fun getValue(
+        context: Context, key: String,
+        defValue: Long
+    ): Long {
         val sp = getSharedPreferences(context)
         return sp.getLong(key, defValue)
     }
