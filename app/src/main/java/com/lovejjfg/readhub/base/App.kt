@@ -18,61 +18,15 @@
 
 package com.lovejjfg.readhub.base
 
-import android.app.Application
-import android.os.Environment
-import android.preference.PreferenceManager
-import android.util.Log
-import com.lovejjfg.readhub.BuildConfig
-import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.utils.http.NetWorkUtils
-import com.lovejjfg.readhub.utils.http.ToastUtil
-import com.meituan.android.walle.WalleChannelReader
-import com.tencent.bugly.Bugly
-import com.tencent.bugly.beta.Beta
-import com.tencent.bugly.crashreport.CrashReport
-import java.io.File
+import com.tencent.tinker.loader.app.TinkerApplication
+import com.tencent.tinker.loader.shareutil.ShareConstants
 
 /**
  * ReadHub
  * Created by Joe at 2017/8/25.
  */
-class App : Application() {
+class App : TinkerApplication(
 
-    override fun onCreate() {
-        super.onCreate()
-        mApp = this
-        val notify = PreferenceManager
-            .getDefaultSharedPreferences(this)
-            .getBoolean("auto_update", true)
-
-        Log.i("APP", "自动更新：$notify")
-
-        val autoDownload = PreferenceManager
-            .getDefaultSharedPreferences(this)
-            .getBoolean("auto_download", true)
-        val strategy = CrashReport.UserStrategy(this)
-        strategy.appChannel = WalleChannelReader.getChannel(applicationContext, "dev")
-        Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG, strategy)
-
-        Log.i("APP", "自动下载：$autoDownload")
-        Beta.autoInit = true
-        Beta.enableHotfix = false
-        Beta.canAutoPatch = false
-        Beta.canShowApkInfo = false
-        Beta.upgradeDialogLayoutId = R.layout.dialog_update
-        Beta.showInterruptedStrategy = false
-        Beta.autoCheckUpgrade = notify
-        Beta.autoDownloadOnWifi = autoDownload
-        Beta.smallIconId = R.mipmap.ic_launcher_foreground
-        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        Beta.init(this, BuildConfig.IS_DEBUG)
-        ToastUtil.initToast(this)
-        NetWorkUtils.init(this)
-        cacheDirectory = File(applicationContext.cacheDir, "responses")
-    }
-
-    companion object {
-        var cacheDirectory: File? = null
-        var mApp: App? = null
-    }
-}
+    ShareConstants.TINKER_ENABLE_ALL, "com.lovejjfg.readhub.base.AppProxy",
+    "com.tencent.tinker.loader.TinkerLoader", false
+)

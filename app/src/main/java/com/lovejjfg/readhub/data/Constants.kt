@@ -51,5 +51,5 @@ object Constants {
 
     const val TYPE_ALREADY_READ = 0xff0001
 
-    const val ITEM_MAX_COUNT = 3
+    const val ITEM_MAX_COUNT = 1
 }

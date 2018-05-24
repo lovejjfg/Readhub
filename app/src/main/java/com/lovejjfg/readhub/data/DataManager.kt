@@ -18,7 +18,8 @@
 
 package com.lovejjfg.readhub.data
 
-import com.lovejjfg.readhub.base.App
+import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.base.IBaseView
 import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
@@ -54,8 +55,7 @@ object DataManager {
 
         if (retrofit == null) {
             val cacheSize = 10 * 1024 * 1024L
-            val cache = Cache(App.cacheDirectory!!, cacheSize)
-
+            val cache = Cache(AppProxy.cacheDirectory!!, cacheSize)
             retrofit = Retrofit.Builder()
                 .baseUrl(API_RELEASE)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
