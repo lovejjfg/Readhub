@@ -36,10 +36,11 @@ import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.TextView
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.dip2px
 import java.lang.IllegalStateException
 
-class PartnerLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = -1) : ViewGroup(context, attrs, defStyleAttr) {
+class PartnerLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = -1) :
+    ViewGroup(context, attrs, defStyleAttr) {
     private var foreground: Drawable? = null
     //显示样式
     private var type: Int = SINGLE_LINE
@@ -51,9 +52,8 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
     private var margin: Int = 0
     private var pGravity: Int = CENTER
 
-
     init {
-        margin = UIUtil.dip2px(getContext(), 4F)
+        margin = context.dip2px(4F)
         val a = context.obtainStyledAttributes(attrs, R.styleable.PartnerLayout)
         val d = a.getDrawable(R.styleable.ForegroundView_android_foreground)
         margin = a.getDimensionPixelOffset(R.styleable.PartnerLayout_PartnerSpace, margin)
@@ -63,7 +63,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         a.recycle()
         outlineProvider = ViewOutlineProvider.BOUNDS
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -114,8 +113,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         } else {
             throw RuntimeException("PartnerLayout child count must is 2")
         }
-
-
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -148,7 +145,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
                         top = lastLineTop + (lastLineHeight - v1.measuredHeight)
                     }
                 }
-
             }
             v1.layout(left, top, left + v1.measuredWidth, top + v1.measuredHeight)
         } else if (type == NEXT_LINE) {
@@ -160,7 +156,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
-
     /**
      * 得到Textview绘制文字的基本信息
      */
@@ -170,7 +165,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         lastLineTop = staticLayout.getLineTop(lineCount - 1)
         lastLineRight = staticLayout.getLineRight(lineCount - 1)
     }
-
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -262,7 +256,6 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         private val MULTI_LINE = 5
         //next line
         private val NEXT_LINE = 6
-
     }
 }
 

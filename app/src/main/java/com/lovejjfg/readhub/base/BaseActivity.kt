@@ -3,14 +3,18 @@ package com.lovejjfg.readhub.base
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.view.ViewGroup.MarginLayoutParams
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.ErrorUtil
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.NoNetEvent
+import com.lovejjfg.readhub.utils.getStatusBarHeight
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.layout_statusbar.statusBarProxy
 
 /**
  * Created by joe on 2017/9/28.
@@ -19,11 +23,11 @@ import io.reactivex.functions.Consumer
 
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
     private var mDisposables: CompositeDisposable? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
+    final override fun onCreate(savedInstanceState: Bundle?) {
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         afterCreatedView(savedInstanceState)
-
+        initStatusBar()
     }
 
     override fun showToast(toast: String) {
@@ -40,10 +44,8 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     override fun showLoadingDialog(cancelable: Boolean) {
     }
 
-
     override fun closeLoadingDialog() {
     }
-
 
     override fun subscribe(subscriber: Disposable) {
         mDisposables?.add(subscriber)
@@ -71,13 +73,20 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         RxBus.instance.unSubscribe(this)
+        super.onDestroy()
     }
 
     override fun getMyContext(): Context? {
         return this
     }
 
-
+    private fun initStatusBar() {
+        statusBarProxy?.let {
+            val statusBarHeight = getStatusBarHeight()
+            val layoutParams = findViewById<Toolbar>(R.id.toolbar).layoutParams as MarginLayoutParams
+            layoutParams.topMargin = statusBarHeight
+            statusBarProxy.layoutParams.height = statusBarHeight
+        }
+    }
 }

@@ -53,6 +53,8 @@
 
         </WebView>
 
+        <include layout="@layout/layout_statusbar"/>
+
     </android.support.design.widget.CoordinatorLayout>
 
 </layout>

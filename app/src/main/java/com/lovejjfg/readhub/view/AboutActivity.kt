@@ -20,7 +20,6 @@ package com.lovejjfg.readhub.view
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,6 +27,7 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Library
 import com.lovejjfg.readhub.databinding.ActivityAboutBinding
 import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
@@ -40,11 +40,11 @@ import io.reactivex.rxkotlin.addTo
  * ReadHub
  * Created by Joe at 2017/9/5.
  */
-class AboutActivity : AppCompatActivity() {
+class AboutActivity : BaseActivity() {
     private val mDisposables: CompositeDisposable = CompositeDisposable()
     private var aboutAdapter: PowerAdapter<Library>? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
         contentView?.tvVersoin?.text = String.format(getString(R.string.version_at), BuildConfig.VERSION_NAME)
         contentView?.toolbar?.setNavigationOnClickListener({ finish() })

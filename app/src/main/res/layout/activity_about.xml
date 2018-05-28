@@ -117,6 +117,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
+        <include layout="@layout/layout_statusbar"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

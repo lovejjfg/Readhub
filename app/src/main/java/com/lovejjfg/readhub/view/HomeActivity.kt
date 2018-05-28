@@ -23,6 +23,7 @@ import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.view.View
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
@@ -38,6 +39,7 @@ import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import kotlinx.android.synthetic.main.activity_home.parentContainer
 
 class HomeActivity : BaseActivity() {
 
@@ -51,48 +53,47 @@ class HomeActivity : BaseActivity() {
     var navigation: BottomNavigationView? = null
     private var currentId: Int = R.id.navigation_home
 
-
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         currentId = item.itemId
         when (item.itemId) {
             R.id.navigation_home -> {
                 logEvent(this, getString(R.string.title_home))
                 fragmentManager.beginTransaction()
-                        .show(hotTopicFragment)
-                        .hide(techFragment)
-                        .hide(developFragment)
-                        .hide(blockChainFragment)
-                        .commitAllowingStateLoss()
+                    .show(hotTopicFragment)
+                    .hide(techFragment)
+                    .hide(developFragment)
+                    .hide(blockChainFragment)
+                    .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_tech -> {
                 logEvent(this, getString(R.string.title_tech))
                 fragmentManager.beginTransaction()
-                        .show(techFragment)
-                        .hide(hotTopicFragment)
-                        .hide(developFragment)
-                        .hide(blockChainFragment)
-                        .commitAllowingStateLoss()
+                    .show(techFragment)
+                    .hide(hotTopicFragment)
+                    .hide(developFragment)
+                    .hide(blockChainFragment)
+                    .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dev -> {
                 logEvent(this, getString(R.string.title_dev))
                 fragmentManager.beginTransaction()
-                        .show(developFragment)
-                        .hide(hotTopicFragment)
-                        .hide(techFragment)
-                        .hide(blockChainFragment)
-                        .commitAllowingStateLoss()
+                    .show(developFragment)
+                    .hide(hotTopicFragment)
+                    .hide(techFragment)
+                    .hide(blockChainFragment)
+                    .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
             else -> {
                 logEvent(this, getString(R.string.title_block_chain))
                 fragmentManager.beginTransaction()
-                        .show(blockChainFragment)
-                        .hide(hotTopicFragment)
-                        .hide(techFragment)
-                        .hide(developFragment)
-                        .commitAllowingStateLoss()
+                    .show(blockChainFragment)
+                    .hide(hotTopicFragment)
+                    .hide(techFragment)
+                    .hide(developFragment)
+                    .commitAllowingStateLoss()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -102,7 +103,6 @@ class HomeActivity : BaseActivity() {
             RxBus.instance.post(ScrollEvent())
         }
     }
-
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
@@ -122,7 +122,6 @@ class HomeActivity : BaseActivity() {
                 R.id.home_setting -> {
                     JumpUitl.jumpSetting(this)
                     return@setOnMenuItemClickListener true
-
                 }
                 else -> {
                     JumpUitl.jumpAbout(this)
@@ -138,14 +137,14 @@ class HomeActivity : BaseActivity() {
             developFragment = DevelopFragment()
             blockChainFragment = BlockChainFragment()
             fragmentManager.beginTransaction()
-                    .add(R.id.content, hotTopicFragment, Constants.HOT)
-                    .add(R.id.content, techFragment, Constants.TECH)
-                    .add(R.id.content, developFragment, Constants.DEV)
-                    .add(R.id.content, blockChainFragment, Constants.BLOCK_CHAIN)
-                    .hide(techFragment)
-                    .hide(developFragment)
-                    .hide(blockChainFragment)
-                    .commitAllowingStateLoss()
+                .add(R.id.content, hotTopicFragment, Constants.HOT)
+                .add(R.id.content, techFragment, Constants.TECH)
+                .add(R.id.content, developFragment, Constants.DEV)
+                .add(R.id.content, blockChainFragment, Constants.BLOCK_CHAIN)
+                .hide(techFragment)
+                .hide(developFragment)
+                .hide(blockChainFragment)
+                .commitAllowingStateLoss()
         } else {
             hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
             techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
@@ -155,18 +154,19 @@ class HomeActivity : BaseActivity() {
                 navigation1?.selectedItemId = currentId
             }
         }
-
     }
 
     private fun checkPermissions() {
         if (!SharedPrefsUtil.getValue(this, Constants.SHOW_PROMISSION, false)) {
-            RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .subscribe({
-                        SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
-                    }, { it.printStackTrace() })
+            RxPermissions(this).request(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+                .subscribe({
+                    SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
+                }, { it.printStackTrace() })
         }
     }
-
 
     override fun onSaveInstanceState(outState: Bundle?) {
         if (currentId != 0) {
@@ -175,19 +175,32 @@ class HomeActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onStart() {
+        super.onStart()
+        hideNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        hideNavigation()
+    }
+
+    private fun hideNavigation() {
+        parentContainer?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+    }
+
     override fun onBackPressed() {
         try {
             JumpUitl.backHome(this)
         } catch (e: Exception) {
             super.onBackPressed()
         }
-
     }
 
     fun selectItem(navigationId: Int) {
         currentId = navigationId
         viewBind?.navigation?.selectedItemId = navigationId
     }
-
-
 }

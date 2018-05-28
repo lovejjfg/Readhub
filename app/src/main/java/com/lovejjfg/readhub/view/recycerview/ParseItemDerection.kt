@@ -21,7 +21,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.utils.UIUtil
-
+import com.lovejjfg.readhub.utils.dip2px
 
 /**
  * Created by joe on 2017/9/29.
@@ -40,17 +40,17 @@ class ParseItemDerection : RecyclerView.ItemDecoration() {
         if (preType != -1) {
             when (viewType) {
                 Constants.TYPE_PARSE_TEXT -> if (viewType != preType) {
-                    outRect?.top = UIUtil.dip2px(parent.context, 30F)
+                    outRect?.top = parent.context.dip2px( 30F)
                 } else {
-                    outRect?.top = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.top = parent.context.dip2px( 20F)
                 }
                 Constants.TYPE_PARSE_IMG -> {
-                    outRect?.left = UIUtil.dip2px(parent.context, 20F)
-                    outRect?.right = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.left = parent.context.dip2px( 20F)
+                    outRect?.right = parent.context.dip2px( 20F)
                     if (viewType != preType) {
-                        outRect?.top = UIUtil.dip2px(parent.context, 30F)
+                        outRect?.top = parent.context.dip2px( 30F)
                     } else {
-                        outRect?.top = UIUtil.dip2px(parent.context, 20F)
+                        outRect?.top = parent.context.dip2px( 20F)
                     }
                 }
             }
@@ -60,7 +60,7 @@ class ParseItemDerection : RecyclerView.ItemDecoration() {
                     outRect?.top = 0
                 }
                 else -> {
-                    outRect?.top = UIUtil.dip2px(parent.context, 20F)
+                    outRect?.top = parent.context.dip2px(20F)
 
                 }
             }

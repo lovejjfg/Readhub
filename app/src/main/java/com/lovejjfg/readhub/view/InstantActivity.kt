@@ -52,8 +52,8 @@ class InstantActivity : BaseActivity() {
     private var refresh: SwipeRefreshLayout? = null
     private var instantAdapter: InstantAdapter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         val topicId = intent.getStringExtra(Constants.ID)
         if (TextUtils.isEmpty(topicId)) {
             finish()
@@ -78,7 +78,6 @@ class InstantActivity : BaseActivity() {
         instantAdapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
         instantAdapter!!.attachRecyclerView(rvHot!!)
         getData(topicId)
-
     }
 
     private fun getData(topicId: String) {

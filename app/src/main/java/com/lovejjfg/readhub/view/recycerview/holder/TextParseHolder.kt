@@ -17,7 +17,12 @@
 package com.lovejjfg.readhub.view.recycerview.holder
 
 import android.os.Build
-import android.text.*
+import android.text.Html
+import android.text.Layout
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -29,26 +34,19 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.JumpUitl
-import com.lovejjfg.readhub.utils.UIUtil
-
+import com.lovejjfg.readhub.utils.dip2px
 
 /**
  * Created by joe on 2017/9/28.
  * Email: lovejjfg@gmail.com
  */
 class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false) {
-    //    @BindView(R.id.tv_content)
-//    internal var mContent: TextView? = null
-//    @BindDimen(R.dimen.padding_20)
-//    internal var padding20: Int = 0
-//    @BindDimen(R.dimen.padding_50)
-//    internal var padding50: Int = 0
     private val JUSTIFY = "justify"
     private val CENTER = "center"
     private val RIGHT = "right"
     private var mContent = itemView as TextView
-    private val padding50 = UIUtil.dip2px(itemView.context, 50F)
-    private val padding20 = UIUtil.dip2px(itemView.context, 20F)
+    private val padding50 = itemView.context.dip2px(50F)
+    private val padding20 = itemView.context.dip2px(20F)
     override fun onBind(item: DetailItems?) {
         mContent.movementMethod = LinkMovementMethod.getInstance()
         val gravity = item!!.gravity
@@ -90,12 +88,10 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
                             ds?.color = mContent.context.resources.getColor(R.color.colorAccent)
                         }
                     }, start, start + href.key.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
                 }
             }
             mContent.text = builder
             mContent.textSize = (if (h1) 18 else if (h6) 14 else 16).toFloat()
         }
-
     }
 }

@@ -51,9 +51,11 @@ import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
+import com.lovejjfg.readhub.utils.hasNavigationBar
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.activity_home.parentContainer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
 import java.io.File
 
@@ -141,6 +143,7 @@ abstract class RefreshFragment : BaseFragment() {
         rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                hideNavigation()
                 if (mSnackBar != null && mSnackBar!!.isShown) {
                     mSnackBar!!.dismiss()
                     return
@@ -163,6 +166,12 @@ abstract class RefreshFragment : BaseFragment() {
                 }
             }
         })
+    }
+
+    private fun hideNavigation() {
+        refresh?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
     private fun initDataOrRefresh(savedInstanceState: Bundle?) {
@@ -214,7 +223,14 @@ abstract class RefreshFragment : BaseFragment() {
                 .setTitle(getString(R.string.share))
                 .setMessage(getString(R.string.share_hint_default))
                 .setNegativeButton(getString(R.string.not_send), { _, _ ->
-                }).create()
+                })
+                .setOnDismissListener {
+                    hideNavigation()
+                }
+                .setOnCancelListener {
+                    hideNavigation()
+                }
+                .create()
         }
         if (hintArrays != null) {
             val d = Math.random() * 100

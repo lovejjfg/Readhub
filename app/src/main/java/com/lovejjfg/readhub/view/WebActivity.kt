@@ -23,31 +23,34 @@ import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
-import android.webkit.*
+import android.webkit.SslErrorHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityWebBinding
 import com.lovejjfg.readhub.utils.UIUtil
 
-class WebActivity : AppCompatActivity() {
+class WebActivity : BaseActivity() {
 
     private var mWeb: WebView? = null
     var loading: ProgressBar? = null
     var toolbar: Toolbar? = null
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        super.onCreate(savedInstanceState)
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         val viewBind = DataBindingUtil.setContentView<ActivityWebBinding>(this, R.layout.activity_web)
-//        val title = intent.getStringExtra(Constants.TITLE)
-//        setMyTitle(title)
         mWeb = viewBind.web
         loading = viewBind.pb
         toolbar = viewBind?.toolbar
@@ -88,14 +91,12 @@ class WebActivity : AppCompatActivity() {
                 loading?.progress = newProgress
                 if (newProgress == 100)
                     loading?.visibility = View.GONE
-
             }
         }
         mWeb!!.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 //                loading?.show()
                 loading?.visibility = View.VISIBLE
-
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -113,11 +114,14 @@ class WebActivity : AppCompatActivity() {
                 loading?.visibility = View.GONE
             }
 
-            override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+            override fun onReceivedHttpError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                errorResponse: WebResourceResponse?
+            ) {
                 super.onReceivedHttpError(view, request, errorResponse)
                 loading?.visibility = View.GONE
             }
-
         }
 
         mWeb!!.loadUrl(url)

@@ -1,11 +1,17 @@
 package com.lovejjfg.readhub.view.widget
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
 import android.graphics.Bitmap.Config.ARGB_8888
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.dip2px
 
 /**
  * Created by joe on 2017/9/13.
@@ -13,7 +19,6 @@ import com.lovejjfg.readhub.utils.UIUtil
  */
 
 class ConnectorView : View {
-
 
     private var outR: Int = 0
     private var innerR: Int = 0
@@ -35,8 +40,8 @@ class ConnectorView : View {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
 
-        outR = UIUtil.dip2px(context, 2.5f)
-        innerR = UIUtil.dip2px(context, 2f)
+        outR = context.dip2px(2.5f)
+        innerR = context.dip2px(2f)
 //        transitionY = UIUtil.dip2px(context, 5f)
         iconPaint.color = LIGHT_GREY
         rootPaint.color = ROOT_COLOR
@@ -64,7 +69,7 @@ class ConnectorView : View {
             val cacheCanvas = Canvas(cache!!)
 
             val halfWidth = width / 2f
-            val strokeSize = UIUtil.dip2px(context, 0.8f).toFloat()
+            val strokeSize = context.dip2px(0.8f).toFloat()
             iconPaint.strokeWidth = strokeSize
             when (type) {
                 ConnectorView.Type.NODE -> {
@@ -110,5 +115,4 @@ class ConnectorView : View {
 
         }
     }
-
 }

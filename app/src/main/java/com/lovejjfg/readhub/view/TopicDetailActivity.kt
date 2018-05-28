@@ -29,8 +29,9 @@ class TopicDetailActivity : BaseActivity() {
     private var topicDetailAdapter: PowerAdapter<DetailItems>? = null
     var toolbar: Toolbar? = null
     private var refresh: SwipeRefreshLayout? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         id = intent.getStringExtra(Constants.ID)
         if (TextUtils.isEmpty(id)) {
             finish()
@@ -57,63 +58,59 @@ class TopicDetailActivity : BaseActivity() {
                 }
             }
         })
-
     }
 
     private fun getData() {
         val subscribe = DataManager.convert(DataManager.init().topicDetail(id!!))
-                .flatMap { topicDetail ->
-                    Observable.create<DetailItems> {
-                        try {
-                            it.onNext(DetailItems(topicDetail))
+            .flatMap { topicDetail ->
+                Observable.create<DetailItems> {
+                    try {
+                        it.onNext(DetailItems(topicDetail))
+                        it.onNext(DetailItems())
+                        val newsArray = topicDetail.newsArray
+                        if (newsArray != null && newsArray.isNotEmpty()) {
+                            for (item in newsArray) {
+                                it.onNext(DetailItems(item!!))
+                            }
                             it.onNext(DetailItems())
-                            val newsArray = topicDetail.newsArray
-                            if (newsArray != null && newsArray.isNotEmpty()) {
-                                for (item in newsArray) {
-                                    it.onNext(DetailItems(item!!))
-                                }
-                                it.onNext(DetailItems())
-                            }
-                            val topics = topicDetail.timeline?.topics
-                            if (topics != null && topics.isNotEmpty()) {
-                                if (topics.size == 1) {
-                                    val items = DetailItems(topics[0]!!)
-                                    items.timeLineType = ConnectorView.Type.ONLY
-                                    it.onNext(items)
-                                } else {
-                                    topics.forEachIndexed({ index, topicsItem ->
-                                        val items = DetailItems(topicsItem!!)
-                                        when (index) {
-                                            0 -> items.timeLineType = ConnectorView.Type.START
-                                            topics.size - 1 -> items.timeLineType = ConnectorView.Type.END
-                                            else -> items.timeLineType = ConnectorView.Type.NODE
-                                        }
-                                        it.onNext(items)
-                                    })
-                                }
-
-                            }
-                            it.onComplete()
-                        } catch (e: Exception) {
-                            it.onError(e)
                         }
-
+                        val topics = topicDetail.timeline?.topics
+                        if (topics != null && topics.isNotEmpty()) {
+                            if (topics.size == 1) {
+                                val items = DetailItems(topics[0]!!)
+                                items.timeLineType = ConnectorView.Type.ONLY
+                                it.onNext(items)
+                            } else {
+                                topics.forEachIndexed({ index, topicsItem ->
+                                    val items = DetailItems(topicsItem!!)
+                                    when (index) {
+                                        0 -> items.timeLineType = ConnectorView.Type.START
+                                        topics.size - 1 -> items.timeLineType = ConnectorView.Type.END
+                                        else -> items.timeLineType = ConnectorView.Type.NODE
+                                    }
+                                    it.onNext(items)
+                                })
+                            }
+                        }
+                        it.onComplete()
+                    } catch (e: Exception) {
+                        it.onError(e)
                     }
+
                 }
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    refresh?.isRefreshing = false
-                    topicDetailAdapter!!.setList(it)
-                    toolbar?.title = it[0]?.detail?.title
-                }, {
-                    it.printStackTrace()
-                    refresh?.isRefreshing = false
-                    topicDetailAdapter?.showError()
-                    handleError(it)
-                })
+            }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                refresh?.isRefreshing = false
+                topicDetailAdapter!!.setList(it)
+                toolbar?.title = it[0]?.detail?.title
+            }, {
+                it.printStackTrace()
+                refresh?.isRefreshing = false
+                topicDetailAdapter?.showError()
+                handleError(it)
+            })
         subscribe(subscribe)
-
     }
-
 }

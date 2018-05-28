@@ -53,9 +53,9 @@ object JumpUitl {
                 .getBoolean("browser_use", false)
 
             if (!default) {
-                val intent = Intent(context, WebActivity::class.java)
-                intent.putExtra(Constants.URL, url)
-                startActivity(context, intent)
+                context.fastStartActivity(WebActivity::class.java, {
+                    it.putExtra(Constants.URL, url)
+                })
             } else {
                 val uri = Uri.parse(url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
