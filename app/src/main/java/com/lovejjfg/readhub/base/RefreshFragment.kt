@@ -51,11 +51,9 @@ import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
-import com.lovejjfg.readhub.utils.hasNavigationBar
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.activity_home.parentContainer
 import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
 import java.io.File
 
@@ -271,7 +269,7 @@ abstract class RefreshFragment : BaseFragment() {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_news)))
             FirebaseUtils.logEvent(
                 mContext!!,
-                getString(R.string.share),
+                Constants.SHARE,
                 Pair(Constants.NEWS_ID, adapter?.list!![position]?.id)
             )
         } catch (e: Exception) {

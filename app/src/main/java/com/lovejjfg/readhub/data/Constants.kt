@@ -34,6 +34,7 @@ object Constants {
     const val ID: String = "id"
     //    const val EXTRA: String = "extra"
     const val TAB_ID: String = "tab_id"
+    const val SHARE = "分享事件"
     const val SHOW_PROMISSION: String = "SHOW_PROMISSION"
     const val DATA: String = "data"
     const val NEWS_ID = "newsId"
