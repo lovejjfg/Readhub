@@ -18,9 +18,9 @@
 
 package com.lovejjfg.readhub.data.topic.tech
 
-import javax.annotation.Generated
 import com.google.gson.annotations.SerializedName
 import com.lovejjfg.readhub.data.topic.DataItem
+import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
 data class Tech(
@@ -29,7 +29,7 @@ data class Tech(
 	val totalItems: Int? = null,
 
 	@field:SerializedName("data")
-	val data: List<DataItem?>? = null,
+	val data: List<DataItem>? = null,
 
 	@field:SerializedName("totalPages")
 	val totalPages: Int? = null,

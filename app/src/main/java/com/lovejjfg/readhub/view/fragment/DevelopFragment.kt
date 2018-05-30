@@ -39,13 +39,13 @@ import io.reactivex.functions.Consumer
  */
 class DevelopFragment : RefreshFragment() {
 
-    override fun createAdapter(): PowerAdapter<DataItem>? {
+    override fun createAdapter(): PowerAdapter<DataItem> {
         return NormalTopicAdapter()
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter?.setOnItemClickListener { _, _, item ->
+        adapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(activity, item.url!!)
         }
     }
@@ -57,7 +57,7 @@ class DevelopFragment : RefreshFragment() {
                         preOrder = latestOrder
                         latestOrder = it.data.first()?.id
                         order = DateUtil.parseTimeToMillis(it.data.last()?.publishDate)
-                        adapter?.setList(it.data)
+                        adapter.setList(it.data)
                         handleAlreadRead(false, it.data, {
                             TextUtils.equals(it?.id, preOrder)
                         })
@@ -66,7 +66,7 @@ class DevelopFragment : RefreshFragment() {
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)
-                    adapter?.showError(false)
+                    adapter.showError(false)
                     handleError(it)
                     refresh?.isRefreshing = false
                 })
@@ -77,14 +77,14 @@ class DevelopFragment : RefreshFragment() {
                 Consumer {
                     val data = it.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
-                    adapter?.appendList(data)
-                    handleAlreadRead(true, adapter?.list!!, {
+                    adapter.appendList(data)
+                    handleAlreadRead(true, adapter.list!!, {
                         TextUtils.equals(it?.id, preOrder)
                     })
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)
-                    adapter?.loadMoreError()
+                    adapter.loadMoreError()
 
                 })
     }

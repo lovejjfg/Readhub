@@ -66,22 +66,22 @@ abstract class RefreshFragment : BaseFragment() {
     protected var order: String? = null
     protected var latestOrder: String? = null
     protected var preOrder: String? = null
-    protected var binding: LayoutRefreshRecyclerBinding? = null
-    protected var adapter: PowerAdapter<DataItem>? = null
-    private var navigation: BottomNavigationView? = null
-    var refresh: SwipeRefreshLayout? = null
+    protected lateinit var binding: LayoutRefreshRecyclerBinding
+    protected lateinit var adapter: PowerAdapter<DataItem>
+    private lateinit var navigation: BottomNavigationView
+    lateinit var refresh: SwipeRefreshLayout
     var mIsVisible = true
     var mIsAnimating = false
     //    var mSnackBar: Snackbar? = null
     private var mShareDialog: AlertDialog? = null
-    private var hintArrays: Array<String>? = null
+    private lateinit var hintArrays: Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hintArrays = resources.getStringArray(R.array.share_hints)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
             Consumer {
                 if (isVisible) {
-                    binding?.rvHot?.scrollToPosition(0)
+                    binding.rvHot.scrollToPosition(0)
                 }
             },
             Consumer { Log.e(TAG, "error:", it) })
@@ -90,8 +90,7 @@ abstract class RefreshFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
         binding = DataBindingUtil.inflate(inflater!!, R.layout.layout_refresh_recycler, container, false)
-        val root = binding?.root
-        return root!!
+        return binding.root
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
@@ -114,31 +113,31 @@ abstract class RefreshFragment : BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         println("view 创建啦：${toString()}")
-        val rvHot = binding?.rvHot
-        rvHot?.layoutManager = FixedLinearLayoutManager(activity)
-        rvHot?.addOnScrollListener(LoadMoreScrollListener(rvHot))
+        val rvHot = binding.rvHot
+        rvHot.layoutManager = FixedLinearLayoutManager(activity)
+        rvHot.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
         handleLongClick()
-        adapter?.setHasStableIds(true)
-        adapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
-        adapter?.attachRecyclerView(rvHot!!)
-        refresh = binding?.container
-        adapter?.setLoadMoreListener {
+        adapter.setHasStableIds(true)
+        adapter.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot))
+        adapter.attachRecyclerView(rvHot)
+        refresh = binding.container
+        adapter.setLoadMoreListener {
             if (order != null) {
                 loadMore()
             }
         }
-        adapter?.totalCount = Int.MAX_VALUE
+        adapter.totalCount = Int.MAX_VALUE
         println("tag:$tag;;isHidden:$isHidden")
         initDataOrRefresh(savedInstanceState)
         @Suppress("DEPRECATION")
-        refresh?.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
-        refresh?.setOnRefreshListener { refresh(refresh) }
-        adapter?.setOnItemClickListener { _, position, item ->
-            item.isExband = !item.isExband!!
-            adapter?.notifyItemChanged(position)
+        refresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
+        refresh.setOnRefreshListener { refresh(refresh) }
+        adapter.setOnItemClickListener { _, position, item ->
+            item.isExband = !item.isExband
+            adapter.notifyItemChanged(position)
         }
-        rvHot?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        rvHot.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 hideNavigation()
@@ -167,7 +166,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun hideNavigation() {
-        refresh?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
+        refresh.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
@@ -179,26 +178,26 @@ abstract class RefreshFragment : BaseFragment() {
             } else {
                 val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
                 if (mList != null && mList.isNotEmpty()) {
-                    adapter?.setList(mList)
+                    adapter.setList(mList)
                 } else {
                     doFreshWithCheck()
                 }
             }
         } catch (e: Exception) {
-            refresh?.isRefreshing = true
+            refresh.isRefreshing = true
             refresh(refresh)
         }
     }
 
     private fun doFreshWithCheck() {
-        if (!isHidden && adapter!!.list.isEmpty()) {
-            refresh?.isRefreshing = true
+        if (!isHidden && adapter.list.isEmpty()) {
+            refresh.isRefreshing = true
             refresh(refresh)
         }
     }
 
     private fun handleLongClick() {
-        adapter?.setOnItemLongClickListener { _, position, _ ->
+        adapter.setOnItemLongClickListener { _, position, _ ->
             val quick = try {
                 PreferenceManager
                     .getDefaultSharedPreferences(mContext)
@@ -230,10 +229,8 @@ abstract class RefreshFragment : BaseFragment() {
                 }
                 .create()
         }
-        if (hintArrays != null) {
-            val d = Math.random() * 100
-            mShareDialog!!.setMessage(hintArrays!![d.toInt() % hintArrays!!.size])
-        }
+        val d = Math.random() * 100
+        mShareDialog!!.setMessage(hintArrays[d.toInt() % hintArrays.size])
         mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send), { _, _ ->
             shareWithCheck(position)
         })
@@ -270,7 +267,7 @@ abstract class RefreshFragment : BaseFragment() {
             FirebaseUtils.logEvent(
                 mContext!!,
                 Constants.SHARE,
-                Pair(Constants.NEWS_ID, adapter?.list!![position]?.id)
+                Pair(Constants.NEWS_ID, adapter.list!![position]?.id)
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -280,9 +277,9 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     protected fun showNav() {
-        navigation?.animate()
-            ?.translationY(0f)
-            ?.setListener(object : AnimatorListenerAdapter() {
+        navigation.animate()
+            .translationY(0f)
+            .setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     mIsAnimating = true
                 }
@@ -293,7 +290,7 @@ abstract class RefreshFragment : BaseFragment() {
                     mIsVisible = true
                 }
             })
-            ?.start()
+            .start()
     }
 
     protected fun hideNav() {
@@ -301,9 +298,9 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     protected fun hideNav(listenerAdapter: AnimatorListenerAdapter?) {
-        navigation?.animate()
-            ?.translationY(navigation?.height!! + 0.5f)
-            ?.setListener(object : AnimatorListenerAdapter() {
+        navigation.animate()
+            .translationY(navigation.height + 0.5f)
+            .setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
                     mIsAnimating = true
                     listenerAdapter?.onAnimationStart(animation)
@@ -315,10 +312,10 @@ abstract class RefreshFragment : BaseFragment() {
                     listenerAdapter?.onAnimationEnd(animation)
                 }
             })
-            ?.start()
+            .start()
     }
 
-    abstract fun createAdapter(): PowerAdapter<DataItem>?
+    abstract fun createAdapter(): PowerAdapter<DataItem>
 
     abstract fun refresh(refresh: SwipeRefreshLayout?)
 
@@ -328,7 +325,7 @@ abstract class RefreshFragment : BaseFragment() {
         super.onResume()
         //refresh time
         if (!isHidden) {
-            adapter?.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -341,11 +338,11 @@ abstract class RefreshFragment : BaseFragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            if (adapter!!.list.isEmpty()) {
-                refresh?.isRefreshing = true
+            if (adapter.list.isEmpty()) {
+                refresh.isRefreshing = true
                 refresh(refresh)
             } else {
-                adapter?.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -360,15 +357,15 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun saveData(outState: Bundle?) {
-        if (saveListData() && adapter?.list != null && adapter?.list?.isNotEmpty()!!) {
-            outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter?.list))
+        if (saveListData() && adapter.list != null && adapter.list?.isNotEmpty()!!) {
+            outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter.list))
             outState?.putString(Constants.CURRENT_ID, latestOrder)
         }
     }
 
     protected inline fun handleAlreadRead(
         loadMore: Boolean,
-        data: List<DataItem?>,
+        data: List<DataItem>,
         check: (item: DataItem?) -> Boolean
     ) {
         println("currentId:$latestOrder;;preId::$preOrder")
@@ -397,10 +394,15 @@ abstract class RefreshFragment : BaseFragment() {
                     }
                 } else {
                     removeRead()
+                    val hintCount = if (data.first()!!.isTop) {
+                        indexOf - 1
+                    } else {
+                        indexOf
+                    }
                     println("插入更新位置：$indexOf")
-                    showToast(String.format(getString(R.string.update_news_with_count), indexOf))
+                    showToast(String.format(getString(R.string.update_news_with_count), hintCount))
                     val element = DataItem()
-                    adapter?.insertItem(indexOf, element)
+                    adapter.insertItem(indexOf, element)
                     preOrder = latestOrder
                 }
             }
@@ -411,9 +413,9 @@ abstract class RefreshFragment : BaseFragment() {
 
     fun removeRead() {
         try {
-            val position = adapter?.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
+            val position = adapter.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
             if (position != -1) {
-                adapter?.removeItem(position!!)
+                adapter.removeItem(position)
             }
         } catch (e: Exception) {
             e.printStackTrace()

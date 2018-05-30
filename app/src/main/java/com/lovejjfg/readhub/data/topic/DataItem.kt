@@ -25,7 +25,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DataItem(
         @field:SerializedName("isExband")
-        var isExband: Boolean? = false,
+        var isExband: Boolean = false,
 
         @field:SerializedName("summary")
         val summary: String? = null,

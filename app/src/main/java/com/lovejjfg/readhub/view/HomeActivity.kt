@@ -46,11 +46,11 @@ class HomeActivity : BaseActivity() {
     @Suppress("PropertyName")
     val TAG = "HOME"
     private var viewBind: ActivityHomeBinding? = null
-    private var hotTopicFragment: Fragment? = null
-    private var techFragment: Fragment? = null
-    private var developFragment: Fragment? = null
-    private var blockChainFragment: Fragment? = null
-    var navigation: BottomNavigationView? = null
+    private lateinit var hotTopicFragment: Fragment
+    private lateinit var techFragment: Fragment
+    private lateinit var developFragment: Fragment
+    private lateinit var blockChainFragment: Fragment
+    lateinit var navigation: BottomNavigationView
     private var currentId: Int = R.id.navigation_home
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -108,8 +108,7 @@ class HomeActivity : BaseActivity() {
         super.afterCreatedView(savedInstanceState)
 //        checkPermissions()
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        val navigation1 = viewBind?.navigation
-        navigation = navigation1
+        navigation = viewBind!!.navigation
         val toolbar = viewBind?.toolbar
         toolbar?.setOnClickListener({
             if (UIUtil.doubleClick()) {
@@ -129,8 +128,8 @@ class HomeActivity : BaseActivity() {
                 }
             }
         }
-        navigation1?.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        navigation1?.setOnNavigationItemReselectedListener(reSelectListener)
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
@@ -151,11 +150,12 @@ class HomeActivity : BaseActivity() {
             developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
             blockChainFragment = fragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN)
             if (currentId != 0) {
-                navigation1?.selectedItemId = currentId
+                navigation.selectedItemId = currentId
             }
         }
     }
 
+    @Suppress("unused")
     private fun checkPermissions() {
         if (!SharedPrefsUtil.getValue(this, Constants.SHOW_PROMISSION, false)) {
             RxPermissions(this).request(
@@ -201,6 +201,6 @@ class HomeActivity : BaseActivity() {
 
     fun selectItem(navigationId: Int) {
         currentId = navigationId
-        viewBind?.navigation?.selectedItemId = navigationId
+        navigation.selectedItemId = navigationId
     }
 }

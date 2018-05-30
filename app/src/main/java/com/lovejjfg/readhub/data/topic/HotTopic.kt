@@ -31,7 +31,7 @@ data class HotTopic(
 	val totalItems: Int? = null,
 
 	@field:SerializedName("data")
-	val data: List<DataItem?>? = null,
+	val data: List<DataItem>? = null,
 
 	@field:SerializedName("totalPages")
 	val totalPages: Int? = null,

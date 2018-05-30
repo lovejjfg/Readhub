@@ -26,7 +26,7 @@ import android.os.Build
  * Email: lovejjfg@gmail.com
  */
 
-inline fun <T> Context.fastStartActivity(clazz: Class<T>, action: (intent: Intent) -> Unit) {
+inline fun <T> Context.fastStartActivity(clazz: Class<T>, action: ((intent: Intent) -> Unit)) {
     val intent = Intent(this, clazz)
     action(intent)
     this.startActivity(intent)
