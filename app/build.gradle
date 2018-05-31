@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: 'walle.gradle'
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION as String
@@ -128,6 +130,8 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.lovejjfg.powertext:lib:0.0.4'
     implementation 'androidx.core:core-ktx:0.3'
+    implementation 'com.meituan.android.walle:library:1.1.6'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

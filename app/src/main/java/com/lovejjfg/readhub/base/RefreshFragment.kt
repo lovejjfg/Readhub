@@ -394,7 +394,7 @@ abstract class RefreshFragment : BaseFragment() {
                     }
                 } else {
                     removeRead()
-                    val hintCount = if (data.first()!!.isTop) {
+                    val hintCount = if (data.first().isTop) {
                         indexOf - 1
                     } else {
                         indexOf

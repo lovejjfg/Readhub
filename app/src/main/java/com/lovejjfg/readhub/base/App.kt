@@ -26,10 +26,11 @@ import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.http.NetWorkUtils
 import com.lovejjfg.readhub.utils.http.ToastUtil
+import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
+import com.tencent.bugly.crashreport.CrashReport
 import java.io.File
-
 
 /**
  * ReadHub
@@ -41,16 +42,17 @@ class App : Application() {
         super.onCreate()
         mApp = this
         val notify = PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getBoolean("auto_update", true)
+            .getDefaultSharedPreferences(this)
+            .getBoolean("auto_update", true)
 
         Log.i("APP", "自动更新：$notify")
 
-
         val autoDownload = PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getBoolean("auto_download", true)
-        Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+            .getDefaultSharedPreferences(this)
+            .getBoolean("auto_download", true)
+        val strategy = CrashReport.UserStrategy(this)
+        strategy.appChannel = WalleChannelReader.getChannel(applicationContext, "dev")
+        Bugly.init(this, BuildConfig.BUGLY, BuildConfig.IS_DEBUG, strategy)
 
         Log.i("APP", "自动下载：$autoDownload")
         Beta.autoInit = true
@@ -68,7 +70,6 @@ class App : Application() {
         NetWorkUtils.init(this)
         cacheDirectory = File(applicationContext.cacheDir, "responses")
     }
-
 
     companion object {
         var cacheDirectory: File? = null

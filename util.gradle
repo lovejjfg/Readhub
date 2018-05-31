@@ -44,7 +44,7 @@ String initTag() {
         if (version == null || "" == versionName) {
             return "0.0.0"
         }
-        println versionName
+        println "versionName:$versionName"
         return versionName
     } catch (e) {
         println e.toString()
@@ -55,8 +55,9 @@ String initTag() {
 
 int initCount() {
     try {
-        return 100 +
-                Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
+        def versionCode = 100 + Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
+        println "versionCode:$versionCode"
+        return versionCode
     } catch (e) {
         println e.toString()
         return 100

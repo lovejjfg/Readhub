@@ -55,8 +55,8 @@ class DevelopFragment : RefreshFragment() {
                 Consumer {
                     if (it.data?.isNotEmpty()!!) {
                         preOrder = latestOrder
-                        latestOrder = it.data.first()?.id
-                        order = DateUtil.parseTimeToMillis(it.data.last()?.publishDate)
+                        latestOrder = it.data.first().id
+                        order = DateUtil.parseTimeToMillis(it.data.last().publishDate)
                         adapter.setList(it.data)
                         handleAlreadRead(false, it.data, {
                             TextUtils.equals(it?.id, preOrder)
