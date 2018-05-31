@@ -27,7 +27,6 @@ object GlideUtils {
         try {
             GlideApp.with(iv!!.context!!)
                     .load(url)
-                    .centerCrop()
                     .into(iv)
         } catch (e: Exception) {
             e.printStackTrace()
