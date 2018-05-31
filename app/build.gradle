@@ -102,7 +102,7 @@ def mockitoVersion = "2.13.0"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.android.support:multidex:1.0.1" // 多dex配置
+    compile "com.android.support:multidex:1.0.3" // 多dex配置
 
     //    implementation 'com.google.firebase:firebase-core:15.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
