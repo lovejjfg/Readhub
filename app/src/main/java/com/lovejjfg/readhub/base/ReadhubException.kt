@@ -21,7 +21,7 @@ package com.lovejjfg.readhub.base
  * Email lovejjfg@gmail.com
  */
 
-class ReadhubException(private val code: Int, val msg: String) : RuntimeException("Code:$code;Message:$msg") {
+class ReadhubException(private val code: Int, private val msg: String) : RuntimeException("Code:$code;Message:$msg") {
 
     fun code(): Int {
         return code
@@ -30,5 +30,4 @@ class ReadhubException(private val code: Int, val msg: String) : RuntimeExceptio
     fun message(): String {
         return msg
     }
-
 }

@@ -43,9 +43,9 @@ import com.lovejjfg.readhub.utils.UIUtil
 
 class WebActivity : BaseActivity() {
 
-    private var mWeb: WebView? = null
-    var loading: ProgressBar? = null
-    var toolbar: Toolbar? = null
+    private lateinit var mWeb: WebView
+    private lateinit var loading: ProgressBar
+    private lateinit var toolbar: Toolbar
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun afterCreatedView(savedInstanceState: Bundle?) {
@@ -53,9 +53,8 @@ class WebActivity : BaseActivity() {
         val viewBind = DataBindingUtil.setContentView<ActivityWebBinding>(this, R.layout.activity_web)
         mWeb = viewBind.web
         loading = viewBind.pb
-        toolbar = viewBind?.toolbar
-        toolbar?.setNavigationOnClickListener({ finish() })
-        toolbar?.setOnClickListener {
+        toolbar = viewBind.toolbar
+        toolbar.setOnClickListener {
             if (UIUtil.doubleClick()) {
                 onTitleDoubleClick()
             }
@@ -66,52 +65,52 @@ class WebActivity : BaseActivity() {
             finish()
             return
         }
-        mWeb!!.isVerticalScrollBarEnabled = false
-        mWeb!!.isHorizontalScrollBarEnabled = false
+        mWeb.isVerticalScrollBarEnabled = false
+        mWeb.isHorizontalScrollBarEnabled = false
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG)
-        val webSettings = mWeb!!.settings
+        val webSettings = mWeb.settings
         webSettings!!.javaScriptEnabled = true
         //        webSettings.setUseWideViewPort(true);
         //        webSettings.setLoadWithOverviewMode(true);
-        mWeb!!.isClickable = true
+        mWeb.isClickable = true
         webSettings.domStorageEnabled = true
         webSettings.loadsImagesAutomatically = true
         webSettings.builtInZoomControls = true
         webSettings.blockNetworkImage = false
         webSettings.displayZoomControls = false
         //        mWeb.setWebViewClient(new WebViewClient());
-        mWeb!!.webChromeClient = object : WebChromeClient() {
+        mWeb.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
-                toolbar?.title = s
+                toolbar.title = s
             }
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                loading?.progress = newProgress
+                loading.progress = newProgress
                 if (newProgress == 100)
-                    loading?.visibility = View.GONE
+                    loading.visibility = View.GONE
             }
         }
-        mWeb!!.webViewClient = object : WebViewClient() {
+        mWeb.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-//                loading?.show()
-                loading?.visibility = View.VISIBLE
+//                loading.show()
+                loading.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                loading?.visibility = View.GONE
-//                loading?.dismiss()
+                loading.visibility = View.GONE
+//                loading.dismiss()
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
-                loading?.visibility = View.GONE
+                loading.visibility = View.GONE
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 super.onReceivedSslError(view, handler, error)
-                loading?.visibility = View.GONE
+                loading.visibility = View.GONE
             }
 
             override fun onReceivedHttpError(
@@ -120,27 +119,27 @@ class WebActivity : BaseActivity() {
                 errorResponse: WebResourceResponse?
             ) {
                 super.onReceivedHttpError(view, request, errorResponse)
-                loading?.visibility = View.GONE
+                loading.visibility = View.GONE
             }
         }
 
-        mWeb!!.loadUrl(url)
+        mWeb.loadUrl(url)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mWeb?.destroy()
+        mWeb.destroy()
     }
 
     override fun onBackPressed() {
-        if (mWeb?.canGoBack()!!) {
-            mWeb?.goBack()
+        if (mWeb.canGoBack()) {
+            mWeb.goBack()
             return
         }
         super.onBackPressed()
     }
 
     private fun onTitleDoubleClick() {
-        mWeb?.scrollTo(0, 0)
+        mWeb.scrollTo(0, 0)
     }
 }

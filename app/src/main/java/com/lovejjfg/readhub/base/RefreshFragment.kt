@@ -49,8 +49,8 @@ import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.ScrollEvent
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
@@ -119,7 +119,7 @@ abstract class RefreshFragment : BaseFragment() {
         adapter = createAdapter()
         handleLongClick()
         adapter.setHasStableIds(true)
-        adapter.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot))
+        adapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
         adapter.attachRecyclerView(rvHot)
         refresh = binding.container
         adapter.setLoadMoreListener {
@@ -131,7 +131,6 @@ abstract class RefreshFragment : BaseFragment() {
         println("tag:$tag;;isHidden:$isHidden")
         initDataOrRefresh(savedInstanceState)
         @Suppress("DEPRECATION")
-        refresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         refresh.setOnRefreshListener { refresh(refresh) }
         adapter.setOnItemClickListener { _, position, item ->
             item.isExband = !item.isExband
@@ -378,7 +377,7 @@ abstract class RefreshFragment : BaseFragment() {
                 return
             }
             val first = data.firstOrNull {
-                it != null && !it.isTop && check(it)
+                !it.isTop && check(it)
             }
             println(first?.id)
             if (first != null) {

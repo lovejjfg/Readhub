@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.data
 
+import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.App
 import com.lovejjfg.readhub.base.IBaseView
@@ -59,28 +60,31 @@ object DataManager {
             val cache = Cache(App.cacheDirectory!!, cacheSize)
 
             val openRawResource =
-                    if (isDebug) {
-                        App.mApp?.resources?.openRawResource(R.raw.charles)
-                    } else {
-                        null
-                    }
+                if (BuildConfig.IS_DEBUG) {
+                    App.mApp?.resources?.openRawResource(R.raw.charles)
+                } else {
+                    null
+                }
             val openRawResource1 = App.mApp?.resources?.openRawResource(R.raw.readhub)
             retrofit = Retrofit.Builder()
-                    .baseUrl(API_RELEASE)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(OkHttpClient.Builder()
-                            .cache(cache)
-                            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                            .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
-                            .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
-                            .addInterceptor(CacheControlInterceptor())
-                            .addInterceptor(LoggingInterceptor())
-                            .sslSocketFactory(SSLUtil.getSSLSocketFactory(openRawResource1, openRawResource), SSLUtil.getTrustManager())
-                            .build()
+                .baseUrl(API_RELEASE)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient.Builder()
+                    .cache(cache)
+                    .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
+                    .addInterceptor(CacheControlInterceptor())
+                    .addInterceptor(LoggingInterceptor())
+                    .sslSocketFactory(
+                        SSLUtil.getSSLSocketFactory(openRawResource1, openRawResource),
+                        SSLUtil.getTrustManager()
                     )
                     .build()
+                )
+                .build()
         }
         return retrofit!!.create(clazz)
     }
@@ -92,33 +96,34 @@ object DataManager {
     fun <R> convert(request: Observable<Response<R>>): Observable<R> {
 
         return request
-                .subscribeOn(Schedulers.io())//事件产生在子线程
-                .retry({ integer, throwable ->
-                    (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
-                })
-                .map { t: Response<R> ->
-                    return@map if (t.isSuccessful) {
-                        t.body()!!
-                    } else {
-                        throw ReadhubException(t.code(), t.message())
-                    }
+            .subscribeOn(Schedulers.io())//事件产生在子线程
+            .retry({ integer, throwable ->
+                (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
+            })
+            .map { t: Response<R> ->
+                return@map if (t.isSuccessful) {
+                    t.body()!!
+                } else {
+                    throw ReadhubException(t.code(), t.message())
                 }
+            }
     }
 
-    fun <R> subscribe(view: IBaseView, request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>) {
+    fun <R> subscribe(
+        view: IBaseView,
+        request: Observable<Response<R>>,
+        onNext: Consumer<R>,
+        onError: Consumer<Throwable>
+    ) {
         val subscribe = convert(request)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(onNext, onError)
         view.subscribe(subscribe)
-
     }
 
     fun <R> mapScribe(request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>): Disposable {
         return convert(request)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError)
-
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(onNext, onError)
     }
-
-
 }

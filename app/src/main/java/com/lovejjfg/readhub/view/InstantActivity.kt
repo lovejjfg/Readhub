@@ -36,6 +36,7 @@ import com.lovejjfg.readhub.databinding.ActivityInstantDetailBinding
 import com.lovejjfg.readhub.databinding.HolderImgParseBinding
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.ParseItemDerection
 import com.lovejjfg.readhub.view.recycerview.holder.ImageParseHolder
 import com.lovejjfg.readhub.view.recycerview.holder.TextParseHolder
@@ -48,9 +49,9 @@ import org.jsoup.Jsoup
  * Email: lovejjfg@gmail.com
  */
 class InstantActivity : BaseActivity() {
-    private var instantbind: ActivityInstantDetailBinding? = null
-    private var refresh: SwipeRefreshLayout? = null
-    private var instantAdapter: InstantAdapter? = null
+    private lateinit var instantbind: ActivityInstantDetailBinding
+    private lateinit var refresh: SwipeRefreshLayout
+    private lateinit var instantAdapter: InstantAdapter
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
@@ -60,23 +61,22 @@ class InstantActivity : BaseActivity() {
             return
         }
         instantbind = DataBindingUtil.setContentView(this, R.layout.activity_instant_detail)
-        refresh = instantbind?.container
-        refresh?.setOnRefreshListener {
+        refresh = instantbind.container
+        refresh.setOnRefreshListener {
             getData(topicId)
         }
-        refresh?.isRefreshing = true
-        instantbind?.toolbar?.setNavigationOnClickListener({ finish() })
-        val rvHot = instantbind?.rvDetail
-        instantbind?.toolbar?.setOnClickListener {
+        refresh.isRefreshing = true
+        val rvHot = instantbind.rvDetail
+        instantbind.toolbar.setOnClickListener {
             if (UIUtil.doubleClick()) {
-                rvHot?.smoothScrollToPosition(0)
+                rvHot.smoothScrollToPosition(0)
             }
         }
-        rvHot?.addItemDecoration(ParseItemDerection())
-        rvHot?.layoutManager = LinearLayoutManager(this)
+        rvHot.addItemDecoration(ParseItemDerection())
+        rvHot.layoutManager = LinearLayoutManager(this)
         instantAdapter = InstantAdapter()
-        instantAdapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
-        instantAdapter!!.attachRecyclerView(rvHot!!)
+        instantAdapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
+        instantAdapter.attachRecyclerView(rvHot)
         getData(topicId)
     }
 
@@ -84,15 +84,15 @@ class InstantActivity : BaseActivity() {
         DataManager.subscribe(this, DataManager.init().topicInstant(topicId), Consumer {
             handleInstant(it)
         }, Consumer {
-            instantAdapter?.showError()
-            refresh?.isRefreshing = false
+            instantAdapter.showError()
+            refresh.isRefreshing = false
             handleError(it)
         })
     }
 
     private fun handleInstant(instantView: InstantView?) {
-        refresh?.isRefreshing = false
-        instantbind?.toolbar?.title = instantView?.title
+        refresh.isRefreshing = false
+        instantbind.toolbar.title = instantView?.title
         if (instantView == null) {
             Log.e("InstantActivity", "extra is null")
             return
@@ -102,15 +102,14 @@ class InstantActivity : BaseActivity() {
             JsoupUtils.parse(body, it, "", 0)
             it.onComplete()
         }
-                .toList()
-                .subscribe({
-                    instantAdapter!!.clearList()
-                    instantAdapter!!.setList(it)
-                }, {
-                    handleError(it)
+            .toList()
+            .subscribe({
+                instantAdapter.clearList()
+                instantAdapter.setList(it)
+            }, {
+                handleError(it)
 
-                })
-
+            })
     }
 
     inner class InstantAdapter : PowerAdapter<DetailItems>() {
@@ -125,15 +124,19 @@ class InstantActivity : BaseActivity() {
         override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DetailItems> {
             return when (viewType) {
                 Constants.TYPE_PARSE_TEXT -> {
-                    TextParseHolder(UIUtil.inflate(R.layout.holder_text_parse, parent!!))
+                    TextParseHolder(parent!!.inflate(R.layout.holder_text_parse))
                 }
                 else -> {
-                    val imgParseBinding = DataBindingUtil.inflate<HolderImgParseBinding>(LayoutInflater.from(parent?.context), R.layout.holder_img_parse, parent, false)
+                    val imgParseBinding = DataBindingUtil.inflate<HolderImgParseBinding>(
+                        LayoutInflater.from(parent?.context),
+                        R.layout.holder_img_parse,
+                        parent,
+                        false
+                    )
 
                     ImageParseHolder(imgParseBinding)
                 }
             }
         }
-
     }
 }

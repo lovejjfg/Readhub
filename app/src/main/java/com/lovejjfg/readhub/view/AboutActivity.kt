@@ -33,7 +33,6 @@ import com.lovejjfg.readhub.databinding.ActivityAboutBinding
 import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
 import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
 /**
@@ -41,19 +40,17 @@ import io.reactivex.rxkotlin.addTo
  * Created by Joe at 2017/9/5.
  */
 class AboutActivity : BaseActivity() {
-    private val mDisposables: CompositeDisposable = CompositeDisposable()
-    private var aboutAdapter: PowerAdapter<Library>? = null
+    private lateinit var aboutAdapter: PowerAdapter<Library>
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
         val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
         contentView?.tvVersoin?.text = String.format(getString(R.string.version_at), BuildConfig.VERSION_NAME)
-        contentView?.toolbar?.setNavigationOnClickListener({ finish() })
         aboutAdapter = AboutAdapter()
         val recyclerView = contentView?.recyclerView
         recyclerView?.layoutManager = LinearLayoutManager(this)
-        aboutAdapter?.attachRecyclerView(recyclerView!!)
+        aboutAdapter.attachRecyclerView(recyclerView!!)
         initData()
-        aboutAdapter?.setOnItemClickListener({ _, _, item ->
+        aboutAdapter.setOnItemClickListener({ _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
         })
     }
@@ -150,7 +147,7 @@ class AboutActivity : BaseActivity() {
         }.toSortedList({ t, t1 ->
             t.name!!.compareTo(t1.name!!)
         })
-            .subscribe({ aboutAdapter?.setList(it) }, { it.printStackTrace() })
+            .subscribe({ aboutAdapter.setList(it) }, { it.printStackTrace() })
             .addTo(mDisposables)
     }
 

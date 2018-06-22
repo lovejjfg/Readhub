@@ -35,7 +35,7 @@ import com.lovejjfg.readhub.databinding.HolderHotTopicBinding
 import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
-import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
 import kotlinx.android.synthetic.main.holder_hot_topic.view.iv_share
 import kotlinx.android.synthetic.main.holder_hot_topic.view.tv_publish
@@ -52,7 +52,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
     override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
-                AlreadyReadHolder(UIUtil.inflate(R.layout.holder_already_read, parent!!))
+                AlreadyReadHolder(parent!!.inflate(R.layout.holder_already_read))
             }
             else -> {
                 val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(

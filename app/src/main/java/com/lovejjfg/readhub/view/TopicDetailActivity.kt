@@ -14,7 +14,7 @@ import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.databinding.ActivityTopicDetailBinding
 import com.lovejjfg.readhub.utils.JumpUitl
-import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.TopicDetailAdapter
 import com.lovejjfg.readhub.view.widget.ConnectorView
 import io.reactivex.Observable
@@ -25,10 +25,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  * lovejjfg@gmail.com
  */
 class TopicDetailActivity : BaseActivity() {
-    var id: String? = null
-    private var topicDetailAdapter: PowerAdapter<DetailItems>? = null
-    var toolbar: Toolbar? = null
-    private var refresh: SwipeRefreshLayout? = null
+    private var id: String? = null
+    private lateinit var topicDetailAdapter: PowerAdapter<DetailItems>
+    private lateinit var toolbar: Toolbar
+    private lateinit var refresh: SwipeRefreshLayout
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
@@ -38,21 +38,20 @@ class TopicDetailActivity : BaseActivity() {
             return
         }
         val topicBind = DataBindingUtil.setContentView<ActivityTopicDetailBinding>(this, R.layout.activity_topic_detail)
-        refresh = topicBind?.container
-        refresh?.setOnRefreshListener {
+        refresh = topicBind.container
+        refresh.setOnRefreshListener {
             getData()
         }
-        refresh?.isRefreshing = true
+        refresh.isRefreshing = true
         getData()
-        toolbar = topicBind?.toolbar
-        topicBind?.toolbar?.setNavigationOnClickListener({ finish() })
-        val rvHot = topicBind?.rvDetail
-        rvHot?.layoutManager = LinearLayoutManager(this)
+        toolbar = topicBind.toolbar
+        val rvHot = topicBind.rvDetail
+        rvHot.layoutManager = LinearLayoutManager(this)
         topicDetailAdapter = TopicDetailAdapter()
-        topicDetailAdapter?.setErrorView(UIUtil.inflate(R.layout.layout_empty, rvHot!!))
-        topicDetailAdapter!!.attachRecyclerView(rvHot!!)
-        topicDetailAdapter!!.setOnItemClickListener({ _, position, item ->
-            when (topicDetailAdapter!!.getItemViewTypes(position)) {
+        topicDetailAdapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
+        topicDetailAdapter.attachRecyclerView(rvHot)
+        topicDetailAdapter.setOnItemClickListener({ _, position, item ->
+            when (topicDetailAdapter.getItemViewTypes(position)) {
                 Constants.TYPE_NEWS -> {
                     JumpUitl.jumpWeb(this, item?.newsItem?.mobileUrl)
                 }
@@ -102,13 +101,13 @@ class TopicDetailActivity : BaseActivity() {
             .toList()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                refresh?.isRefreshing = false
-                topicDetailAdapter!!.setList(it)
-                toolbar?.title = it[0]?.detail?.title
+                refresh.isRefreshing = false
+                topicDetailAdapter.setList(it)
+                toolbar.title = it[0]?.detail?.title
             }, {
                 it.printStackTrace()
-                refresh?.isRefreshing = false
-                topicDetailAdapter?.showError()
+                refresh.isRefreshing = false
+                topicDetailAdapter.showError()
                 handleError(it)
             })
         subscribe(subscribe)

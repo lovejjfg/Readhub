@@ -16,7 +16,6 @@ class ExampleUnitTest {
 
         val child = Jsoup.parse(test).body().child(0)
         println(child.outerHtml())
-
     }
 
     @Test
@@ -34,7 +33,6 @@ class ExampleUnitTest {
         t1 = TestModel("test changed")
         println(t1.name)
         println(t2.name)
-
     }
 
     @Test
@@ -48,10 +46,16 @@ class ExampleUnitTest {
         println(h xor h.ushr(16))
         val message = h xor h.ushr(16)
         println(message and 15)
+    }
 
-
+    @Test
+    fun testReplace() {
+        val str1 = "xxx"
+        val str2 = null
+        val str3 = "oooo"
+        val format = String.format("%s%s%s", str1, str2, str3)
+        println(format)
     }
 
     data class TestModel(var name: String? = null)
-
 }

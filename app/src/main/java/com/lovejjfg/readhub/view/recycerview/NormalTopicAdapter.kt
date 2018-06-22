@@ -29,9 +29,9 @@ import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.databinding.HolderNormalTopicBinding
 import com.lovejjfg.readhub.utils.DateUtil
-import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
-import kotlinx.android.synthetic.main.holder_normal_topic.view.*
+import kotlinx.android.synthetic.main.holder_normal_topic.view.iv_share
 
 /**
  * ReadHub
@@ -42,7 +42,7 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
     override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
-                AlreadyReadHolder(UIUtil.inflate(R.layout.holder_already_read, parent!!))
+                AlreadyReadHolder(parent!!.inflate(R.layout.holder_already_read))
             }
             else -> {
                 val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_normal_topic, parent, false)

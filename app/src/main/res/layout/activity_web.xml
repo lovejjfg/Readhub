@@ -32,26 +32,31 @@
 
             <ProgressBar
                 android:id="@+id/pb"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:max="100"
                 android:padding="0dp"
                 android:progressDrawable="@drawable/progress_state"
                 android:progressTint="@color/colorAccent"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 />
 
         </android.support.design.widget.AppBarLayout>
 
-
-        <WebView
-            android:id="@+id/web"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:layout_editor_absoluteY="56dp">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </WebView>
+            <WebView
+                android:id="@+id/web"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteY="56dp">
+
+            </WebView>
+        </android.support.v4.widget.NestedScrollView>
+
 
         <include layout="@layout/layout_statusbar"/>
 

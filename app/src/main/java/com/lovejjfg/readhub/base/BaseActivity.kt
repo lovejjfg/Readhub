@@ -22,12 +22,17 @@ import kotlinx.android.synthetic.main.layout_statusbar.statusBarProxy
  */
 
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
-    private var mDisposables: CompositeDisposable? = null
+    protected val mDisposables: CompositeDisposable = CompositeDisposable()
     final override fun onCreate(savedInstanceState: Bundle?) {
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         afterCreatedView(savedInstanceState)
         initStatusBar()
+        initToolBar()
+    }
+
+    private fun initToolBar() {
+        findViewById<Toolbar>(R.id.toolbar)?.setNavigationOnClickListener { finish() }
     }
 
     override fun showToast(toast: String) {
@@ -48,11 +53,11 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     override fun subscribe(subscriber: Disposable) {
-        mDisposables?.add(subscriber)
+        mDisposables.add(subscriber)
     }
 
     override fun unSubscribe() {
-        mDisposables?.clear()
+        mDisposables.clear()
     }
 
     override fun handleError(throwable: Throwable) {
@@ -60,8 +65,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     override fun beforeCreate(savedInstanceState: Bundle?) {
-        mDisposables?.clear()
-        mDisposables = CompositeDisposable()
+        mDisposables.clear()
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {

@@ -123,9 +123,10 @@ class HotTopicFragment : RefreshFragment() {
                     })
 
         }
-        if (callback != null) {
+        callback?.let {
             mSnackBar!!.addCallback(callback)
         }
+
         mSnackBar!!.setText(String.format(getString(R.string.hot_topic_update, refreshCount)))
         mSnackBar!!.show()
     }

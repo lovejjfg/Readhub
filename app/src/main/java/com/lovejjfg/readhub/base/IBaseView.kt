@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import io.reactivex.disposables.Disposable
 
-
 /**
  * Created by Joe on 2016/11/13.
  * Email lovejjfg@gmail.com
@@ -50,6 +49,5 @@ interface IBaseView {
 
     fun afterCreatedView(savedInstanceState: Bundle?)
 
-    fun getMyContext() : Context?
-
+    fun getMyContext(): Context?
 }
