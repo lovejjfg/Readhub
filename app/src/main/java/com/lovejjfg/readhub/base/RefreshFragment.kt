@@ -115,12 +115,12 @@ abstract class RefreshFragment : BaseFragment() {
         println("view 创建啦：${toString()}")
         val rvHot = binding.rvHot
         rvHot.layoutManager = FixedLinearLayoutManager(activity)
-        rvHot.addOnScrollListener(LoadMoreScrollListener(rvHot))
         adapter = createAdapter()
         handleLongClick()
         adapter.setHasStableIds(true)
         adapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
         adapter.attachRecyclerView(rvHot)
+        rvHot.addOnScrollListener(LoadMoreScrollListener(rvHot))
         refresh = binding.container
         adapter.setLoadMoreListener {
             if (order != null) {
