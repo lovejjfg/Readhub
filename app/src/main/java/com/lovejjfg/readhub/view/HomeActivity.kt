@@ -110,11 +110,11 @@ class HomeActivity : BaseActivity() {
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         navigation = viewBind!!.navigation
         val toolbar = viewBind?.toolbar
-        toolbar?.setOnClickListener({
+        toolbar?.setOnClickListener {
             if (UIUtil.doubleClick()) {
                 RxBus.instance.post(ScrollEvent())
             }
-        })
+        }
         toolbar?.inflateMenu(R.menu.home)
         toolbar?.setOnMenuItemClickListener {
             when (it.itemId) {

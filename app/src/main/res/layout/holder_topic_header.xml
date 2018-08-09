@@ -28,7 +28,7 @@
         <TextView
             android:id="@+id/tv_des"
             style="@style/Text.DetailDes"
-            android:text="@{detail.summary}"
+            android:text="@{TextUtils.isEmpty(detail.summary)?null:detail.summary.trim()}"
             tools:text="现实 ... 早在 2011 年海澜之家就开始了电商之旅，不过线上销量一直不太高而已，2016 年占比为 5.17%，线下始终了他们销售的主要阵地，而且数量一直也在增加当中，仅在 2017 年，海澜之家就计划净增门店 750 家，其中海澜之家门店净增 350 家，爱居兔和海一家门店净增 400 家。"
             />
 
