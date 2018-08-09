@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -105,7 +105,7 @@
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.1"
                 android:maxLines="@{topic.isExband?1000:3}"
-                android:text="@{topic.summary}"
+                android:text="@{TextUtils.isEmpty(topic.summary)?null:topic.summary.trim()}"
                 android:textColor="@color/theme_color_text_g4"
                 android:textSize="@dimen/text_des"
                 android:visibility="@{TextUtils.isEmpty(topic.summary)?View.GONE:View.VISIBLE}"

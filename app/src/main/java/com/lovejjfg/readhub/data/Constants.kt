@@ -23,7 +23,7 @@ package com.lovejjfg.readhub.data
  * Created by Joe at 2017/8/4.
  */
 object Constants {
-    const val API_RELEASE = "https://api.readhub.me/"
+    const val API_RELEASE = "https://api.readhub.cn/"
 
     const val RELATIVE_ITEMS = "relative_items"
     const val URL: String = "url"
