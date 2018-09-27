@@ -43,7 +43,7 @@ class TechFragment : RefreshFragment() {
         return NormalTopicAdapter()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(activity, item.url!!)
@@ -52,15 +52,15 @@ class TechFragment : RefreshFragment() {
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().tech(),
-                Consumer {
-                    if (it.data?.isNotEmpty()!!) {
+                Consumer { tech ->
+                    if (tech.data.isNotEmpty()) {
                         preOrder = latestOrder
-                        latestOrder = it.data.first().id
-                        order = DateUtil.parseTimeToMillis(it.data.last().publishDate)
-                        adapter.setList(it.data)
-                        handleAlreadRead(false, it.data, {
+                        latestOrder = tech.data.first().id
+                        order = DateUtil.parseTimeToMillis(tech.data.last().publishDate)
+                        adapter.setList(tech.data)
+                        handleAlreadRead(false, tech.data) {
                             TextUtils.equals(it?.id, preOrder)
-                        })
+                        }
                     }
                     refresh?.isRefreshing = false
                 },

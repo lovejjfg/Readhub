@@ -32,7 +32,6 @@ import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.view.recycerview.NormalTopicAdapter
 import io.reactivex.functions.Consumer
 
-
 /**
  * ReadHub
  * Created by Joe at 2017/7/30.
@@ -43,7 +42,7 @@ class DevelopFragment : RefreshFragment() {
         return NormalTopicAdapter()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(activity, item.url!!)
@@ -52,41 +51,40 @@ class DevelopFragment : RefreshFragment() {
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().devNews(),
-                Consumer { develop ->
-                    if (develop.data?.isNotEmpty()!!) {
-                        preOrder = latestOrder
-                        latestOrder = develop.data.first().id
-                        order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
-                        adapter.setList(develop.data)
-                        handleAlreadRead(false, develop.data) {
-                            TextUtils.equals(it?.id, preOrder)
-                        }
+            Consumer { develop ->
+                if (develop.data.isNotEmpty()) {
+                    preOrder = latestOrder
+                    latestOrder = develop.data.first().id
+                    order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
+                    adapter.setList(develop.data)
+                    handleAlreadRead(false, develop.data) {
+                        TextUtils.equals(it?.id, preOrder)
                     }
-                    refresh?.isRefreshing = false
-                },
-                Consumer {
-                    Log.e(TAG, "error:", it)
-                    adapter.showError(false)
-                    handleError(it)
-                    refresh?.isRefreshing = false
-                })
+                }
+                refresh?.isRefreshing = false
+            },
+            Consumer {
+                Log.e(TAG, "error:", it)
+                adapter.showError(false)
+                handleError(it)
+                refresh?.isRefreshing = false
+            })
     }
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().devNewsMore(order!!, 10),
-                Consumer { develop ->
-                    val data = develop.data
-                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
-                    adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!) {
-                        TextUtils.equals(it?.id, preOrder)
-                    }
-                },
-                Consumer {
-                    Log.e(TAG, "error:", it)
-                    adapter.loadMoreError()
+            Consumer { develop ->
+                val data = develop.data
+                order = DateUtil.parseTimeToMillis(data.last().publishDate)
+                adapter.appendList(data)
+                handleAlreadRead(true, adapter.list!!) {
+                    TextUtils.equals(it?.id, preOrder)
+                }
+            },
+            Consumer {
+                Log.e(TAG, "error:", it)
+                adapter.loadMoreError()
 
-                })
+            })
     }
-
 }

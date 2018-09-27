@@ -40,8 +40,11 @@ import com.tencent.bugly.crashreport.CrashReport
 
 object JumpUitl {
 
-    fun jumpWeb(context: Context, url: String?) {
+    fun jumpWeb(context: Context?, url: String?) {
         try {
+            if (context == null) {
+                return
+            }
             if (TextUtils.isEmpty(url)) {
                 return
             }
@@ -53,9 +56,9 @@ object JumpUitl {
                 .getBoolean("browser_use", false)
 
             if (!default) {
-                context.fastStartActivity(WebActivity::class.java, {
+                context.fastStartActivity(WebActivity::class.java) {
                     it.putExtra(Constants.URL, url)
-                })
+                }
             } else {
                 val uri = Uri.parse(url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -66,36 +69,54 @@ object JumpUitl {
         }
     }
 
-    fun jumpSetting(context: Context) {
+    fun jumpSetting(context: Context?) {
+        if (context == null) {
+            return
+        }
         val intent = Intent(context, SettingsActivity::class.java)
         startActivity(context, intent)
     }
 
-    fun jumpAbout(context: Context) {
+    fun jumpAbout(context: Context?) {
+        if (context == null) {
+            return
+        }
         val intent = Intent(context, AboutActivity::class.java)
         startActivity(context, intent)
     }
 
     fun jumpTimeLine(context: Context?, id: String?) {
+        if (context == null) {
+            return
+        }
         val intent = Intent(context, TopicDetailActivity::class.java)
         intent.putExtra(Constants.ID, id)
-        startActivity(context!!, intent)
+        startActivity(context, intent)
     }
 
     fun jumpInstant(context: Context?, id: String?) {
+        if (context == null) {
+            return
+        }
         val intent = Intent(context, InstantActivity::class.java)
         intent.putExtra(Constants.ID, id)
-        startActivity(context!!, intent)
+        startActivity(context, intent)
     }
 
     fun backHome(context: Context?) {
+        if (context == null) {
+            return
+        }
         val intent = Intent()
         intent.action = Intent.ACTION_MAIN
         intent.addCategory(Intent.CATEGORY_HOME)
-        context!!.startActivity(intent)
+        context.startActivity(intent)
     }
 
-    fun startActivity(context: Context, intent: Intent) {
+    fun startActivity(context: Context?, intent: Intent) {
+        if (context == null) {
+            return
+        }
         context.startActivity(intent)
     }
 }

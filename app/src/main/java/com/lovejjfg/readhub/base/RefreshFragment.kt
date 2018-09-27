@@ -86,9 +86,9 @@ abstract class RefreshFragment : BaseFragment() {
             Consumer { Log.e(TAG, "error:", it) })
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navigation = (activity as HomeActivity).navigation
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.layout_refresh_recycler, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)
         return binding.root
     }
 
@@ -109,7 +109,7 @@ abstract class RefreshFragment : BaseFragment() {
         println("onActivityCreated")
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         println("view 创建啦：${toString()}")
         val rvHot = binding.rvHot
@@ -232,7 +232,7 @@ abstract class RefreshFragment : BaseFragment() {
             shareWithCheck(position)
         }
 
-        if (!activity.isFinishing) {
+        if (activity?.isFinishing == false) {
             mShareDialog!!.show()
         }
     }
@@ -344,7 +344,7 @@ abstract class RefreshFragment : BaseFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         try {
             saveData(outState)
             mShareDialog?.dismiss()

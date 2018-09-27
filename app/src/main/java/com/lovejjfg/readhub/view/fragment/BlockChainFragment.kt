@@ -41,24 +41,24 @@ class BlockChainFragment : RefreshFragment() {
         return NormalTopicAdapter()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener { _, _, item ->
-            JumpUitl.jumpWeb(activity, item.url!!)
+            JumpUitl.jumpWeb(mContext, item.url)
         }
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().blockchain(10),
-                Consumer {
-                    if (it.data?.isNotEmpty()!!) {
+                Consumer { develop ->
+                    if (develop.data.isNotEmpty()) {
                         preOrder = latestOrder
-                        latestOrder = it.data.first().id
-                        order = DateUtil.parseTimeToMillis(it.data.last().publishDate)
-                        adapter.setList(it.data)
-                        handleAlreadRead(false, it.data, {
+                        latestOrder = develop.data.first().id
+                        order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
+                        adapter.setList(develop.data)
+                        handleAlreadRead(false, develop.data) {
                             TextUtils.equals(it?.id, preOrder)
-                        })
+                        }
                     }
                     refresh?.isRefreshing = false
                 },

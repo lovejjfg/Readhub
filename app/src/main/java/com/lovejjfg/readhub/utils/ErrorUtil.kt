@@ -35,11 +35,13 @@ import javax.net.ssl.SSLHandshakeException
 
 object ErrorUtil {
 
-
-    fun handleError(context: Context, throwable: Throwable) {
+    fun handleError(context: Context?, throwable: Throwable) {
         Log.e("ErrorUtil", "handleError: ", throwable)
         //  CrashReport.postCatchedException(throwable)
         //        view.showErrorView();
+        if (context == null) {
+            return
+        }
         if (throwable is ReadhubException) {
             val code = throwable.code()
             if (code == 504) {

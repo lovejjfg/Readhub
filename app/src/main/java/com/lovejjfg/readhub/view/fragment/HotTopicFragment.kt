@@ -49,7 +49,7 @@ class HotTopicFragment : RefreshFragment() {
         return HotTopicAdapter()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener { _, position, item ->
             item.isExband = !item.isExband
@@ -69,7 +69,6 @@ class HotTopicFragment : RefreshFragment() {
         return true
     }
 
-
     private fun checkNews() {
         refreshCount = 0
         if (adapter.list?.isEmpty()!!) {
@@ -87,7 +86,6 @@ class HotTopicFragment : RefreshFragment() {
                 showHint()
             }
         }, Consumer { it.printStackTrace() })
-
     }
 
     private fun showHint() {
@@ -104,7 +102,6 @@ class HotTopicFragment : RefreshFragment() {
         } else {
             makeSnack(null)
         }
-
     }
 
     private fun makeSnack(callback: BaseTransientBottomBar.BaseCallback<Snackbar>?) {
@@ -113,15 +110,17 @@ class HotTopicFragment : RefreshFragment() {
         }
         if (mSnackBar == null) {
             @Suppress("DEPRECATION")
-            mSnackBar = Snackbar.make(view, String.format(getString(R.string.hot_topic_update), refreshCount), Snackbar.LENGTH_INDEFINITE)
-                    .setActionTextColor(resources.getColor(R.color.colorAccent))
-                    .setAction(R.string.refresh, {
-                        rv_hot?.scrollToPosition(0)
-                        refresh.isRefreshing = true
-                        refresh(refresh)
-                        (activity as HomeActivity).selectItem(R.id.navigation_home)
-                    })
-
+            mSnackBar = Snackbar.make(
+                refresh, String.format(getString(R.string.hot_topic_update), refreshCount), Snackbar
+                    .LENGTH_INDEFINITE
+            )
+                .setActionTextColor(resources.getColor(R.color.colorAccent))
+                .setAction(R.string.refresh) {
+                    rv_hot?.scrollToPosition(0)
+                    refresh.isRefreshing = true
+                    refresh(refresh)
+                    (activity as HomeActivity).selectItem(R.id.navigation_home)
+                }
         }
         callback?.let {
             mSnackBar!!.addCallback(callback)
@@ -139,46 +138,46 @@ class HotTopicFragment : RefreshFragment() {
     override fun refresh(refresh: SwipeRefreshLayout?) {
         mSnackBar?.dismiss()
         DataManager.subscribe(this, DataManager.init().hotTopic(),
-                Consumer {
-                    if (it.data?.isNotEmpty()!!) {
-                        preOrder = latestOrder
-                        latestOrder = it.data.first().order
-                        if (!TextUtils.isEmpty(latestOrder) && latestOrder!!.isTopOrder()) {
-                            latestOrder = it.data[1].order
-                            it.data.first().isTop = true
-                        } else {
-                            it.data.first().isTop = false
-                        }
-                        order = it.data.last().order
-                        adapter.setList(it.data)
-                        handleAlreadRead(false, it.data, {
-                            TextUtils.equals(it?.order, preOrder)
-                        })
+            Consumer { hotTopic ->
+                if (hotTopic.data.isNotEmpty()) {
+                    preOrder = latestOrder
+                    latestOrder = hotTopic.data.first().order
+                    if (!TextUtils.isEmpty(latestOrder) && latestOrder!!.isTopOrder()) {
+                        latestOrder = hotTopic.data[1].order
+                        hotTopic.data.first().isTop = true
+                    } else {
+                        hotTopic.data.first().isTop = false
                     }
-                    refresh?.isRefreshing = false
-                },
-                Consumer {
-                    it.printStackTrace()
-                    adapter.showError(false)
-                    handleError(it)
-                    refresh?.isRefreshing = false
-                })
+                    order = hotTopic.data.last().order
+                    adapter.setList(hotTopic.data)
+                    handleAlreadRead(false, hotTopic.data) {
+                        TextUtils.equals(it?.order, preOrder)
+                    }
+                }
+                refresh?.isRefreshing = false
+            },
+            Consumer {
+                it.printStackTrace()
+                adapter.showError(false)
+                handleError(it)
+                refresh?.isRefreshing = false
+            })
     }
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().hotTopicMore(order!!, 10),
-                Consumer { hotTopic ->
-                    val data = hotTopic.data
-                    order = data.last().order
-                    adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!) {
-                        TextUtils.equals(it?.order, preOrder)
-                    }
-                    Log.i(TAG, "loadMore:order:$order")
-                },
-                Consumer {
-                    it.printStackTrace()
-                    adapter.loadMoreError()
-                })
+            Consumer { hotTopic ->
+                val data = hotTopic.data
+                order = data.last().order
+                adapter.appendList(data)
+                handleAlreadRead(true, adapter.list!!) {
+                    TextUtils.equals(it?.order, preOrder)
+                }
+                Log.i(TAG, "loadMore:order:$order")
+            },
+            Consumer {
+                it.printStackTrace()
+                adapter.loadMoreError()
+            })
     }
 }

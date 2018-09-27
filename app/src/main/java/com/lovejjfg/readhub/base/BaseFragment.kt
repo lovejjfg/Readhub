@@ -18,9 +18,9 @@
 
 package com.lovejjfg.readhub.base
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.lovejjfg.readhub.utils.ErrorUtil
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
@@ -51,18 +51,20 @@ abstract class BaseFragment : Fragment(), IBaseView {
         if (savedInstanceState == null) {
             return
         }
-        val isSupportHidden = savedInstanceState.getBoolean(BaseFragment.ARG_IS_HIDDEN)
-        val ft = activity.fragmentManager.beginTransaction()
-        if (isSupportHidden) {
-            ft.hide(fragment)
-        } else {
-            ft.show(fragment)
+        activity?.apply {
+            val isSupportHidden = savedInstanceState.getBoolean(BaseFragment.ARG_IS_HIDDEN)
+            val ft = this.supportFragmentManager.beginTransaction()
+            if (isSupportHidden) {
+                ft.hide(fragment)
+            } else {
+                ft.show(fragment)
+            }
+            ft.commit()
         }
-        ft.commit()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState!!.putBoolean(ARG_IS_HIDDEN, isHidden)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(ARG_IS_HIDDEN, isHidden)
         super.onSaveInstanceState(outState)
     }
 

@@ -37,7 +37,7 @@ object ToastUtil {
         }
     }
 
-    fun showToast(context: Context, msg: String) {
+    fun showToast(context: Context?, msg: String) {
         showToast(context, msg, Toast.LENGTH_SHORT)
     }
 

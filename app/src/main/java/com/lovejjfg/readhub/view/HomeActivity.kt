@@ -19,16 +19,14 @@
 package com.lovejjfg.readhub.view
 
 import android.Manifest
-import android.app.Fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.view.View
-import android.widget.Toast
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
 import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
 import com.lovejjfg.readhub.utils.FirebaseUtils.logScreen
@@ -42,9 +40,6 @@ import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 
 class HomeActivity : BaseActivity() {
@@ -65,7 +60,7 @@ class HomeActivity : BaseActivity() {
             R.id.navigation_home -> {
                 logEvent(this, getString(R.string.title_home))
                 logScreen(this, getString(R.string.title_home))
-                fragmentManager.beginTransaction()
+                supportFragmentManager.beginTransaction()
                     .show(hotTopicFragment)
                     .hide(techFragment)
                     .hide(developFragment)
@@ -76,7 +71,7 @@ class HomeActivity : BaseActivity() {
             R.id.navigation_tech -> {
                 logEvent(this, getString(R.string.title_tech))
                 logScreen(this, getString(R.string.title_tech))
-                fragmentManager.beginTransaction()
+                supportFragmentManager.beginTransaction()
                     .show(techFragment)
                     .hide(hotTopicFragment)
                     .hide(developFragment)
@@ -87,7 +82,7 @@ class HomeActivity : BaseActivity() {
             R.id.navigation_dev -> {
                 logEvent(this, getString(R.string.title_dev))
                 logScreen(this, getString(R.string.title_dev))
-                fragmentManager.beginTransaction()
+                supportFragmentManager.beginTransaction()
                     .show(developFragment)
                     .hide(hotTopicFragment)
                     .hide(techFragment)
@@ -98,7 +93,7 @@ class HomeActivity : BaseActivity() {
             else -> {
                 logEvent(this, getString(R.string.title_block_chain))
                 logScreen(this, getString(R.string.title_block_chain))
-                fragmentManager.beginTransaction()
+                supportFragmentManager.beginTransaction()
                     .show(blockChainFragment)
                     .hide(hotTopicFragment)
                     .hide(techFragment)
@@ -146,7 +141,7 @@ class HomeActivity : BaseActivity() {
             techFragment = TechFragment()
             developFragment = DevelopFragment()
             blockChainFragment = BlockChainFragment()
-            fragmentManager.beginTransaction()
+            supportFragmentManager.beginTransaction()
                 .add(R.id.content, hotTopicFragment, Constants.HOT)
                 .add(R.id.content, techFragment, Constants.TECH)
                 .add(R.id.content, developFragment, Constants.DEV)
@@ -156,10 +151,10 @@ class HomeActivity : BaseActivity() {
                 .hide(blockChainFragment)
                 .commitAllowingStateLoss()
         } else {
-            hotTopicFragment = fragmentManager.findFragmentByTag(Constants.HOT)
-            techFragment = fragmentManager.findFragmentByTag(Constants.TECH)
-            developFragment = fragmentManager.findFragmentByTag(Constants.DEV)
-            blockChainFragment = fragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN)
+            hotTopicFragment = supportFragmentManager.findFragmentByTag(Constants.HOT)!!
+            techFragment = supportFragmentManager.findFragmentByTag(Constants.TECH)!!
+            developFragment = supportFragmentManager.findFragmentByTag(Constants.DEV)!!
+            blockChainFragment = supportFragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN)!!
             if (currentId != 0) {
                 navigation.selectedItemId = currentId
             }
