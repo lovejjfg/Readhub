@@ -13,11 +13,11 @@ data class EntityTopicsItem(
         val topics: List<TopicsItem?>? = null,
 
         @field:SerializedName("entityId")
-        val entityId: Int? = null,
+        val entityId: String? = null,
 
         @field:SerializedName("eventTypeLabel")
         val eventTypeLabel: String? = null,
 
         @field:SerializedName("eventType")
-        val eventType: Int? = null
+        val eventType: String? = null
 )

@@ -31,10 +31,10 @@ data class NewsArrayItem(
 	val authorName: String? = null,
 
 	@field:SerializedName("groupId")
-	val groupId: Int? = null,
+	val groupId: String? = null,
 
 	@field:SerializedName("duplicateId")
-	val duplicateId: Int? = null,
+	val duplicateId: String? = null,
 
 	@field:SerializedName("publishDate")
 	val publishDate: String? = null,
@@ -43,7 +43,7 @@ data class NewsArrayItem(
 	val siteName: String? = null,
 
 	@field:SerializedName("id")
-	val id: Int? = null,
+	val id: String? = null,
 
 	@field:SerializedName("mobileUrl")
 	val mobileUrl: String? = null,

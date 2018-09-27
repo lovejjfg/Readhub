@@ -52,15 +52,15 @@ class DevelopFragment : RefreshFragment() {
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
         DataManager.subscribe(this, DataManager.init().devNews(),
-                Consumer {
-                    if (it.data?.isNotEmpty()!!) {
+                Consumer { develop ->
+                    if (develop.data?.isNotEmpty()!!) {
                         preOrder = latestOrder
-                        latestOrder = it.data.first().id
-                        order = DateUtil.parseTimeToMillis(it.data.last().publishDate)
-                        adapter.setList(it.data)
-                        handleAlreadRead(false, it.data, {
+                        latestOrder = develop.data.first().id
+                        order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
+                        adapter.setList(develop.data)
+                        handleAlreadRead(false, develop.data) {
                             TextUtils.equals(it?.id, preOrder)
-                        })
+                        }
                     }
                     refresh?.isRefreshing = false
                 },
@@ -74,13 +74,13 @@ class DevelopFragment : RefreshFragment() {
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().devNewsMore(order!!, 10),
-                Consumer {
-                    val data = it.data
+                Consumer { develop ->
+                    val data = develop.data
                     order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
                     adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!, {
+                    handleAlreadRead(true, adapter.list!!) {
                         TextUtils.equals(it?.id, preOrder)
-                    })
+                    }
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)

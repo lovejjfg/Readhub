@@ -40,7 +40,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.tryWrite
 import androidx.core.view.toBitmap
-import com.lovejjfg.powerrecycle.LoadMoreScrollListener
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.manager.FixedLinearLayoutManager
 import com.lovejjfg.readhub.R
@@ -120,7 +119,6 @@ abstract class RefreshFragment : BaseFragment() {
         adapter.setHasStableIds(true)
         adapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
         adapter.attachRecyclerView(rvHot)
-        rvHot.addOnScrollListener(LoadMoreScrollListener(rvHot))
         refresh = binding.container
         adapter.setLoadMoreListener {
             if (order != null) {
@@ -137,14 +135,14 @@ abstract class RefreshFragment : BaseFragment() {
             adapter.notifyItemChanged(position)
         }
         rvHot.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 hideNavigation()
                 if (mSnackBar != null && mSnackBar!!.isShown) {
                     mSnackBar!!.dismiss()
                     return
                 }
-                if (recyclerView?.layoutManager is LinearLayoutManager) {
+                if (recyclerView.layoutManager is LinearLayoutManager) {
                     val first =
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     if (first == 0) {
@@ -218,8 +216,8 @@ abstract class RefreshFragment : BaseFragment() {
             mShareDialog = AlertDialog.Builder(mContext!!)
                 .setTitle(getString(R.string.share))
                 .setMessage(getString(R.string.share_hint_default))
-                .setNegativeButton(getString(R.string.not_send), { _, _ ->
-                })
+                .setNegativeButton(getString(R.string.not_send)) { _, _ ->
+                }
                 .setOnDismissListener {
                     hideNavigation()
                 }
@@ -230,9 +228,9 @@ abstract class RefreshFragment : BaseFragment() {
         }
         val d = Math.random() * 100
         mShareDialog!!.setMessage(hintArrays[d.toInt() % hintArrays.size])
-        mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send), { _, _ ->
+        mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
             shareWithCheck(position)
-        })
+        }
 
         if (!activity.isFinishing) {
             mShareDialog!!.show()

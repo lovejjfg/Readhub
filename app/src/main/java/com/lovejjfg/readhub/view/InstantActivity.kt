@@ -117,18 +117,18 @@ class InstantActivity : BaseActivity() {
             return list[position].type!!
         }
 
-        override fun onViewHolderBind(holder: PowerHolder<DetailItems>?, position: Int) {
-            holder!!.onBind(list[position])
+        override fun onViewHolderBind(holder: PowerHolder<DetailItems>, position: Int) {
+            holder.onBind(list[position])
         }
 
-        override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DetailItems> {
+        override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DetailItems> {
             return when (viewType) {
                 Constants.TYPE_PARSE_TEXT -> {
-                    TextParseHolder(parent!!.inflate(R.layout.holder_text_parse))
+                    TextParseHolder(parent.inflate(R.layout.holder_text_parse))
                 }
                 else -> {
                     val imgParseBinding = DataBindingUtil.inflate<HolderImgParseBinding>(
-                        LayoutInflater.from(parent?.context),
+                        LayoutInflater.from(parent.context),
                         R.layout.holder_img_parse,
                         parent,
                         false

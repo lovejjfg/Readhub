@@ -47,7 +47,7 @@ data class TopicDetail(
         val entityEventTopics: List<Any?>? = null,
 
         @field:SerializedName("order")
-        val order: Int? = null,
+        val order: String? = null,
 
         @field:SerializedName("updatedAt")
         val updatedAt: String? = null

@@ -25,6 +25,7 @@ import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.data.topic.develop.Develop
 import com.lovejjfg.readhub.data.topic.tech.Tech
 import io.reactivex.Observable
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -38,6 +39,9 @@ interface ReadHubService {
 
     @GET("topic")
     fun hotTopic(): Observable<Response<HotTopic>>
+
+    @GET("topic")
+    fun hotTopic1(): Call<HotTopic>
 
     //https://api.readhub.me/topic/instantview?topicId=RwOK8HoWNG
     @GET("topic/instantview")

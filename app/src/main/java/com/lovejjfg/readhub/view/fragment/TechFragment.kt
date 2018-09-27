@@ -74,13 +74,13 @@ class TechFragment : RefreshFragment() {
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().techMore(order!!, 10),
-                Consumer {
-                    val data = it.data
-                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
+                Consumer { tech ->
+                    val data = tech.data
+                    order = DateUtil.parseTimeToMillis(data.last().publishDate)
                     adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!, {
+                    handleAlreadRead(true, adapter.list!!) {
                         TextUtils.equals(it?.id, preOrder)
-                    })
+                    }
                     Log.i(TAG, "order:$order")
                 },
                 Consumer {

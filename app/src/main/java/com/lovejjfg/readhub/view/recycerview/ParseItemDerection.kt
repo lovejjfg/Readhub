@@ -20,7 +20,6 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.dip2px
 
 /**
@@ -29,42 +28,40 @@ import com.lovejjfg.readhub.utils.dip2px
  */
 class ParseItemDerection : RecyclerView.ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-        val position = parent?.getChildAdapterPosition(view)
-        val adapter = parent?.adapter
-        val viewType = adapter?.getItemViewType(position!!)
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val position = parent.getChildAdapterPosition(view)
+        val adapter = parent.adapter
+        val viewType = adapter?.getItemViewType(position)
         var preType = -1
-        if (position!! > 0) {
+        if (position > 0) {
             preType = adapter!!.getItemViewType(position - 1)
         }
         if (preType != -1) {
             when (viewType) {
                 Constants.TYPE_PARSE_TEXT -> if (viewType != preType) {
-                    outRect?.top = parent.context.dip2px( 30F)
+                    outRect.top = parent.context.dip2px(30F)
                 } else {
-                    outRect?.top = parent.context.dip2px( 20F)
+                    outRect.top = parent.context.dip2px(20F)
                 }
                 Constants.TYPE_PARSE_IMG -> {
-                    outRect?.left = parent.context.dip2px( 20F)
-                    outRect?.right = parent.context.dip2px( 20F)
+                    outRect.left = parent.context.dip2px(20F)
+                    outRect.right = parent.context.dip2px(20F)
                     if (viewType != preType) {
-                        outRect?.top = parent.context.dip2px( 30F)
+                        outRect.top = parent.context.dip2px(30F)
                     } else {
-                        outRect?.top = parent.context.dip2px( 20F)
+                        outRect.top = parent.context.dip2px(20F)
                     }
                 }
             }
         } else {
             when (viewType) {
                 Constants.TYPE_PARSE_IMG -> {
-                    outRect?.top = 0
+                    outRect.top = 0
                 }
                 else -> {
-                    outRect?.top = parent.context.dip2px(20F)
-
+                    outRect.top = parent.context.dip2px(20F)
                 }
             }
         }
     }
-
 }

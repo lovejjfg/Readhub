@@ -167,13 +167,13 @@ class HotTopicFragment : RefreshFragment() {
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().hotTopicMore(order!!, 10),
-                Consumer {
-                    val data = it.data
-                    order = data?.last()?.order
+                Consumer { hotTopic ->
+                    val data = hotTopic.data
+                    order = data.last().order
                     adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!, {
+                    handleAlreadRead(true, adapter.list!!) {
                         TextUtils.equals(it?.order, preOrder)
-                    })
+                    }
                     Log.i(TAG, "loadMore:order:$order")
                 },
                 Consumer {

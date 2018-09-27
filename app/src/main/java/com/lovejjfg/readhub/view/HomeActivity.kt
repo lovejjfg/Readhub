@@ -24,11 +24,14 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.view.View
+import android.widget.Toast
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
+import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
 import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
+import com.lovejjfg.readhub.utils.FirebaseUtils.logScreen
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.SharedPrefsUtil
@@ -39,6 +42,9 @@ import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 
 class HomeActivity : BaseActivity() {
@@ -58,6 +64,7 @@ class HomeActivity : BaseActivity() {
         when (item.itemId) {
             R.id.navigation_home -> {
                 logEvent(this, getString(R.string.title_home))
+                logScreen(this, getString(R.string.title_home))
                 fragmentManager.beginTransaction()
                     .show(hotTopicFragment)
                     .hide(techFragment)
@@ -68,6 +75,7 @@ class HomeActivity : BaseActivity() {
             }
             R.id.navigation_tech -> {
                 logEvent(this, getString(R.string.title_tech))
+                logScreen(this, getString(R.string.title_tech))
                 fragmentManager.beginTransaction()
                     .show(techFragment)
                     .hide(hotTopicFragment)
@@ -78,6 +86,7 @@ class HomeActivity : BaseActivity() {
             }
             R.id.navigation_dev -> {
                 logEvent(this, getString(R.string.title_dev))
+                logScreen(this, getString(R.string.title_dev))
                 fragmentManager.beginTransaction()
                     .show(developFragment)
                     .hide(hotTopicFragment)
@@ -88,6 +97,7 @@ class HomeActivity : BaseActivity() {
             }
             else -> {
                 logEvent(this, getString(R.string.title_block_chain))
+                logScreen(this, getString(R.string.title_block_chain))
                 fragmentManager.beginTransaction()
                     .show(blockChainFragment)
                     .hide(hotTopicFragment)
@@ -107,6 +117,7 @@ class HomeActivity : BaseActivity() {
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
 //        checkPermissions()
+        logScreen(this, getString(R.string.title_home))
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         navigation = viewBind!!.navigation
         val toolbar = viewBind?.toolbar

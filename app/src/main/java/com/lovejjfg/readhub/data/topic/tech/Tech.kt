@@ -26,10 +26,10 @@ import javax.annotation.Generated
 data class Tech(
 
 	@field:SerializedName("totalItems")
-	val totalItems: Int? = null,
+	val totalItems: String? = null,
 
 	@field:SerializedName("data")
-	val data: List<DataItem>? = null,
+	val data: List<DataItem>,
 
 	@field:SerializedName("totalPages")
 	val totalPages: Int? = null,

@@ -25,15 +25,15 @@ import javax.annotation.Generated
 @Generated("com.robohorse.robopojogenerator")
 data class Develop(
 
-        @field:SerializedName("totalItems")
-        val totalItems: Int? = null,
+    @field:SerializedName("totalItems")
+    val totalItems: String? = null,
 
-        @field:SerializedName("data")
-        val data: List<DataItem>? = null,
+    @field:SerializedName("data")
+    val data: List<DataItem>,
 
-        @field:SerializedName("totalPages")
-        val totalPages: Int? = null,
+    @field:SerializedName("totalPages")
+    val totalPages: Int? = null,
 
-        @field:SerializedName("pageSize")
-        val pageSize: Int? = null
+    @field:SerializedName("pageSize")
+    val pageSize: Int? = null
 )

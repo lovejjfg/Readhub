@@ -39,10 +39,10 @@ import kotlinx.android.synthetic.main.holder_normal_topic.view.iv_share
  */
 
 class NormalTopicAdapter : PowerAdapter<DataItem>() {
-    override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
-                AlreadyReadHolder(parent!!.inflate(R.layout.holder_already_read))
+                AlreadyReadHolder(parent.inflate(R.layout.holder_already_read))
             }
             else -> {
                 val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_normal_topic, parent, false)
@@ -70,8 +70,8 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
         }
     }
 
-    override fun onViewHolderBind(holder: PowerHolder<DataItem>?, position: Int) {
-        holder!!.onBind(list[position])
+    override fun onViewHolderBind(holder: PowerHolder<DataItem>, position: Int) {
+        holder.onBind(list[position])
     }
 
     inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {

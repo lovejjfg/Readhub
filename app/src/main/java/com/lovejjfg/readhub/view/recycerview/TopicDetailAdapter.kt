@@ -28,6 +28,7 @@ import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
 import com.lovejjfg.readhub.databinding.HolderTopicHeaderBinding
 import com.lovejjfg.readhub.databinding.HolderTopicTimelineBinding
 import com.lovejjfg.readhub.utils.DateUtil
+import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.holder.DividerHolder
 
 /**
@@ -35,21 +36,21 @@ import com.lovejjfg.readhub.view.recycerview.holder.DividerHolder
  * lovejjfg@gmail.com
  */
 class TopicDetailAdapter : PowerAdapter<DetailItems>() {
-    override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DetailItems> {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DetailItems> {
         when (viewType) {
             Constants.TYPE_HEADER -> {
-                val itemBinding = DataBindingUtil.inflate<HolderTopicHeaderBinding>(LayoutInflater.from(parent?.context), R.layout.holder_topic_header, parent, false)
+                val itemBinding = DataBindingUtil.inflate<HolderTopicHeaderBinding>(LayoutInflater.from(parent.context), R.layout.holder_topic_header, parent, false)
                 return HeaderHolder(itemBinding)
             }
             Constants.TYPE_NEWS -> {
-                val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(LayoutInflater.from(parent?.context), R.layout.holder_hot_topic_item, parent, false)
+                val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(LayoutInflater.from(parent.context), R.layout.holder_hot_topic_item, parent, false)
                 return HotTopicItemHolder(itemBinding)
             }
             Constants.TYPE_DIVIDER -> {
-                return DividerHolder(LayoutInflater.from(parent?.context).inflate(R.layout.layout_divider, parent, false), false)
+                return DividerHolder(parent.inflate(R.layout.layout_divider), false)
             }
             else -> {
-                val itemBinding = DataBindingUtil.inflate<HolderTopicTimelineBinding>(LayoutInflater.from(parent?.context), R.layout.holder_topic_timeline, parent, false)
+                val itemBinding = DataBindingUtil.inflate<HolderTopicTimelineBinding>(LayoutInflater.from(parent.context), R.layout.holder_topic_timeline, parent, false)
                 return TimeLineHolder(itemBinding)
             }
 
@@ -58,8 +59,8 @@ class TopicDetailAdapter : PowerAdapter<DetailItems>() {
     }
 
 
-    override fun onViewHolderBind(holder: PowerHolder<DetailItems>?, position: Int) {
-        holder?.onBind(list[position])
+    override fun onViewHolderBind(holder: PowerHolder<DetailItems>, position: Int) {
+        holder.onBind(list[position])
     }
 
 

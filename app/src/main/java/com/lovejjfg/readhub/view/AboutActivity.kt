@@ -50,9 +50,9 @@ class AboutActivity : BaseActivity() {
         recyclerView?.layoutManager = LinearLayoutManager(this)
         aboutAdapter.attachRecyclerView(recyclerView!!)
         initData()
-        aboutAdapter.setOnItemClickListener({ _, _, item ->
+        aboutAdapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
-        })
+        }
     }
 
     private fun initData() {
@@ -144,9 +144,9 @@ class AboutActivity : BaseActivity() {
                 )
             )
             it.onComplete()
-        }.toSortedList({ t, t1 ->
+        }.toSortedList { t, t1 ->
             t.name!!.compareTo(t1.name!!)
-        })
+        }
             .subscribe({ aboutAdapter.setList(it) }, { it.printStackTrace() })
             .addTo(mDisposables)
     }
@@ -157,8 +157,8 @@ class AboutActivity : BaseActivity() {
     }
 
     class AboutAdapter : PowerAdapter<Library>() {
-        override fun onViewHolderBind(holder: PowerHolder<Library>?, position: Int) {
-            holder?.onBind(list[position])
+        override fun onViewHolderBind(holder: PowerHolder<Library>, position: Int) {
+            holder.onBind(list[position])
         }
 
         override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<Library>? {

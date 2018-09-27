@@ -45,18 +45,18 @@ import kotlinx.android.synthetic.main.holder_hot_topic.view.tv_publish
  * Created by Joe at 2017/7/30.
  */
 class HotTopicAdapter : PowerAdapter<DataItem>() {
-    override fun onViewHolderBind(holder: PowerHolder<DataItem>?, position: Int) {
-        holder?.onBind(list[position])
+    override fun onViewHolderBind(holder: PowerHolder<DataItem>, position: Int) {
+        holder.onBind(list[position])
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<DataItem> {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
-                AlreadyReadHolder(parent!!.inflate(R.layout.holder_already_read))
+                AlreadyReadHolder(parent.inflate(R.layout.holder_already_read))
             }
             else -> {
                 val inflate = DataBindingUtil.inflate<HolderHotTopicBinding>(
-                    LayoutInflater.from(parent?.context),
+                    LayoutInflater.from(parent.context),
                     R.layout.holder_hot_topic,
                     parent,
                     false
@@ -143,9 +143,10 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
     }
 
     inner class HotTopicItemAdapter : PowerAdapter<NewsArrayItem>() {
-        override fun onViewHolderCreate(parent: ViewGroup?, viewType: Int): PowerHolder<NewsArrayItem> {
+
+        override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<NewsArrayItem> {
             val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(
-                LayoutInflater.from(parent?.context),
+                LayoutInflater.from(parent.context),
                 R.layout.holder_hot_topic_item,
                 parent,
                 false
@@ -153,8 +154,8 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
             return HotTopicItemHolder(itemBinding)
         }
 
-        override fun onViewHolderBind(holder: PowerHolder<NewsArrayItem>?, position: Int) {
-            holder!!.onBind(list[position])
+        override fun onViewHolderBind(holder: PowerHolder<NewsArrayItem>, position: Int) {
+            holder.onBind(list[position])
         }
     }
 

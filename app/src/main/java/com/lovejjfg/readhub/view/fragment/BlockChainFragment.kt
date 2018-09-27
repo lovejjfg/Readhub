@@ -72,13 +72,13 @@ class BlockChainFragment : RefreshFragment() {
 
     override fun loadMore() {
         DataManager.subscribe(this, DataManager.init().blockchainMore(order!!, 10),
-                Consumer {
-                    val data = it.data
-                    order = DateUtil.parseTimeToMillis(data?.last()?.publishDate)
+                Consumer { develop ->
+                    val data = develop.data
+                    order = DateUtil.parseTimeToMillis(data.last().publishDate)
                     adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!, {
+                    handleAlreadRead(true, adapter.list!!) {
                         TextUtils.equals(it?.id, preOrder)
-                    })
+                    }
                 },
                 Consumer {
                     Log.e(TAG, "error:", it)

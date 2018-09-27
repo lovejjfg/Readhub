@@ -83,9 +83,9 @@ object DataManager {
 
         return request
             .subscribeOn(Schedulers.io())//事件产生在子线程
-            .retry({ integer, throwable ->
+            .retry { integer, throwable ->
                 (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
-            })
+            }
             .map { t: Response<R> ->
                 return@map if (t.isSuccessful) {
                     t.body()!!
