@@ -22,10 +22,7 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name"
-                app:titleTextColor="#fff"
-                >
-
-            </android.support.v7.widget.Toolbar>
+                app:titleTextColor="#fff"/>
         </android.support.design.widget.AppBarLayout>
 
 
@@ -33,8 +30,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            >
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         </FrameLayout>
 

@@ -111,7 +111,7 @@ class HomeActivity : BaseActivity() {
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
-//        checkPermissions()
+        checkPermissions()
         logScreen(this, getString(R.string.title_home))
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         navigation = viewBind!!.navigation
@@ -166,7 +166,8 @@ class HomeActivity : BaseActivity() {
         if (!SharedPrefsUtil.getValue(this, Constants.SHOW_PROMISSION, false)) {
             RxPermissions(this).request(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE
             )
                 .subscribe({
                     SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)

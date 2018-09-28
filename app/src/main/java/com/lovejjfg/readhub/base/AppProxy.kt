@@ -29,6 +29,7 @@ import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.http.NetWorkUtils
 import com.lovejjfg.readhub.utils.http.ToastUtil
+import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.Bugly.applicationContext
 import com.tencent.bugly.beta.Beta
@@ -63,19 +64,20 @@ class AppProxy(
         super.onCreate()
         mApp = this
 
-
-        Bugly.init(application, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
-        CrashReport.setIsDevelopmentDevice(applicationContext, true);
+        CrashReport.setIsDevelopmentDevice(applicationContext, BuildConfig.IS_DEBUG);
         val notify = PreferenceManager
             .getDefaultSharedPreferences(application)
             .getBoolean("auto_update", true)
+
+        val strategy = CrashReport.UserStrategy(application)
+        strategy.appChannel = WalleChannelReader.getChannel(applicationContext, "dev")
 
         Log.i("APP", "自动更新：$notify")
 
         val autoDownload = PreferenceManager
             .getDefaultSharedPreferences(application)
             .getBoolean("auto_download", true)
-        Bugly.init(application, BuildConfig.BUGLY, BuildConfig.IS_DEBUG)
+        Bugly.init(application, BuildConfig.BUGLY, BuildConfig.IS_DEBUG, strategy)
 
         Log.i("APP", "自动下载：$autoDownload")
         Beta.autoInit = true
