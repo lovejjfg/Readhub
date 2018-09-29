@@ -18,6 +18,7 @@
 
 package com.lovejjfg.readhub.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -25,6 +26,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.TextUtils
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.view.AboutActivity
 import com.lovejjfg.readhub.view.InstantActivity
@@ -103,8 +105,13 @@ object JumpUitl {
         startActivity(context, intent)
     }
 
-    fun backHome(context: Context?) {
+    fun backHome(context: Activity?) {
         if (context == null) {
+            return
+        }
+        if (AppProxy.needRestart) {
+            context.finish()
+            android.os.Process.killProcess(android.os.Process.myPid())
             return
         }
         val intent = Intent()

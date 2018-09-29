@@ -34,7 +34,8 @@ import com.tencent.bugly.Bugly
 import com.tencent.bugly.Bugly.applicationContext
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
-import com.tencent.tinker.entry.DefaultApplicationLike
+import com.tencent.tinker.lib.reporter.DefaultLoadReporter
+import com.tencent.tinker.loader.app.DefaultApplicationLike
 import java.io.File
 
 /**
@@ -100,7 +101,17 @@ class AppProxy(
     override fun onBaseContextAttached(base: Context) {
         super.onBaseContextAttached(base)
         MultiDex.install(base)
-        Beta.installTinker(this)
+        Beta.installTinker(this, object : DefaultLoadReporter(base) {
+            override fun onLoadResult(patchDirectory: File?, loadCode: Int, cost: Long) {
+                super.onLoadResult(patchDirectory, loadCode, cost)
+                needRestart = loadCode == 0
+            }
+
+            override fun onLoadException(e: Throwable?, errorCode: Int) {
+                super.onLoadException(e, errorCode)
+                CrashReport.postCatchedException(e)
+            }
+        }, null, null, null, null)
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -111,5 +122,6 @@ class AppProxy(
     companion object {
         var cacheDirectory: File? = null
         var mApp: AppProxy? = null
+        var needRestart: Boolean = true
     }
 }

@@ -25,7 +25,3 @@
 -keep class com.tencent.tinker.loader.** {
     <init>();
 }
-
--keep class com.lovejjfg.tinker.powerrecycle.**{*;}
-
-

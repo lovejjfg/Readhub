@@ -111,7 +111,7 @@ class HomeActivity : BaseActivity() {
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
-        checkPermissions()
+//        checkPermissions()
         logScreen(this, getString(R.string.title_home))
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         navigation = viewBind!!.navigation

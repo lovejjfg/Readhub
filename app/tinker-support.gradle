@@ -5,8 +5,8 @@ def bakPath = file("${buildDir}/bakApk/")
 
 /**
  * 此处填写每次构建生成的基准包目录*/
-def baseApkDir = "app-0929-11-34-19"
-def id = "${project.gitTag}_${project.gitCommitCount}_debug_fix"
+def baseApkDir = "$BASE_APK_DIR"
+def id = "${project.gitTag}_${project.gitCommitCount}"
 
 /**
  * 对于插件各参数的详细解析请参考*/
@@ -26,13 +26,13 @@ tinkerSupport {
     // 如果为空，则表示不是进行补丁包的编译
     // @{link tinkerPatch.oldApk }
     //    baseApk = "${bakPath}/${baseApkDir}/readhub_${project.gitTag}.${project.gitCommitCount}.apk"
-    baseApk = "${bakPath}/${baseApkDir}/app-debug.apk"
+    baseApk = "${bakPath}/${baseApkDir}/$BASE_APK_NAME"
 
     // 对应tinker插件applyMapping
-    baseApkProguardMapping = "${bakPath}/${baseApkDir}/app-debug-mapping.txt"
+    baseApkProguardMapping = "${bakPath}/${baseApkDir}/$BASE_APK_MAPPING"
 
     // 对应tinker插件applyResourceMapping
-    baseApkResourceMapping = "${bakPath}/${baseApkDir}/app-debug-R.txt"
+    baseApkResourceMapping = "${bakPath}/${baseApkDir}/$BASE_APK_R"
 
     // 构建基准包和补丁包都要指定不同的tinkerId，并且必须保证唯一性
     tinkerId = "readhub-$id"
@@ -55,7 +55,7 @@ tinkerSupport {
  * 对于各参数的详细介绍请参考:
  * https://github.com/Tencent/tinker/wiki/Tinker-%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97*/
 tinkerPatch {
-    oldApk = "${bakPath}/${baseApkDir}/app-debug.apk"
+    oldApk = "${bakPath}/${baseApkDir}/$BASE_APK_NAME"
     println "执行tinkerPatch了"
     ignoreWarning = true
     useSign = true
