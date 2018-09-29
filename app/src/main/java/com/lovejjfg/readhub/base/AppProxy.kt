@@ -31,7 +31,6 @@ import com.lovejjfg.readhub.utils.http.NetWorkUtils
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
-import com.tencent.bugly.Bugly.applicationContext
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.tinker.lib.reporter.DefaultLoadReporter
@@ -65,14 +64,14 @@ class AppProxy(
         super.onCreate()
         mApp = this
 
-        CrashReport.setIsDevelopmentDevice(applicationContext, BuildConfig.IS_DEBUG)
+        CrashReport.setIsDevelopmentDevice(application, BuildConfig.IS_DEBUG)
         val notify = PreferenceManager
             .getDefaultSharedPreferences(application)
             .getBoolean("auto_update", true)
 
         val strategy = CrashReport.UserStrategy(application)
-        strategy.appChannel = WalleChannelReader.getChannel(applicationContext, "dev")
-
+        strategy.appChannel = WalleChannelReader.getChannel(application, "dev")
+        Log.e("Readhub", " ${strategy.appChannel}")
         Log.i("APP", "自动更新：$notify")
 
         val autoDownload = PreferenceManager
@@ -94,7 +93,7 @@ class AppProxy(
         Beta.init(application, BuildConfig.IS_DEBUG)
         ToastUtil.initToast(application)
         NetWorkUtils.init(application)
-        cacheDirectory = File(applicationContext.cacheDir, "responses")
+        cacheDirectory = File(application.cacheDir, "responses")
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
