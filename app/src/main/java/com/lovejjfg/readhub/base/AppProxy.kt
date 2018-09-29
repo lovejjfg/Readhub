@@ -65,7 +65,7 @@ class AppProxy(
         super.onCreate()
         mApp = this
 
-        CrashReport.setIsDevelopmentDevice(applicationContext, BuildConfig.IS_DEBUG);
+        CrashReport.setIsDevelopmentDevice(applicationContext, BuildConfig.IS_DEBUG)
         val notify = PreferenceManager
             .getDefaultSharedPreferences(application)
             .getBoolean("auto_update", true)

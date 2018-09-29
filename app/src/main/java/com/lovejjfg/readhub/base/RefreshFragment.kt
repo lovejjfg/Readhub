@@ -24,10 +24,13 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
+import android.support.v4.content.FileProvider
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -249,13 +252,24 @@ abstract class RefreshFragment : BaseFragment() {
             itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.VISIBLE
             val file = File(
                 mContext?.externalCacheDir,
-                String.format(getString(R.string.img_name), System.currentTimeMillis().toString())
+                "share" + File.separator + String.format(
+                    getString(R.string.img_name),
+                    System.currentTimeMillis().toString()
+                )
             )
             AtomicFile(file).tryWrite {
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
                 bitmap?.recycle()
             }
-            val uriToImage = Uri.fromFile(file)
+
+            val uriToImage: Uri
+            uriToImage = if (VERSION.SDK_INT <= VERSION_CODES.M) {
+                Uri.fromFile(file)
+            } else {
+                FileProvider.getUriForFile(
+                    context!!, context!!.packageName + ".fileProvider", file
+                )
+            }
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.lovejjfg.readhub">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,6 +12,8 @@
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 8.0安装权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
         android:name=".base.App"
@@ -65,14 +68,27 @@
             android:theme="@android:style/Theme.Translucent"/>
 
         <provider
+            android:name="com.tencent.bugly.beta.utils.BuglyFileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="name,authorities,exported,grantUriPermissions">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="name,resource"/>
+        </provider>
+
+        <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/file_paths"/>
         </provider>
+
     </application>
 
 </manifest>
