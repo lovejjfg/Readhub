@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
-import android.preference.PreferenceManager
 import android.support.multidex.MultiDex
 import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
@@ -59,35 +58,25 @@ class AppProxy(
 ) {
 
     val TAG = "AppProxy"
+    private var channel: String = "dev"
 
     override fun onCreate() {
         super.onCreate()
         mApp = this
 
         CrashReport.setIsDevelopmentDevice(application, BuildConfig.IS_DEBUG)
-        val notify = PreferenceManager
-            .getDefaultSharedPreferences(application)
-            .getBoolean("auto_update", true)
 
         val strategy = CrashReport.UserStrategy(application)
-        strategy.appChannel = WalleChannelReader.getChannel(application, "dev")
-        Log.e("Readhub", " ${strategy.appChannel}")
-        Log.i("APP", "自动更新：$notify")
-
-        val autoDownload = PreferenceManager
-            .getDefaultSharedPreferences(application)
-            .getBoolean("auto_download", true)
+        Log.e("Readhub", " $channel")
+        strategy.appChannel = channel
         Bugly.init(application, BuildConfig.BUGLY, BuildConfig.IS_DEBUG, strategy)
-
-        Log.i("APP", "自动下载：$autoDownload")
         Beta.autoInit = true
-        Beta.enableHotfix = true
         Beta.canAutoPatch = true
         Beta.canShowApkInfo = false
         Beta.upgradeDialogLayoutId = R.layout.dialog_update
-        Beta.showInterruptedStrategy = false
-        Beta.autoCheckUpgrade = notify
-        Beta.autoDownloadOnWifi = autoDownload
+        Beta.showInterruptedStrategy = true
+        Beta.autoCheckUpgrade = true
+        Beta.autoDownloadOnWifi = false
         Beta.smallIconId = R.mipmap.ic_launcher_foreground
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         Beta.init(application, BuildConfig.IS_DEBUG)
@@ -100,17 +89,24 @@ class AppProxy(
     override fun onBaseContextAttached(base: Context) {
         super.onBaseContextAttached(base)
         MultiDex.install(base)
-        Beta.installTinker(this, object : DefaultLoadReporter(base) {
-            override fun onLoadResult(patchDirectory: File?, loadCode: Int, cost: Long) {
-                super.onLoadResult(patchDirectory, loadCode, cost)
-                needRestart = loadCode == 0
-            }
+        val channel1 = WalleChannelReader.getChannel(application, "dev")
+        if (channel1 != null) {
+            channel = channel1
+        }
+        if (channel != "googleplay") {
+            Log.e("Readhub", "init hot fix.")
+            Beta.installTinker(this, object : DefaultLoadReporter(base) {
+                override fun onLoadResult(patchDirectory: File?, loadCode: Int, cost: Long) {
+                    super.onLoadResult(patchDirectory, loadCode, cost)
+                    needRestart = loadCode == 0
+                }
 
-            override fun onLoadException(e: Throwable?, errorCode: Int) {
-                super.onLoadException(e, errorCode)
-                CrashReport.postCatchedException(e)
-            }
-        }, null, null, null, null)
+                override fun onLoadException(e: Throwable?, errorCode: Int) {
+                    super.onLoadException(e, errorCode)
+                    CrashReport.postCatchedException(e)
+                }
+            }, null, null, null, null)
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -121,6 +117,6 @@ class AppProxy(
     companion object {
         var cacheDirectory: File? = null
         var mApp: AppProxy? = null
-        var needRestart: Boolean = true
+        var needRestart: Boolean = false
     }
 }

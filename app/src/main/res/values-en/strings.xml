@@ -34,7 +34,7 @@
     <string name="pref_share">One Step Share</string>
     <string name="pref_share_des">Not show the share confirm dialog</string>
     <string name="normal">Normal</string>
-    <string name="download">Download</string>
+    <string name="version">Version</string>
     <string name="pref_update_des">Remind you when there is a new version</string>
     <string name="pref_update">Update Notification</string>
     <string name="pref_update_manual">Check Update</string>

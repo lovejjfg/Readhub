@@ -24,27 +24,12 @@
 
     <PreferenceCategory
         android:key="pref_key_download"
-        android:title="@string/download">
-
-        <SwitchPreference
-            android:id="@+id/auto_update"
-            android:defaultValue="true"
-            android:key="@string/auto_update"
-            android:summary="@string/pref_update_des"
-            android:title="@string/pref_update"/>
-
-        <SwitchPreference
-            android:id="@+id/auto_download"
-            android:defaultValue="true"
-            android:key="auto_download"
-            android:summary="@string/auto_download_des"
-            android:title="@string/auto_download"/>
+        android:title="@string/version">
 
         <Preference
             android:id="@+id/check_update"
             android:key="@string/manual_update"
-            android:title="@string/pref_update_manual"
-            >
+            android:title="@string/pref_update_manual">
 
         </Preference>
         <!-- NOTE: EditTextPreference accepts EditText attributes. -->
