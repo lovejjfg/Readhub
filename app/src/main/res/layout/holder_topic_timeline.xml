@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-    >
+        xmlns:tools="http://schemas.android.com/tools">
 
 
     <android.support.design.internal.ForegroundLinearLayout
@@ -26,8 +25,7 @@
             android:gravity="center"
             android:textColor="@color/theme_color_text_g1"
             android:textSize="@dimen/text_des"
-            tools:text="9-19"
-            />
+            tools:text="9-19"/>
 
 
         <TextView
@@ -35,8 +33,7 @@
             style="@style/Text.TimeLine"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"
-            />
+            tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"/>
 
     </android.support.design.internal.ForegroundLinearLayout>
 

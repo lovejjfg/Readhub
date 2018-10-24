@@ -50,13 +50,13 @@ class TopicDetailActivity : BaseActivity() {
         topicDetailAdapter = TopicDetailAdapter()
         topicDetailAdapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
         topicDetailAdapter.attachRecyclerView(rvHot)
-        topicDetailAdapter.setOnItemClickListener({ _, position, item ->
+        topicDetailAdapter.setOnItemClickListener { _, position, item ->
             when (topicDetailAdapter.getItemViewTypes(position)) {
                 Constants.TYPE_NEWS -> {
                     JumpUitl.jumpWeb(this, item?.newsItem?.mobileUrl)
                 }
             }
-        })
+        }
     }
 
     private fun getData() {
@@ -80,7 +80,7 @@ class TopicDetailActivity : BaseActivity() {
                                 items.timeLineType = ConnectorView.Type.ONLY
                                 it.onNext(items)
                             } else {
-                                topics.forEachIndexed({ index, topicsItem ->
+                                topics.forEachIndexed { index, topicsItem ->
                                     val items = DetailItems(topicsItem!!)
                                     when (index) {
                                         0 -> items.timeLineType = ConnectorView.Type.START
@@ -88,7 +88,7 @@ class TopicDetailActivity : BaseActivity() {
                                         else -> items.timeLineType = ConnectorView.Type.NODE
                                     }
                                     it.onNext(items)
-                                })
+                                }
                             }
                         }
                         it.onComplete()

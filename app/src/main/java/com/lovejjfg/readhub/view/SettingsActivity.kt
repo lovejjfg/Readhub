@@ -18,7 +18,6 @@
 
 package com.lovejjfg.readhub.view
 
-
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
@@ -28,10 +27,21 @@ import android.preference.Preference
 import android.preference.PreferenceActivity
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
+import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.utils.getStatusBarHeight
+import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout
 import com.tencent.bugly.beta.Beta
+import kotlinx.android.synthetic.main.activity_setting.view.containerLayout
+import kotlinx.android.synthetic.main.activity_setting.view.toolbar
+import kotlinx.android.synthetic.main.layout_statusbar.view.statusBarProxy
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -47,35 +57,10 @@ import com.tencent.bugly.beta.Beta
 class SettingsActivity : AppCompatPreferenceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupActionBar()
         fragmentManager.beginTransaction()
-                .replace(android.R.id.content, GeneralPreferenceFragment())
-                .commit()
+            .replace(android.R.id.content, GeneralPreferenceFragment())
+            .commit()
     }
-
-    /**
-     * Set up the [android.app.ActionBar], if the API is available.
-     */
-    private fun setupActionBar() {
-        val actionBar = supportActionBar
-        actionBar.setDisplayHomeAsUpEnabled(true)
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun onIsMultiPane(): Boolean {
-        return isXLargeTablet(this)
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    //    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//    override fun onBuildHeaders(target: List<PreferenceActivity.Header>) {
-//        loadHeadersFromResource(R.xml.pref_headers, target)
-//    }
 
     /**
      * This method stops fragment injection in malicious applications.
@@ -102,7 +87,24 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                 Beta.checkUpgrade()
                 return@setOnPreferenceClickListener true
             }
-            checkUpdate?.summary = getString(R.string.current_version)+BuildConfig.VERSION_NAME
+            checkUpdate?.summary = getString(R.string.current_version) + BuildConfig.VERSION_NAME
+        }
+
+        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup, savedInstanceState: Bundle?): View {
+            val view = super.onCreateView(inflater, container, savedInstanceState)
+            val parent = container.inflate(R.layout.activity_setting) as SwipeCoordinatorLayout
+            parent.setOnSwipeBackListener { activity?.onBackPressed() }
+            parent.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+            parent.containerLayout.addView(view)
+            initStatusBar(parent.statusBarProxy, parent.toolbar)
+            return parent
+        }
+
+        private fun initStatusBar(statusBarProxy: View, toolbar: Toolbar) {
+            val statusBarHeight = statusBarProxy.context.getStatusBarHeight()
+            val layoutParams = toolbar.layoutParams as MarginLayoutParams
+            layoutParams.topMargin = statusBarHeight
+            statusBarProxy.layoutParams.height = statusBarHeight
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -122,7 +124,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         super.onResume()
         preferenceScreen
     }
-
 
     companion object {
 
@@ -158,10 +159,12 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
             // Trigger the listener immediately with the preference's
             // current value.
-            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.context)
-                            .getBoolean(preference.key, false))
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(
+                preference,
+                PreferenceManager
+                    .getDefaultSharedPreferences(preference.context)
+                    .getBoolean(preference.key, false)
+            )
         }
     }
 }

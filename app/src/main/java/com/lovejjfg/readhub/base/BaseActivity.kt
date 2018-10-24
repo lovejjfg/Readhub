@@ -11,6 +11,7 @@ import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.getStatusBarHeight
 import com.lovejjfg.readhub.utils.http.ToastUtil
+import com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
@@ -33,6 +34,9 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
 
     private fun initToolBar() {
         findViewById<Toolbar>(R.id.toolbar)?.setNavigationOnClickListener { finish() }
+        findViewById<SwipeCoordinatorLayout>(R.id.parentContainer)?.setOnSwipeBackListener{
+            onBackPressed()
+        }
     }
 
     override fun showToast(toast: String) {

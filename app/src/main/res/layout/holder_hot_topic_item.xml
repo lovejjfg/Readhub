@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-    >
-
+        xmlns:tools="http://schemas.android.com/tools">
     <data>
-
         <variable
             name="news"
             type="com.lovejjfg.readhub.data.topic.NewsArrayItem"/>
     </data>
-
 
     <android.support.design.internal.ForegroundLinearLayout
         android:id="@+id/container"
@@ -33,8 +29,7 @@
                 android:text="@{news.title}"
                 android:textColor="@color/theme_color_text_g0"
                 android:textSize="@dimen/text_sec_title"
-                tools:text="xxxxxxxxxxx"
-                />
+                tools:text="xxxxxxxxxxx"/>
 
             <TextView
                 android:id="@+id/tv_site_name"
@@ -43,8 +38,7 @@
                 android:text="@{news.siteName}"
                 android:textColor="@color/theme_color_text_g1"
                 android:textSize="@dimen/text_time"
-                tools:text="3小时前"
-                />
+                tools:text="3小时前"/>
 
         </com.lovejjfg.readhub.view.PartnerLayout>
     </android.support.design.internal.ForegroundLinearLayout>
