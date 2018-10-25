@@ -9,10 +9,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.support.v4.view.animation.LinearOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.animation.LinearInterpolator
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.dip2px
 import java.util.ArrayList
@@ -33,14 +33,19 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     private val mControlPoints = ArrayList<PointF>(5)
     private var xResult: Float = 0F
     private var yResult: Float = 0F
+    private var rawX: Float = 0F
     private val path = Path()
     private val arrowPath = Path()
     private val pathPaint = Paint()
     private var animator: ValueAnimator
     private var percent: Float = 0F
+    private var arrowLength: Float = 0F
     private var arrowPaint: Paint
 
     private var callback: Callback? = null
+    private val callbackRunnable = Runnable {
+        callback?.invoke()
+    }
 
     init {
         pathPaint.color = Color.BLACK
@@ -50,6 +55,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         arrowPaint = Paint(pathPaint)
         arrowPaint.color = Color.WHITE
         arrowPaint.strokeWidth = context.dip2px(2f).toFloat()
+        arrowLength = context.dip2px(6f).toFloat()
         arrowPaint.strokeCap = Paint.Cap.ROUND
         arrowPaint.style = Paint.Style.STROKE
 
@@ -59,8 +65,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         animator.duration = 200
         animator.addUpdateListener { animation ->
             val animatedFraction = animation.animatedFraction
-            xResult *= (1 - animatedFraction)
-            invalidate(xResult)
+            invalidate((1 - animatedFraction) * rawX)
         }
     }
 
@@ -87,16 +92,12 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         if (animator.isRunning) {
             return false
         }
-        val rawX = event.x * 0.8f
+        rawX = (event.x - 50) * 0.8f
         yResult = event.y
         val action = event.action
         when (action) {
             MotionEvent.ACTION_UP -> {
-                dispatchCallback()
-                if (animator.isRunning) {
-                    animator.cancel()
-                }
-                animator.start()
+                handleUpEvent()
                 return true
             }
         }
@@ -104,10 +105,17 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         return true
     }
 
-    private fun dispatchCallback() {
+    private fun handleUpEvent() {
         if (percent >= 1 && callback != null) {
+            mBezierPoints = null
             FirebaseUtils.logEvent(context, "滑动关闭", Pair("activity", context::class.java.simpleName))
-            callback?.invoke()
+            invalidate()
+            post(callbackRunnable)
+        } else {
+            if (animator.isRunning) {
+                animator.cancel()
+            }
+            animator.start()
         }
     }
 
@@ -140,23 +148,31 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         if (mBezierPoints == null) {
             return
         }
-        pathPaint.alpha = (percent * 255).toInt()
-        arrowPaint.alpha = (percent * 255).toInt()
+        pathPaint.alpha = (percent * 210).toInt()
         path.reset()
         for (pointF in mBezierPoints!!) {
             path.lineTo(pointF.x, pointF.y)
         }
         path.close()
         canvas.drawPath(path, pathPaint)
-        if (percent > 0.2) {
+        if (percent > 0.4) {
+            arrowPaint.alpha = 55 + (percent * 200).toInt()
             arrowPath.reset()
-            val sin = Math.sin(Math.toRadians((50 + (1 - percent) * 50).toDouble()))
-            val cos = Math.cos(Math.toRadians((50 + (1 - percent) * 50).toDouble()))
-            val dy = (20 * sin).toFloat()
-            val dx = (20 * cos).toFloat()
-            val x = xResult * 0.25f
+            val sin = Math.sin(Math.toRadians((50 + (1 - percent) * 65.0))).toFloat()
+            val cos = Math.cos(Math.toRadians((50 + (1 - percent) * 65.0))).toFloat()
+            val dy = arrowLength * sin
+            val dx = arrowLength * cos
+            val x = xResult * 0.2f
             arrowPath.moveTo(x, yResult - dy)
             arrowPath.lineTo(x - dx, yResult)
+            arrowPath.lineTo(x, yResult + dy)
+            canvas.drawPath(arrowPath, arrowPaint)
+        } else {
+            arrowPaint.alpha = 55 + (percent * 200).toInt()
+            arrowPath.reset()
+            val dy = arrowLength * 2.5f * percent
+            val x = xResult * 0.2f * 2.5f * percent
+            arrowPath.moveTo(x, yResult - dy)
             arrowPath.lineTo(x, yResult + dy)
             canvas.drawPath(arrowPath, arrowPaint)
         }
@@ -205,7 +221,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         private const val FRAME = 100
         private const val MAX_X_VALUE = 200F
         private val INTERPOLATOR = LinearOutSlowInInterpolator()
-        private val LINEAR_INTERPOLATOR = LinearInterpolator()
+        private val LINEAR_INTERPOLATOR = FastOutLinearInInterpolator()
     }
 }
 private typealias Callback = () -> Unit

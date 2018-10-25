@@ -60,7 +60,9 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".view.AboutActivity"/>
-        <activity android:name=".view.TopicDetailActivity"/>
+        <activity
+            android:name=".view.TopicDetailActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".view.InstantActivity"/>
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

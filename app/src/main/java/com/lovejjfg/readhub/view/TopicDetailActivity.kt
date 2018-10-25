@@ -1,9 +1,12 @@
 package com.lovejjfg.readhub.view
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import com.lovejjfg.powerrecycle.PowerAdapter
@@ -29,6 +32,8 @@ class TopicDetailActivity : BaseActivity() {
     private lateinit var topicDetailAdapter: PowerAdapter<DetailItems>
     private lateinit var toolbar: Toolbar
     private lateinit var refresh: SwipeRefreshLayout
+    private lateinit var parentLayout: AppBarLayout
+    private lateinit var rvHot: RecyclerView
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
@@ -44,8 +49,9 @@ class TopicDetailActivity : BaseActivity() {
         }
         refresh.isRefreshing = true
         getData()
+        parentLayout = topicBind.appbarLayout
         toolbar = topicBind.toolbar
-        val rvHot = topicBind.rvDetail
+        rvHot = topicBind.rvDetail
         rvHot.layoutManager = LinearLayoutManager(this)
         topicDetailAdapter = TopicDetailAdapter()
         topicDetailAdapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
@@ -55,8 +61,24 @@ class TopicDetailActivity : BaseActivity() {
                 Constants.TYPE_NEWS -> {
                     JumpUitl.jumpWeb(this, item?.newsItem?.mobileUrl)
                 }
+                Constants.TYPE_TIMELINE -> {
+                    JumpUitl.jumpTimeLine(this, item?.timeLine?.id)
+                }
+
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        id = intent?.getStringExtra(Constants.ID)
+        if (TextUtils.isEmpty(id)) {
+            return
+        }
+        parentLayout.setExpanded(true, false)
+        rvHot.scrollToPosition(0)
+        refresh.isRefreshing = true
+        getData()
     }
 
     private fun getData() {
