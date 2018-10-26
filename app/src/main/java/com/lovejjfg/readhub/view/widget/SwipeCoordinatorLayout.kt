@@ -41,6 +41,8 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     private var percent: Float = 0F
     private var arrowLength: Float = 0F
     private var arrowPaint: Paint
+    private var xMaxValue = 200F
+    private var xDefaultOffset = 50F
 
     private var callback: Callback? = null
     private val callbackRunnable = Runnable {
@@ -48,6 +50,8 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     }
 
     init {
+        xMaxValue = context.dip2px(70f).toFloat()
+        xDefaultOffset = context.dip2px(25f).toFloat()
         pathPaint.color = Color.BLACK
         pathPaint.style = Paint.Style.FILL
         pathPaint.isAntiAlias = true
@@ -92,7 +96,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         if (animator.isRunning) {
             return false
         }
-        rawX = (event.x - 50) * 0.8f
+        rawX = (event.x - xDefaultOffset) * 0.8f
         yResult = event.y
         val action = event.action
         when (action) {
@@ -120,19 +124,22 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     }
 
     private fun invalidate(rawX: Float) {
-        val min = if (rawX != 0f) Math.min(rawX, MAX_X_VALUE) else 0F
-        percent = min / MAX_X_VALUE
-        xResult = INTERPOLATOR.getInterpolation(percent) * MAX_X_VALUE
+        if (rawX < 0) {
+            return
+        }
+        val min = if (rawX != 0f) Math.min(rawX, xMaxValue) else 0F
+        percent = min / xMaxValue
+        xResult = INTERPOLATOR.getInterpolation(percent) * xMaxValue
         buildBezierPoints()
         invalidate()
     }
 
     private fun initControlPoint(min: Float) {
-        addControlPoint(0, 0f, yResult - min * 2)
-        addControlPoint(1, 0f, yResult - min * 0.5f)
+        addControlPoint(0, 0f, yResult - xMaxValue * 1.5f)
+        addControlPoint(1, 0f, yResult - xMaxValue * 0.573f)
         addControlPoint(2, min, yResult)
-        addControlPoint(3, 0f, yResult + min * 0.5f)
-        addControlPoint(4, 0f, yResult + min * 2)
+        addControlPoint(3, 0f, yResult + xMaxValue * 0.573f)
+        addControlPoint(4, 0f, yResult + xMaxValue * 1.5f)
     }
 
     private fun addControlPoint(pos: Int, x: Float, y: Float) {
@@ -219,7 +226,6 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
 
     companion object {
         private const val FRAME = 100
-        private const val MAX_X_VALUE = 200F
         private val INTERPOLATOR = LinearOutSlowInInterpolator()
         private val LINEAR_INTERPOLATOR = FastOutLinearInInterpolator()
     }
