@@ -31,6 +31,7 @@
         <activity
             android:name=".view.HomeActivity"
             android:label="@string/app_name"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -51,23 +52,28 @@
         </activity>
         <activity
             android:name=".view.WebActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.SettingsActivity"
             android:label="@string/home_setting"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".view.AboutActivity"/>
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".view.AboutActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.TopicDetailActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
-        <activity android:name=".view.InstantActivity"/>
+        <activity android:name=".view.InstantActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
+
+        <activity android:name=".view.SearchActivity"
+            android:theme="@style/AppTheme.Search"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="com.tencent.bugly.beta.utils.BuglyFileProvider"

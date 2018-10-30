@@ -418,6 +418,7 @@ abstract class RefreshFragment : BaseFragment() {
                 }
             }
         } catch (e: Exception) {
+            Log.e("RefreshFragment", "handleAlreadRead", e)
             CrashReport.postCatchedException(e)
         }
     }

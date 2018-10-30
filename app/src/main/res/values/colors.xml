@@ -15,5 +15,10 @@
     <color name="theme_color_text_g6">#4c4c4c</color>
     <color name="theme_color_divider">#eeeeee</color>
     <color name="trans_primary">#cc2c4856</color>
+    <color name="background_dark">#ff333333</color>
+    <color name="background_super_dark">#ff292929</color>
+    <color name="gif_badge_dark_image">#b3ffffff</color>
+    <color name="scrim">#99323232</color>
+
 
 </resources>

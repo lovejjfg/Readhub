@@ -4,17 +4,16 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.ErrorUtil
 import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.getStatusBarHeight
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.layout_statusbar.statusBarProxy
 
 /**
@@ -33,8 +32,8 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     private fun initToolBar() {
-        findViewById<Toolbar>(R.id.toolbar)?.setNavigationOnClickListener { finish() }
-        findViewById<SwipeCoordinatorLayout>(R.id.parentContainer)?.setOnSwipeBackListener{
+        (findViewById<View>(R.id.toolbar) as? Toolbar)?.setNavigationOnClickListener { finish() }
+        findViewById<SwipeCoordinatorLayout>(R.id.parentContainer)?.setOnSwipeBackListener {
             onBackPressed()
         }
     }
@@ -73,11 +72,6 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
-        RxBus.instance.addSubscription(this, NoNetEvent::class.java, Consumer {
-            showToast(R.string.net_unavailable)
-        }, Consumer {
-            it.printStackTrace()
-        })
     }
 
     override fun onDestroy() {
@@ -92,7 +86,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     private fun initStatusBar() {
         statusBarProxy?.let {
             val statusBarHeight = getStatusBarHeight()
-            val layoutParams = findViewById<Toolbar>(R.id.toolbar).layoutParams as MarginLayoutParams
+            val layoutParams = findViewById<View>(R.id.toolbar)?.layoutParams as MarginLayoutParams
             layoutParams.topMargin = statusBarHeight
             statusBarProxy.layoutParams.height = statusBarHeight
         }

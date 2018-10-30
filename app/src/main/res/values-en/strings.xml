@@ -66,6 +66,8 @@
     <string name="hot_topic_update">%d unread hot news</string>
     <string name="update_news_with_count">Update %d news</string>
     <string name="share_error">Share failed 0.0</string>
+    <string name="search_hint">Search some news</string>
+    <string name="no_search_results">No results for\n“%1$s”</string>
     <string-array name="share_hints">
         <item>@string/share_hint_default</item>
         <item>Why not share as fast as you can?</item>

@@ -18,11 +18,11 @@
 
 package com.lovejjfg.readhub.data
 
-import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.base.IBaseView
 import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
+import com.lovejjfg.readhub.data.Constants.API_SEARCH_RELEASE
 import com.lovejjfg.readhub.utils.http.CacheControlInterceptor
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
@@ -46,8 +46,9 @@ import java.util.concurrent.TimeUnit
  * Created by Joe at 2017/7/26.
  */
 object DataManager {
-
+    //https://search.readhub.cn/api/entity/news?page=1&size=20&ner_name=%E9%A9%AC%E6%96%AF%E5%85%8B&entity_id=baike_3776526&type=hot
     private var retrofit: Retrofit? = null
+    private var searchRetrofit: Retrofit? = null
     private val isDebug = false
     private const val TIME_OUT = 10L
 
@@ -77,6 +78,29 @@ object DataManager {
 
     fun init(): ReadHubService {
         return init(ReadHubService::class.java)
+    }
+
+    fun initSearch(): SearchService {
+        if (searchRetrofit == null) {
+            val cacheSize = 10 * 1024 * 1024L
+            val cache = Cache(AppProxy.cacheDirectory!!, cacheSize)
+            searchRetrofit = Retrofit.Builder()
+                .baseUrl(API_SEARCH_RELEASE)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient.Builder()
+                    .cache(cache)
+                    .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
+                    .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
+                    .addInterceptor(CacheControlInterceptor())
+                    .addInterceptor(LoggingInterceptor())
+                    .build()
+                )
+                .build()
+        }
+        return searchRetrofit!!.create(SearchService::class.java)
     }
 
     fun <R> convert(request: Observable<Response<R>>): Observable<R> {

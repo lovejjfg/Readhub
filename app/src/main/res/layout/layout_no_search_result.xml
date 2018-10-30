@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/noSearchResult"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:drawablePadding="4dp"
+    android:drawableTop="@drawable/ic_search_primary"
+    android:padding="@dimen/spacing_huge"
+    android:paddingTop="@dimen/spacing_huge"
+    android:textAlignment="center"
+    android:textColor="@color/colorPrimary"
+    android:textSize="18sp">
+</TextView>

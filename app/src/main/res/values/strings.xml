@@ -65,6 +65,9 @@
     <string name="hot_topic_update">热门话题有%d条更新</string>
     <string name="update_news_with_count">更新%d条新闻</string>
     <string name="share_error">对不起，无法分享0.0</string>
+    <string name="transition_search_back">transition_search_back</string>
+    <string name="search_hint">搜搜热门新闻吧</string>
+    <string name="no_search_results">没有找到\n“%1$s”</string>
     <string-array name="share_hints">
         <item>@string/share_hint_default</item>
         <item>原来都出新闻了，我居然还不知道～～</item>

@@ -24,6 +24,7 @@ package com.lovejjfg.readhub.data
  */
 object Constants {
     const val API_RELEASE = "https://api.readhub.cn/"
+    const val API_SEARCH_RELEASE = "https://search.readhub.cn/api/"
 
     const val RELATIVE_ITEMS = "relative_items"
     const val URL: String = "url"

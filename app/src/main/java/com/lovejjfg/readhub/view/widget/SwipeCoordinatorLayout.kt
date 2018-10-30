@@ -152,12 +152,10 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        if (mBezierPoints == null) {
-            return
-        }
+        val points = mBezierPoints ?: return
         pathPaint.alpha = (percent * 210).toInt()
         path.reset()
-        for (pointF in mBezierPoints!!) {
+        for (pointF in points) {
             path.lineTo(pointF.x, pointF.y)
         }
         path.close()

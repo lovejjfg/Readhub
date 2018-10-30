@@ -30,6 +30,7 @@ import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.view.AboutActivity
 import com.lovejjfg.readhub.view.InstantActivity
+import com.lovejjfg.readhub.view.SearchActivity
 import com.lovejjfg.readhub.view.SettingsActivity
 import com.lovejjfg.readhub.view.TopicDetailActivity
 import com.lovejjfg.readhub.view.WebActivity
@@ -124,6 +125,11 @@ object JumpUitl {
         if (context == null) {
             return
         }
+        context.startActivity(intent)
+    }
+
+    fun jumpSearch(context: Context) {
+        val intent = Intent(context, SearchActivity::class.java)
         context.startActivity(intent)
     }
 }

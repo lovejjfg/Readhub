@@ -19,6 +19,8 @@
 package com.lovejjfg.readhub.view
 
 import android.Manifest
+import android.app.ActivityOptions
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -34,12 +36,14 @@ import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.SharedPrefsUtil
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.fragment.BlockChainFragment
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 
 class HomeActivity : BaseActivity() {
@@ -112,6 +116,7 @@ class HomeActivity : BaseActivity() {
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
 //        checkPermissions()
+        addToast()
         logScreen(this, getString(R.string.title_home))
         viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
         navigation = viewBind!!.navigation
@@ -126,6 +131,16 @@ class HomeActivity : BaseActivity() {
             when (it.itemId) {
                 R.id.home_setting -> {
                     JumpUitl.jumpSetting(this)
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.home_search -> {
+                    val searchMenuView = toolbar.findViewById<View>(R.id.home_search)
+                    val options = ActivityOptions.makeSceneTransitionAnimation(
+                        this, searchMenuView,
+                        getString(R.string.transition_search_back)
+                    ).toBundle()
+                    val intent = Intent(this, SearchActivity::class.java)
+                    startActivity(intent, options)
                     return@setOnMenuItemClickListener true
                 }
                 else -> {
@@ -159,6 +174,14 @@ class HomeActivity : BaseActivity() {
                 navigation.selectedItemId = currentId
             }
         }
+    }
+
+    private fun addToast() {
+        RxBus.instance.addSubscription(this, NoNetEvent::class.java, Consumer {
+            showToast(R.string.net_unavailable)
+        }, Consumer {
+            it.printStackTrace()
+        })
     }
 
     @Suppress("unused")

@@ -20,11 +20,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/home_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/home_setting"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/home_setting"
         android:title="@string/home_setting"
-        app:showAsAction="never"
-        />
-
+        app:showAsAction="never"/>
     <item
         android:id="@+id/home_about"
         android:title="@string/home_about"
