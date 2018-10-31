@@ -59,14 +59,14 @@
     <string name="maybe_fail_hint">Share maybe fail without this Permission</string>
     <string name="share_news">Share News</string>
     <string name="img_name">readhub_%s.jpg</string>
-    <string name="show_more">Show More</string>
+    <string name="show_more">More</string>
     <string name="wait_away">～～Take a break～～</string>
     <string name="current_version">Current version：</string>
     <string name="version_at">Version：%s</string>
     <string name="hot_topic_update">%d unread hot news</string>
     <string name="update_news_with_count">Update %d news</string>
     <string name="share_error">Share failed 0.0</string>
-    <string name="search_hint">Search some news</string>
+    <string name="search_hint">Search some news…</string>
     <string name="no_search_results">No results for\n“%1$s”</string>
     <string-array name="share_hints">
         <item>@string/share_hint_default</item>

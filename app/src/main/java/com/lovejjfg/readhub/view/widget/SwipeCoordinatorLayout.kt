@@ -1,7 +1,22 @@
+/*
+ * Copyright (c) 2018.  Joe
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.lovejjfg.readhub.view.widget
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -17,11 +32,11 @@ import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.dip2px
 import java.util.ArrayList
 
-@Suppress("unused")
 /**
  * Created by joe on 2018/10/13.
  * Email: lovejjfg@gmail.com
  */
+@Suppress("unused")
 class SwipeCoordinatorLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -88,13 +103,12 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         return ev.x < 10
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!edges) {
-            return false
+            return super.onTouchEvent(event)
         }
         if (animator.isRunning) {
-            return false
+            return super.onTouchEvent(event)
         }
         rawX = (event.x - xDefaultOffset) * 0.8f
         yResult = event.y
@@ -102,17 +116,21 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         when (action) {
             MotionEvent.ACTION_UP -> {
                 handleUpEvent()
+                super.onTouchEvent(event)
                 return true
             }
         }
-        invalidate(rawX)
-        return true
+        if (edges) {
+            invalidate(rawX)
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun handleUpEvent() {
         if (percent >= 1 && callback != null) {
             mBezierPoints = null
-            FirebaseUtils.logEvent(context, "滑动关闭", Pair("activity", context::class.java.simpleName))
+            FirebaseUtils.logSwipbackEvent(context)
             invalidate()
             post(callbackRunnable)
         } else {

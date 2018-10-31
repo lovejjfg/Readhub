@@ -40,15 +40,14 @@
                 android:text="@{topic.title}"
                 android:textColor="@color/theme_color_text"
                 android:textSize="@dimen/text_title"
-                tools:text="xxxxxxxxxxx"
-                />
+                tools:text="xxxxxxxxxxx"/>
 
 
             <com.lovejjfg.powertext.ExpandableTextView
                 android:id="@+id/tv_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/normal_margin_padding"
                 android:clickable="false"
                 android:duplicateParentState="true"
                 android:ellipsize="end"
@@ -58,13 +57,12 @@
                 android:textSize="@dimen/text_des"
                 app:defaultLineCount="3"
                 app:defaultMoreHint="@string/show_more"
-                app:moreHintColor="@color/colorAccent"
-                />
+                app:moreHintColor="@color/colorAccent"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/normal_margin_padding"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -74,8 +72,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/theme_color_text_g1"
                     android:textSize="@dimen/text_time"
-                    tools:text="相关："
-                    />
+                    tools:text="相关："/>
 
                 <com.lovejjfg.readhub.view.widget.ForegroundImageView
                     android:id="@+id/iv_share"
@@ -83,8 +80,7 @@
                     android:layout_height="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/normal_margin_padding"
                     android:background="?actionBarItemBackground"
-                    android:src="@drawable/ic_share"
-                    />
+                    android:src="@drawable/ic_share"/>
 
             </LinearLayout>
 

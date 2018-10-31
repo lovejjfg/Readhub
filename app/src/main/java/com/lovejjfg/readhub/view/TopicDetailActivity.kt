@@ -17,6 +17,7 @@ import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.databinding.ActivityTopicDetailBinding
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.TopicDetailAdapter
 import com.lovejjfg.readhub.view.widget.ConnectorView
@@ -51,6 +52,11 @@ class TopicDetailActivity : BaseActivity() {
         getData()
         parentLayout = topicBind.appbarLayout
         toolbar = topicBind.toolbar
+        toolbar.setOnClickListener {
+            if (UIUtil.doubleClick()) {
+                rvHot.smoothScrollToPosition(0)
+            }
+        }
         rvHot = topicBind.rvDetail
         rvHot.layoutManager = LinearLayoutManager(this)
         topicDetailAdapter = TopicDetailAdapter()
@@ -76,8 +82,9 @@ class TopicDetailActivity : BaseActivity() {
             return
         }
         parentLayout.setExpanded(true, false)
-        rvHot.scrollToPosition(0)
         refresh.isRefreshing = true
+        rvHot.scrollToPosition(0)
+        topicDetailAdapter.clearList()
         getData()
     }
 

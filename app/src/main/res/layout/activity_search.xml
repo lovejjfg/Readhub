@@ -4,31 +4,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent">
 
+        <include
+            layout="@layout/layout_statusbar"/>
+
         <FrameLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
+            android:elevation="0dp"
             android:theme="@style/SearchViewTheme"
             android:transitionGroup="false">
-
-            <View
-                android:id="@+id/search_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"/>
 
             <SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
                 android:iconifiedByDefault="false"
                 android:transitionGroup="true"/>
 
@@ -59,7 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_white"
-        android:elevation="4dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ProgressBar
@@ -83,18 +80,11 @@
             android:id="@+id/searchContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
+            android:paddingTop="@dimen/normal_margin_padding"
             android:visibility="gone"/>
-
     </FrameLayout>
-
-    <View
-        android:id="@+id/scrim"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:background="@color/scrim"/>
-
-    <include layout="@layout/layout_statusbar"/>
 
 
 </com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout>

@@ -32,6 +32,8 @@ import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.search.SearchItem
 import com.lovejjfg.readhub.transitions.CircularReveal
+import com.lovejjfg.readhub.utils.DateUtil
+import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.ImeUtils
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.TransitionUtils
@@ -45,6 +47,7 @@ import kotlinx.android.synthetic.main.activity_search.searchContent
 import kotlinx.android.synthetic.main.activity_search.searchView
 import kotlinx.android.synthetic.main.activity_search.searchback
 import kotlinx.android.synthetic.main.holder_search.searchDes
+import kotlinx.android.synthetic.main.holder_search.searchTime
 import kotlinx.android.synthetic.main.holder_search.searchTitle
 import kotlinx.android.synthetic.main.layout_no_search_result.noSearchResult
 
@@ -82,6 +85,7 @@ open class SearchActivity : BaseActivity() {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         // hint, inputType & ime options seem to be ignored from XML! Set in code
+        searchView.isSoundEffectsEnabled = false
         searchView.queryHint = getString(R.string.search_hint)
         searchView.inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
         searchView.imeOptions = searchView.imeOptions or EditorInfo.IME_ACTION_SEARCH or
@@ -111,10 +115,12 @@ open class SearchActivity : BaseActivity() {
     }
 
     private fun clearResults() {
+        unSubscribe()
         TransitionManager.beginDelayedTransition(
             searchContent,
             getTransition(R.transition.auto)
         )
+        searchContent.scrollToPosition(0)
         adapter.clearList()
         resultsContainer.isGone = true
         searchContent.isGone = true
@@ -122,16 +128,15 @@ open class SearchActivity : BaseActivity() {
         setNoResultsVisibility(View.GONE)
     }
 
-    override fun onPause() {
-        // needed to suppress the default window animation when closing the activity
-        overridePendingTransition(0, 0)
-        super.onPause()
-    }
-
     private fun startSearch(nearKey: String?) {
         if (nearKey == null) {
             return
         }
+        FirebaseUtils.logSearchEvent(this, nearKey)
+        ImeUtils.hideIme(searchView)
+        searchView.clearFocus()
+        searchContent.scrollToPosition(0)
+        adapter.clearList()
         resultsContainer.isVisible = true
         searchContent.isGone = true
         this.searchKey = nearKey
@@ -143,7 +148,6 @@ open class SearchActivity : BaseActivity() {
                 val data = it.data
                 if (data != null && data.items.isNotEmpty()) {
                     adapter.totalCount = data.totalItems
-                    adapter.clearList()
                     adapter.setList(data.items)
                     if (!searchContent.isVisible) {
                         TransitionManager.beginDelayedTransition(
@@ -186,7 +190,7 @@ open class SearchActivity : BaseActivity() {
         if (visibility == View.VISIBLE) {
             if (emptyText == null) {
                 emptyText = noResultLayout.inflate() as TextView
-                emptyText?.setOnClickListener { v ->
+                emptyText?.setOnClickListener { _ ->
                     searchView.setQuery("", false)
                     searchView.requestFocus()
                     ImeUtils.showIme(searchView)
@@ -228,11 +232,12 @@ open class SearchActivity : BaseActivity() {
                     val searchIcon = sharedElements[0]
                     if (searchIcon.id != R.id.searchback) return
                     val centerX = (searchIcon.left + searchIcon.right) / 2
+                    val transitionSet = window.returnTransition as? TransitionSet ?: return
                     val hideResults = TransitionUtils.findTransition(
-                        window.returnTransition as TransitionSet,
+                        transitionSet,
                         CircularReveal::class.java, R.id.resultsContainer
-                    ) as CircularReveal
-                    hideResults.setCenter(Point(centerX, 0))
+                    ) as? CircularReveal
+                    hideResults?.setCenter(Point(centerX, 0))
                 }
             }
         })
@@ -260,6 +265,7 @@ open class SearchActivity : BaseActivity() {
                 searchDes.setOnClickListener {
                     itemView.performClick()
                 }
+                searchTime.text = DateUtil.parseTime(t.topicCreateAt)
             }
         }
     }

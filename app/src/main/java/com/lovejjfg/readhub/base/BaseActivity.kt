@@ -32,7 +32,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     private fun initToolBar() {
-        (findViewById<View>(R.id.toolbar) as? Toolbar)?.setNavigationOnClickListener { finish() }
+        (findViewById<View>(R.id.toolbar) as? Toolbar)?.setNavigationOnClickListener { onBackPressed() }
         findViewById<SwipeCoordinatorLayout>(R.id.parentContainer)?.setOnSwipeBackListener {
             onBackPressed()
         }
@@ -86,9 +86,12 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     private fun initStatusBar() {
         statusBarProxy?.let {
             val statusBarHeight = getStatusBarHeight()
-            val layoutParams = findViewById<View>(R.id.toolbar)?.layoutParams as MarginLayoutParams
-            layoutParams.topMargin = statusBarHeight
-            statusBarProxy.layoutParams.height = statusBarHeight
+            val params = statusBarProxy.layoutParams
+            params.height = statusBarHeight
+            statusBarProxy.layoutParams = params
+            val layoutParams = (findViewById<View>(R.id.toolbar) as? Toolbar)?.layoutParams as? MarginLayoutParams
+            layoutParams?.topMargin = statusBarHeight
+
         }
     }
 }

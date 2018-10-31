@@ -37,19 +37,34 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <TextView
-            android:id="@+id/searchTitle"
+        <com.lovejjfg.readhub.view.PartnerLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/theme_color_text"
-            android:textSize="@dimen/text_title"
-            tools:text="xxxxxxxxxxx"/>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/searchTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/theme_color_text"
+                android:textSize="@dimen/text_title"
+                tools:text="xxxxxxxxxxx"/>
+
+            <TextView
+                android:id="@+id/searchTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/theme_color_text_g1"
+                android:textSize="@dimen/text_time"
+                tools:text="3小时前"/>
+
+        </com.lovejjfg.readhub.view.PartnerLayout>
+
 
         <com.lovejjfg.powertext.ExpandableTextView
             android:id="@+id/searchDes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:clickable="false"
             android:duplicateParentState="true"
             android:ellipsize="end"
@@ -57,7 +72,7 @@
             android:lineSpacingExtra="1dp"
             android:textColor="@color/theme_color_text_g4"
             android:textSize="@dimen/text_des"
-            app:defaultLineCount="3"
+            app:defaultLineCount="4"
             app:defaultMoreHint="@string/show_more"
             app:moreHintColor="@color/colorAccent"/>
 

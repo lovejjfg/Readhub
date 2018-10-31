@@ -23,41 +23,17 @@
         android:duration="600"
         android:interpolator="@android:interpolator/fast_out_linear_in">
         <targets>
-            <target android:targetId="@id/resultsContainer" />
+            <target android:targetId="@id/resultsContainer"/>
         </targets>
     </transition>
 
     <fade
-        android:duration="120"
-        android:interpolator="@android:interpolator/fast_out_linear_in">
-        <targets>
-            <target android:targetId="@id/searchView" />
-        </targets>
-    </fade>
-
-    <fade
-        android:startDelay="300"
-        android:duration="3000"
-        android:interpolator="@android:interpolator/fast_out_linear_in">
-        <targets>
-            <target android:targetId="@id/search_background" />
-        </targets>
-    </fade>
-
-    <fade
-        android:duration="400"
-        android:interpolator="@android:interpolator/fast_out_linear_in">
-        <targets>
-            <target android:targetId="@id/scrim"/>
-        </targets>
-    </fade>
-
-    <fade
-        android:duration="400"
-        android:interpolator="@android:interpolator/fast_out_slow_in">
-        <targets>
-            <target android:targetId="@android:id/navigationBarBackground"/>
-        </targets>
+        android:duration="160"
+        android:fadingMode="fade_out"
+        android:startDelay="400">
+        <targets
+            android:targetId="@id/searchView"
+            android:targetName="SearchView"/>
     </fade>
 
 </transitionSet>

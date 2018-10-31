@@ -39,7 +39,9 @@ public class DateUtil {
         try {
             SimpleDateFormat sdf = initDateFormat();
             Date d = sdf.parse(date);
-            String s = DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+            String s =
+                DateUtils.getRelativeTimeSpanString(d.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+                    .toString();
             if (!TextUtils.isEmpty(s) && s.startsWith("0分钟")) {
                 return "刚刚";
             }
@@ -85,7 +87,6 @@ public class DateUtil {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public static String parseTimeLine(String date) {
@@ -105,6 +106,4 @@ public class DateUtil {
             return false;
         }
     }
-
-
 }

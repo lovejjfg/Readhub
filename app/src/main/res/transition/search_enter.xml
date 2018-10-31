@@ -17,43 +17,14 @@
   -->
 
 <transitionSet
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <transitionSet android:duration="400">
-        <targets>
-            <target android:targetId="@id/scrim" />
-        </targets>
-        <fade />
-        <transition
-            class="com.lovejjfg.readhub.transitions.CircularReveal"
-            app:centerOn="@id/searchback"
-            android:interpolator="@android:interpolator/linear_out_slow_in" />
-    </transitionSet>
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <fade
-        android:duration="300"
-        android:interpolator="@android:interpolator/linear_out_slow_in">
-        <targets>
-            <target android:targetId="@id/search_background" />
-        </targets>
-    </fade>
-
-    <fade
-        android:startDelay="400"
-        android:duration="400"
-        android:interpolator="@android:interpolator/linear_out_slow_in">
-        <targets>
-            <target android:targetId="@id/searchView" />
-        </targets>
-    </fade>
-
-    <fade
-        android:duration="400"
-        android:interpolator="@android:interpolator/fast_out_slow_in">
-        <targets>
-            <target android:targetId="@android:id/navigationBarBackground" />
-        </targets>
+        android:duration="200"
+        android:fadingMode="fade_in"
+        android:interpolator="@android:interpolator/linear_out_slow_in"
+        android:startDelay="400">
+        <targets android:targetId="@id/searchView"/>
     </fade>
 
 </transitionSet>

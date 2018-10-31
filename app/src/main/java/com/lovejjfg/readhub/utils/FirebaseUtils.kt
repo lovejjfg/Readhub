@@ -41,6 +41,14 @@ object FirebaseUtils {
         }
     }
 
+    fun logSearchEvent(context: Context, searchKey: String) {
+        logEvent(context, "搜索关键词", Pair("关键词", searchKey))
+    }
+
+    fun logSwipbackEvent(context: Context) {
+        logEvent(context, "滑动关闭", Pair("activity", context::class.java.simpleName))
+    }
+
     fun logScreen(context: Activity, screenName: String) {
         try {
             FirebaseAnalytics.getInstance(context)?.setCurrentScreen(context, "screen:$screenName", null)

@@ -26,10 +26,12 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.View
+import android.widget.TextView
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
+import com.lovejjfg.readhub.utils.AnimUtils
 import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
 import com.lovejjfg.readhub.utils.FirebaseUtils.logScreen
 import com.lovejjfg.readhub.utils.JumpUitl
@@ -45,6 +47,7 @@ import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_home.parentContainer
+import kotlinx.android.synthetic.main.activity_home.toolbar
 
 class HomeActivity : BaseActivity() {
 
@@ -149,6 +152,9 @@ class HomeActivity : BaseActivity() {
                 }
             }
         }
+        if (savedInstanceState == null) {
+            animateToolbar()
+        }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
@@ -232,5 +238,18 @@ class HomeActivity : BaseActivity() {
     fun selectItem(navigationId: Int) {
         currentId = navigationId
         navigation.selectedItemId = navigationId
+    }
+
+    private fun animateToolbar() {
+        val t = toolbar.getChildAt(0)
+        (t as? TextView)?.apply {
+            this.alpha = 0f
+            this.scaleX = 0.8f
+            this.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .setStartDelay(400)
+                .setDuration(1000).interpolator = AnimUtils.getFastOutSlowInInterpolator(context)
+        }
     }
 }
