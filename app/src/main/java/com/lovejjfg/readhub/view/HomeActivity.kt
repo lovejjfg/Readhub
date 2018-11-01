@@ -19,18 +19,15 @@
 package com.lovejjfg.readhub.view
 
 import android.Manifest
-import android.app.ActivityOptions
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.R.id
-import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
@@ -49,6 +46,7 @@ import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.activity_home.appbarLayout
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 import kotlinx.android.synthetic.main.activity_home.toolbar
 
@@ -140,7 +138,7 @@ class HomeActivity : BaseActivity() {
                     return@setOnMenuItemClickListener true
                 }
                 R.id.home_search -> {
-                    goSearch(toolbar)
+                    goSearch()
                     return@setOnMenuItemClickListener true
                 }
                 else -> {
@@ -175,22 +173,31 @@ class HomeActivity : BaseActivity() {
                 navigation.selectedItemId = currentId
             }
         }
+        initAppbar()
     }
 
-    private fun goSearch(toolbar: Toolbar) {
-        val searchMenuView = toolbar.findViewById<View>(id.home_search)
-        val options = ActivityOptions.makeSceneTransitionAnimation(
-            this, searchMenuView,
-            getString(string.transition_search_back)
-        ).toBundle()
-        val intent = Intent(this, SearchActivity::class.java)
-        startActivityForResult(intent, Constants.REQUST_CODE_SEARCH, options)
+    private var isExpand: Boolean = true
+    private fun initAppbar() {
+        appbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+            isExpand = verticalOffset == 0
+        }
+    }
+
+    private fun goSearch() {
+        if (!isExpand) {
+            appbarLayout.setExpanded(true, false)
+            toolbar.post {
+                JumpUitl.jumpSearch(this, toolbar)
+            }
+        } else {
+            JumpUitl.jumpSearch(this, toolbar)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.REQUST_CODE_SEARCH) {
-            val view = viewBind?.toolbar?.findViewById<View>(id.home_search)
+            val view = toolbar.findViewById<View>(id.home_search)
             view?.alpha = 1.0F
         }
     }

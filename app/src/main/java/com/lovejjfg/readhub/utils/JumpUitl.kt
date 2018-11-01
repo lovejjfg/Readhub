@@ -25,8 +25,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.widget.Toolbar
 import android.text.TextUtils
+import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.lovejjfg.readhub.R.id
+import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.view.AboutActivity
@@ -129,8 +133,16 @@ object JumpUitl {
         context.startActivity(intent)
     }
 
-    fun jumpSearch(context: Context) {
-        val intent = Intent(context, SearchActivity::class.java)
-        context.startActivity(intent)
+    fun jumpSearch(activity: Activity, toolbar: Toolbar) {
+        try {
+            val searchMenuView = toolbar.findViewById<View>(id.home_search)
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                activity, searchMenuView,
+                activity.getString(string.transition_search_back)
+            ).toBundle()
+            val intent = Intent(activity, SearchActivity::class.java)
+            activity.startActivityForResult(intent, Constants.REQUST_CODE_SEARCH, options)
+        } catch (e: Exception) {
+        }
     }
 }
