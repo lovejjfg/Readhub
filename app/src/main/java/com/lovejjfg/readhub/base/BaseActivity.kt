@@ -33,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
 
     private fun initToolBar() {
         (findViewById<View>(R.id.toolbar) as? Toolbar)?.setNavigationOnClickListener { onBackPressed() }
-        findViewById<SwipeCoordinatorLayout>(R.id.parentContainer)?.setOnSwipeBackListener {
+        (findViewById<View>(R.id.parentContainer) as? SwipeCoordinatorLayout)?.setOnSwipeBackListener {
             onBackPressed()
         }
     }

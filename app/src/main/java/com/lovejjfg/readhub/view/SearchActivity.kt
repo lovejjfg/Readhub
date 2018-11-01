@@ -8,6 +8,8 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.annotation.TransitionRes
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -41,7 +43,9 @@ import com.lovejjfg.readhub.utils.inflate
 import io.reactivex.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_search.empty
+import kotlinx.android.synthetic.main.activity_search.goTop
 import kotlinx.android.synthetic.main.activity_search.noResultLayout
+import kotlinx.android.synthetic.main.activity_search.parentContainer
 import kotlinx.android.synthetic.main.activity_search.resultsContainer
 import kotlinx.android.synthetic.main.activity_search.searchContent
 import kotlinx.android.synthetic.main.activity_search.searchView
@@ -65,7 +69,8 @@ open class SearchActivity : BaseActivity() {
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
         setContentView(R.layout.activity_search)
-        searchContent.layoutManager = LinearLayoutManager(this)
+        val manager = LinearLayoutManager(this)
+        searchContent.layoutManager = manager
         adapter = SearchAdapter()
         adapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpTimeLine(this, item.topicId)
@@ -73,9 +78,32 @@ open class SearchActivity : BaseActivity() {
         adapter.setLoadMoreListener {
             loadMore()
         }
+        searchContent.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (Math.abs(dy) > 100) {
+                    ImeUtils.hideIme(searchView)
+                    hideNavigation()
+                }
+                if (!goTop.isShown && manager.findLastVisibleItemPosition() >= 20)
+                    goTop.show()
+                else if (goTop.isShown && manager.findLastVisibleItemPosition() < 20)
+                    goTop.hide()
+            }
+        })
+
         searchContent.adapter = adapter
+        goTop.setOnClickListener {
+            searchContent.scrollToPosition(0)
+            goTop.hide()
+        }
         setupTransitions()
         setupSearchView()
+    }
+
+    private fun hideNavigation() {
+        parentContainer.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
     private fun setupSearchView() {
@@ -122,8 +150,10 @@ open class SearchActivity : BaseActivity() {
         )
         searchContent.scrollToPosition(0)
         adapter.clearList()
-        resultsContainer.isGone = true
-        searchContent.isGone = true
+        searchContent.post {
+            resultsContainer.isGone = true
+            searchContent.isGone = true
+        }
         empty.isGone = true
         setNoResultsVisibility(View.GONE)
     }
@@ -132,13 +162,16 @@ open class SearchActivity : BaseActivity() {
         if (nearKey == null) {
             return
         }
+        setNoResultsVisibility(View.GONE)
         FirebaseUtils.logSearchEvent(this, nearKey)
         ImeUtils.hideIme(searchView)
         searchView.clearFocus()
         searchContent.scrollToPosition(0)
         adapter.clearList()
-        resultsContainer.isVisible = true
-        searchContent.isGone = true
+        searchContent.post {
+            resultsContainer.isVisible = true
+            searchContent.isGone = true
+        }
         this.searchKey = nearKey
         empty.visibility = View.VISIBLE
         DataManager.subscribe(this, DataManager.initSearch()
@@ -208,9 +241,7 @@ open class SearchActivity : BaseActivity() {
             )
             noSearchResult.text = ssb
         }
-        if (emptyText != null) {
-            emptyText?.visibility = visibility
-        }
+        emptyText?.visibility = visibility
     }
 
     override fun onBackPressed() {
@@ -260,11 +291,7 @@ open class SearchActivity : BaseActivity() {
                     return
                 }
                 searchTitle.text = t.topicTitle?.trim()
-                searchDes.setOriginalText(t.topicSummary?.trim())
-                searchDes.isExpanded = t.isExpand
-                searchDes.setOnClickListener {
-                    itemView.performClick()
-                }
+                searchDes.text = t.topicSummary?.trim()
                 searchTime.text = DateUtil.parseTime(t.topicCreateAt)
             }
         }

@@ -1,27 +1,11 @@
-/*
- *   Copyright 2018 Google LLC
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- *
- */
-
 package com.lovejjfg.readhub.utils
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
 import android.os.ResultReceiver
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import java.lang.reflect.Method
 
 /**
  * Utility methods for working with the keyboard
@@ -43,10 +27,52 @@ object ImeUtils {
     }
 
     fun hideIme(view: View) {
-        val imm = view.context.getSystemService(
-            Context
-                .INPUT_METHOD_SERVICE
-        ) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        try {
+            val imm = view.context.getSystemService(
+                Context.INPUT_METHOD_SERVICE
+            ) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        } catch (e: Exception) {
+            // ignore
+        }
+    }
+
+    fun addKeyboardListener(activity: Activity, targetView: View? = null, dy: Int = 0, listener: InputCallback?) {
+        try {
+            val decorView = activity.window.decorView
+            decorView.viewTreeObserver.addOnGlobalLayoutListener {
+                val rect = Rect()
+                decorView.getWindowVisibleDisplayFrame(rect)
+                val rootHeight = decorView.rootView.height
+                val mainInvisibleHeight = rootHeight - rect.bottom
+                if (mainInvisibleHeight > rootHeight / 4) {
+                    val location = IntArray(2)
+                    var srollHeight = 0
+                    if (targetView != null) {
+                        targetView.getLocationInWindow(location)
+                        srollHeight = location[1] + targetView.height + dy - rect.bottom
+                    }
+                    if (srollHeight > 0) {
+                        decorView.scrollTo(0, srollHeight)
+                    }
+                    listener?.invoke(true)
+                } else {
+                    if (targetView != null) {
+                        decorView.scrollTo(0, 0)
+                    }
+                    listener?.invoke(false)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun removeKeyboardListener(activity: Activity) {
+        val decorView = activity.window.decorView
+        decorView.viewTreeObserver.removeOnGlobalLayoutListener {
+
+        }
     }
 }
+private typealias InputCallback = ((Boolean) -> Unit)

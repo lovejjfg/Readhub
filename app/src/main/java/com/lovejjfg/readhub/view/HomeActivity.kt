@@ -25,9 +25,12 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.R.id
+import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
@@ -137,13 +140,7 @@ class HomeActivity : BaseActivity() {
                     return@setOnMenuItemClickListener true
                 }
                 R.id.home_search -> {
-                    val searchMenuView = toolbar.findViewById<View>(R.id.home_search)
-                    val options = ActivityOptions.makeSceneTransitionAnimation(
-                        this, searchMenuView,
-                        getString(R.string.transition_search_back)
-                    ).toBundle()
-                    val intent = Intent(this, SearchActivity::class.java)
-                    startActivity(intent, options)
+                    goSearch(toolbar)
                     return@setOnMenuItemClickListener true
                 }
                 else -> {
@@ -152,12 +149,10 @@ class HomeActivity : BaseActivity() {
                 }
             }
         }
-        if (savedInstanceState == null) {
-            animateToolbar()
-        }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.setOnNavigationItemReselectedListener(reSelectListener)
         if (savedInstanceState == null) {
+            animateToolbar()
             hotTopicFragment = HotTopicFragment()
             techFragment = TechFragment()
             developFragment = DevelopFragment()
@@ -179,6 +174,24 @@ class HomeActivity : BaseActivity() {
             if (currentId != 0) {
                 navigation.selectedItemId = currentId
             }
+        }
+    }
+
+    private fun goSearch(toolbar: Toolbar) {
+        val searchMenuView = toolbar.findViewById<View>(id.home_search)
+        val options = ActivityOptions.makeSceneTransitionAnimation(
+            this, searchMenuView,
+            getString(string.transition_search_back)
+        ).toBundle()
+        val intent = Intent(this, SearchActivity::class.java)
+        startActivityForResult(intent, Constants.REQUST_CODE_SEARCH, options)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constants.REQUST_CODE_SEARCH) {
+            val view = viewBind?.toolbar?.findViewById<View>(id.home_search)
+            view?.alpha = 1.0F
         }
     }
 

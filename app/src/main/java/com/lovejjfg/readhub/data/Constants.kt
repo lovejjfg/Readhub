@@ -53,4 +53,6 @@ object Constants {
     const val TYPE_ALREADY_READ = 0xff0001
 
     const val ITEM_MAX_COUNT = 1
+
+    const val REQUST_CODE_SEARCH = 0x000001
 }

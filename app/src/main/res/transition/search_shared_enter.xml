@@ -22,11 +22,11 @@
     android:transitionOrdering="together">
 
     <targets>
-        <target android:targetId="@id/searchback" />
+        <target android:targetId="@id/searchback"/>
     </targets>
-    <changeBounds android:interpolator="@android:interpolator/fast_out_slow_in" />
+    <changeBounds android:interpolator="@android:interpolator/fast_out_slow_in"/>
     <transition
         class="com.lovejjfg.readhub.transitions.StartAnimatable"
-        android:src="@drawable/avd_search_to_back" />
+        android:src="@drawable/avd_search_to_back"/>
 
 </transitionSet>

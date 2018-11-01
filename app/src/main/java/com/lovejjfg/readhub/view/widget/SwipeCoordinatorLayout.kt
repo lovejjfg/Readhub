@@ -41,8 +41,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = -1
-) :
-    CoordinatorLayout(context, attrs, defStyleAttr) {
+) : CoordinatorLayout(context, attrs, defStyleAttr) {
     private var edges: Boolean = false
     private var mBezierPoints: ArrayList<PointF>? = null
     private val mControlPoints = ArrayList<PointF>(5)
@@ -93,7 +92,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
         when (action) {
             MotionEvent.ACTION_DOWN -> {
                 edges = isEdges(ev)
-                return edges
+                return edges || super.onInterceptTouchEvent(ev)
             }
         }
         return super.onInterceptTouchEvent(ev)

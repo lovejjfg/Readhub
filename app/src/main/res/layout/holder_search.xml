@@ -19,16 +19,14 @@
 
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
     android:clipChildren="false"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="3dp"
-    app:contentPadding="@dimen/normal_margin_padding">
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,7 +58,7 @@
         </com.lovejjfg.readhub.view.PartnerLayout>
 
 
-        <com.lovejjfg.powertext.ExpandableTextView
+        <TextView
             android:id="@+id/searchDes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,11 +68,9 @@
             android:ellipsize="end"
             android:focusable="false"
             android:lineSpacingExtra="1dp"
+            android:maxLines="4"
             android:textColor="@color/theme_color_text_g4"
-            android:textSize="@dimen/text_des"
-            app:defaultLineCount="4"
-            app:defaultMoreHint="@string/show_more"
-            app:moreHintColor="@color/colorAccent"/>
+            android:textSize="@dimen/text_des"/>
 
     </LinearLayout>
 

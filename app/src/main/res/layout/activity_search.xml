@@ -2,6 +2,7 @@
 <com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -82,10 +83,22 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:descendantFocusability="beforeDescendants"
-            android:paddingTop="@dimen/normal_margin_padding"
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:visibility="gone"/>
     </FrameLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/goTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_arrow_upward_black"
+        android:visibility="gone"
+        app:fabSize="normal"
+        app:pressedTranslationZ="10dp"
+        tools:visibility="visible"/>
 
 </com.lovejjfg.readhub.view.widget.SwipeCoordinatorLayout>
 
