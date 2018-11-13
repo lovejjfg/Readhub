@@ -76,7 +76,7 @@
         <activity
             android:name=".view.SearchActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:theme="@style/AppTheme.Search"/>
 
         <provider
