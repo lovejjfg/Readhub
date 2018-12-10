@@ -174,7 +174,7 @@ class AboutActivity : BaseActivity() {
 
     class AboutHolder(itemView: HolderAboutInfoBinding) : PowerHolder<Library>(itemView.root) {
         private var dataBind: HolderAboutInfoBinding? = itemView
-        override fun onBind(t: Library?) {
+        override fun onBind(t: Library) {
             dataBind?.lib = t
         }
     }

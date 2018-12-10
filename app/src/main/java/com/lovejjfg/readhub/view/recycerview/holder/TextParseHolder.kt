@@ -47,9 +47,9 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
     private var mContent = itemView as TextView
     private val padding50 = itemView.context.dip2px(50F)
     private val padding20 = itemView.context.dip2px(20F)
-    override fun onBind(item: DetailItems?) {
+    override fun onBind(item: DetailItems) {
         mContent.movementMethod = LinkMovementMethod.getInstance()
-        val gravity = item!!.gravity
+        val gravity = item.gravity
         //            mContent.setAlign(AlignTextView.Align.ALIGN_LEFT);
         if (TextUtils.isEmpty(gravity)) {
             mContent.gravity = Gravity.START

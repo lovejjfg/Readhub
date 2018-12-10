@@ -79,7 +79,7 @@ open class SearchActivity : BaseActivity() {
             loadMore()
         }
         searchContent.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (Math.abs(dy) > 100) {
                     ImeUtils.hideIme(searchView)
                     hideNavigation()
@@ -286,10 +286,7 @@ open class SearchActivity : BaseActivity() {
         class SearchHolder(override val containerView: View) : PowerHolder<SearchItem>(containerView),
             LayoutContainer {
 
-            override fun onBind(t: SearchItem?) {
-                if (t == null) {
-                    return
-                }
+            override fun onBind(t: SearchItem) {
                 searchTitle.text = t.topicTitle?.trim()
                 searchDes.text = t.topicSummary?.trim()
                 searchTime.text = DateUtil.parseTime(t.topicCreateAt)

@@ -28,6 +28,7 @@ import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.http.NetWorkUtils
 import com.lovejjfg.readhub.utils.http.ToastUtil
+import com.lovejjfg.shake.ShakerHelper
 import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
@@ -63,7 +64,7 @@ class AppProxy(
     override fun onCreate() {
         super.onCreate()
         mApp = this
-
+        ShakerHelper.init(application)
         CrashReport.setIsDevelopmentDevice(application, BuildConfig.IS_DEBUG)
 
         val strategy = CrashReport.UserStrategy(application)

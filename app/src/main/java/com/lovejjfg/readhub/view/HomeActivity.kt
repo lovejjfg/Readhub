@@ -22,13 +22,17 @@ import android.Manifest
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.R.id
 import com.lovejjfg.readhub.base.BaseActivity
+import com.lovejjfg.readhub.base.BaseFragment
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.databinding.ActivityHomeBinding
 import com.lovejjfg.readhub.utils.AnimUtils
@@ -174,13 +178,22 @@ class HomeActivity : BaseActivity() {
             }
         }
         initAppbar()
+
+        RxBus.instance.addSubscription(this, ScrollEvent::class.java,
+            Consumer {
+                if (!isExpand)
+                    appbarLayout.setExpanded(true, false)
+            },
+            Consumer { Log.e(BaseFragment.TAG, "error:", it) })
     }
 
     private var isExpand: Boolean = true
     private fun initAppbar() {
-        appbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
-            isExpand = verticalOffset == 0
-        }
+        appbarLayout.addOnOffsetChangedListener(object : OnOffsetChangedListener {
+            override fun onOffsetChanged(p0: AppBarLayout?, p1: Int) {
+                isExpand = p1 == 0
+            }
+        })
     }
 
     private fun goSearch() {
@@ -253,6 +266,11 @@ class HomeActivity : BaseActivity() {
         } catch (e: Exception) {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        RxBus.instance.unSubscribe(this)
     }
 
     fun selectItem(navigationId: Int) {

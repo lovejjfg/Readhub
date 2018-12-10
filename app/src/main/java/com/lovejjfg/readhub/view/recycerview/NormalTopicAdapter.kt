@@ -45,7 +45,7 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
                 AlreadyReadHolder(parent.inflate(R.layout.holder_already_read))
             }
             else -> {
-                val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent?.context), R.layout.holder_normal_topic, parent, false)
+                val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent.context), R.layout.holder_normal_topic, parent, false)
                 return NormalTopicHolder(topicBinding)
             }
         }
@@ -76,22 +76,22 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
 
     inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {
         var itemBinding: HolderNormalTopicBinding? = itemView
-        override fun onBind(t: DataItem?) {
+        override fun onBind(t: DataItem) {
             itemBinding!!.tvRelative.text = null
             itemBinding!!.tvRelative.requestLayout()
             itemBinding!!.topic = t
-            val text: String? = if (TextUtils.isEmpty(t?.authorName)) {
-                t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
+            val text: String? = if (TextUtils.isEmpty(t.authorName)) {
+                t.siteName + " · " + DateUtil.parseTime(t.publishDate)
             } else {
-                t?.authorName + "/" + t?.siteName + " · " + DateUtil.parseTime(t?.publishDate)
+                t.authorName + "/" + t.siteName + " · " + DateUtil.parseTime(t.publishDate)
 
             }
             itemBinding!!.tvRelative.text = text
             itemBinding!!.tvDes.setOnExpandChangeListener {
-                t?.isExband = it
+                t.isExband = it
             }
-            itemBinding!!.tvDes.setOriginalText(t?.summary)
-            itemBinding!!.tvDes.isExpanded = t?.isExband!!
+            itemBinding!!.tvDes.setOriginalText(t.summary)
+            itemBinding!!.tvDes.isExpanded = t.isExband!!
             itemBinding!!.tvDes.setOnClickListener {
                 itemView.performClick()
             }

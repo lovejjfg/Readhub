@@ -91,11 +91,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
         var dataBind: HolderHotTopicBinding? = itemView
 
-        override fun onBind(t: DataItem?) {
-            if (t == null) {
-                return
-            }
-
+        override fun onBind(t: DataItem) {
             if (dataBind?.topic?.order != t.order) {
                 dataBind?.topic = t
                 val rvItem = dataBind?.rvItem
@@ -161,7 +157,7 @@ class HotTopicAdapter : PowerAdapter<DataItem>() {
 
     inner class HotTopicItemHolder(itemView: HolderHotTopicItemBinding) : PowerHolder<NewsArrayItem>(itemView.root) {
         private var itemBinding: HolderHotTopicItemBinding? = itemView
-        override fun onBind(t: NewsArrayItem?) {
+        override fun onBind(t: NewsArrayItem) {
             itemBinding!!.news = t
         }
     }

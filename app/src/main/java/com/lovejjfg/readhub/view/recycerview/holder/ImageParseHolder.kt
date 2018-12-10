@@ -29,12 +29,11 @@ import com.lovejjfg.readhub.utils.glide.GlideUtils
  */
 class ImageParseHolder(parseBinding: HolderImgParseBinding) : PowerHolder<DetailItems>(parseBinding.root, false) {
     var imgBind = parseBinding
-    override fun onBind(t: DetailItems?) {
-        super.onBind(t)
-        GlideUtils.into(t?.img, imgBind.ivContent)
-        if (!TextUtils.isEmpty(t?.alt)) {
+    override fun onBind(t: DetailItems) {
+        GlideUtils.into(t.img, imgBind.ivContent)
+        if (!TextUtils.isEmpty(t.alt)) {
             imgBind.tvIgAlt.visibility = View.VISIBLE
-            imgBind.tvIgAlt.text = t?.alt
+            imgBind.tvIgAlt.text = t.alt
         } else {
             imgBind.tvIgAlt.visibility = View.GONE
         }

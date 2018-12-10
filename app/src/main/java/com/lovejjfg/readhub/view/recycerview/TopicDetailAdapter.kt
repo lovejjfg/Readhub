@@ -82,25 +82,25 @@ class TopicDetailAdapter : PowerAdapter<DetailItems>() {
 
     class HeaderHolder(itemView: HolderTopicHeaderBinding?) : PowerHolder<DetailItems>(itemView!!.root, false) {
         val viewBind = itemView
-        override fun onBind(t: DetailItems?) {
-            viewBind?.detail = t?.detail
+        override fun onBind(t: DetailItems) {
+            viewBind?.detail = t.detail
         }
     }
 
     class TimeLineHolder(itemView: HolderTopicTimelineBinding?) : PowerHolder<DetailItems>(itemView!!.root) {
         val viewBind = itemView
-        override fun onBind(t: DetailItems?) {
-            val timeLine = t?.timeLine
+        override fun onBind(t: DetailItems) {
+            val timeLine = t.timeLine
             viewBind?.tvContent?.text = timeLine?.title?.trim()
             viewBind?.tvTime?.text = DateUtil.parseTimeLine(timeLine?.createdAt)
-            viewBind?.connector?.setType(t!!.timeLineType!!)
+            viewBind?.connector?.setType(t.timeLineType!!)
         }
     }
 
     inner class HotTopicItemHolder(itemView: HolderHotTopicItemBinding) : PowerHolder<DetailItems>(itemView.root) {
         var itemBinding: HolderHotTopicItemBinding? = itemView
-        override fun onBind(t: DetailItems?) {
-            itemBinding!!.news = t?.newsItem
+        override fun onBind(t: DetailItems) {
+            itemBinding!!.news = t.newsItem
         }
     }
 }

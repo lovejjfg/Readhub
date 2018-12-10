@@ -26,8 +26,7 @@ import com.lovejjfg.readhub.data.topic.DataItem
  */
 class AlreadyReadHolder(view: View) : PowerHolder<DataItem>(view, false) {
 
-    override fun onBind(t: DataItem?) {
-        super.onBind(t)
+    override fun onBind(t: DataItem) {
         itemView.setOnLongClickListener {
             return@setOnLongClickListener false
         }

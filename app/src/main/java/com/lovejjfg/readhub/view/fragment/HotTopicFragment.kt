@@ -32,11 +32,12 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
+import com.lovejjfg.readhub.utils.RxBus
+import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.utils.isTopOrder
 import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
 
 /**
  * ReadHub
@@ -116,7 +117,7 @@ class HotTopicFragment : RefreshFragment() {
             )
                 .setActionTextColor(resources.getColor(R.color.colorAccent))
                 .setAction(R.string.refresh) {
-                    rv_hot?.scrollToPosition(0)
+                    RxBus.instance.post(ScrollEvent())
                     refresh.isRefreshing = true
                     refresh(refresh)
                     (activity as HomeActivity).selectItem(R.id.navigation_home)
