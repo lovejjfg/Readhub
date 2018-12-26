@@ -49,6 +49,7 @@ import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_home.appbarLayout
 import kotlinx.android.synthetic.main.activity_home.parentContainer
@@ -138,7 +139,7 @@ class HomeActivity : BaseActivity() {
         toolbar?.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.home_setting -> {
-                    JumpUitl.jumpSetting(this)
+                    CrashReport.testJavaCrash()
                     return@setOnMenuItemClickListener true
                 }
                 R.id.home_search -> {
