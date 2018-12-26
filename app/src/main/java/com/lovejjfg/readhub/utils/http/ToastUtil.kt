@@ -18,10 +18,11 @@ package com.lovejjfg.readhub.utils.http
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Looper
 import android.support.annotation.StringRes
 import android.widget.Toast
-
 import com.tencent.bugly.crashreport.CrashReport
 
 /**
@@ -33,7 +34,7 @@ object ToastUtil {
 
     fun initToast(context: Context?) {
         if (TOAST == null) {
-            TOAST = Toast.makeText(context, "", Toast.LENGTH_LONG)
+            TOAST = Toast.makeText(context, "", Toast.LENGTH_SHORT)
         }
     }
 
@@ -41,9 +42,10 @@ object ToastUtil {
         showToast(context, msg, Toast.LENGTH_SHORT)
     }
 
-
-    fun showToast(context: Context,
-                  @StringRes StringID: Int) {
+    fun showToast(
+        context: Context,
+        @StringRes StringID: Int
+    ) {
 
         showToast(context, context.getString(StringID), Toast.LENGTH_SHORT)
     }
@@ -62,15 +64,18 @@ object ToastUtil {
             e.printStackTrace()
             CrashReport.postCatchedException(e)
         }
-
     }
 
     private fun safeShow(context: Context?, msg: String, duration: Int) {
         try {
-            initToast(context)
-            TOAST!!.setText(msg)
-            TOAST!!.duration = duration
-            TOAST!!.show()
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                Toast.makeText(context, msg, duration).show()
+            } else {
+                initToast(context)
+                TOAST?.setText(msg)
+                TOAST?.duration = duration
+                TOAST?.show()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             CrashReport.postCatchedException(e)
