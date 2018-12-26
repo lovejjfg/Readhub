@@ -57,6 +57,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     private var arrowPaint: Paint
     private var xMaxValue = 200F
     private var xDefaultOffset = 50F
+    private var edgeSize = 30F
 
     private var callback: Callback? = null
     private val callbackRunnable = Runnable {
@@ -66,6 +67,8 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     init {
         xMaxValue = context.dip2px(70f).toFloat()
         xDefaultOffset = context.dip2px(25f).toFloat()
+        edgeSize = context.dip2px(20f).toFloat()
+
         pathPaint.color = Color.BLACK
         pathPaint.style = Paint.Style.FILL
         pathPaint.isAntiAlias = true
@@ -99,7 +102,7 @@ class SwipeCoordinatorLayout @JvmOverloads constructor(
     }
 
     private fun isEdges(ev: MotionEvent): Boolean {
-        return ev.x < 10
+        return ev.x < edgeSize
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

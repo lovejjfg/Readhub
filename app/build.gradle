@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
-    implementation 'com.lovejjfg.powerrecycle:powerrecycle:2.0.0-canary1'
+    implementation 'com.lovejjfg.powerrecycle:powerrecycle:2.0.0-canary7'
     implementation 'javax.annotation:javax.annotation-api:1.2'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
