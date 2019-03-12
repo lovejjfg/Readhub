@@ -42,6 +42,7 @@ object Constants {
     const val IMAGE_TYPE = "image/jpeg"
     const val PRE_ID = "PRE_ID"
     const val CURRENT_ID = "CURRENT_ID"
+    const val LASTED_ID = "LASTED_ID"
     //
     const val TYPE_HEADER = 1
     const val TYPE_NEWS = 2

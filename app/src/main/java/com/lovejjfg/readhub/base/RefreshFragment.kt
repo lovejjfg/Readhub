@@ -74,7 +74,6 @@ abstract class RefreshFragment : BaseFragment() {
     lateinit var refresh: SwipeRefreshLayout
     var mIsVisible = true
     var mIsAnimating = false
-    //    var mSnackBar: Snackbar? = null
     private var mShareDialog: AlertDialog? = null
     private lateinit var hintArrays: Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +98,7 @@ abstract class RefreshFragment : BaseFragment() {
         super.afterCreatedView(savedInstanceState)
         if (savedInstanceState != null) {
             latestOrder = savedInstanceState.getString(Constants.CURRENT_ID)
-//            preOrder = savedInstanceState.getString(Constants.PRE_ID)
+            order = savedInstanceState.getString(Constants.LASTED_ID)
         }
     }
 
@@ -126,6 +125,8 @@ abstract class RefreshFragment : BaseFragment() {
         adapter.setLoadMoreListener {
             if (order != null) {
                 loadMore()
+            } else {
+                adapter.loadMoreError()
             }
         }
         adapter.totalCount = Int.MAX_VALUE
@@ -371,6 +372,7 @@ abstract class RefreshFragment : BaseFragment() {
         if (saveListData() && adapter.list != null && adapter.list?.isNotEmpty()!!) {
             outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter.list))
             outState?.putString(Constants.CURRENT_ID, latestOrder)
+            outState?.putString(Constants.LASTED_ID, order)
         }
     }
 
