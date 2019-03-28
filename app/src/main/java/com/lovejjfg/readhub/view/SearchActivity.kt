@@ -25,8 +25,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.toast
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
@@ -69,6 +71,7 @@ open class SearchActivity : BaseActivity() {
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
         setContentView(R.layout.activity_search)
+        toast(getString(R.string.search_api_disable))
         val manager = LinearLayoutManager(this)
         searchContent.layoutManager = manager
         adapter = SearchAdapter()
@@ -195,6 +198,7 @@ open class SearchActivity : BaseActivity() {
                 }
             }, Consumer {
                 empty.visibility = View.GONE
+                toast(R.string.search_api_disable, Toast.LENGTH_LONG)
                 it.printStackTrace()
             })
     }
