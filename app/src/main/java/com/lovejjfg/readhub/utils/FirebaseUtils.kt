@@ -49,6 +49,21 @@ object FirebaseUtils {
         logEvent(context, "滑动关闭", Pair("activity", context::class.java.simpleName))
     }
 
+    fun logEggCenter(context: Context) {
+        logEvent(context, "彩蛋", Pair("type", "center"))
+    }
+    fun logEggAbout(context: Context) {
+        logEvent(context, "彩蛋", Pair("type", "About"))
+    }
+
+    fun logEggText(context: Context, text: String) {
+        logEvent(context, "彩蛋", Pair("type", "text"), Pair("name", text))
+    }
+
+    fun logEggRandom(context: Context) {
+        logEvent(context, "彩蛋", Pair("type", "random"))
+    }
+
     fun logScreen(context: Activity, screenName: String) {
         try {
             FirebaseAnalytics.getInstance(context)?.setCurrentScreen(context, "screen:$screenName", null)

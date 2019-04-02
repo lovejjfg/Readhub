@@ -30,7 +30,8 @@ object UIUtil {
      * 双击事件、多击事件
      */
     //存储时间的数组
-    private val mHits = LongArray(2)
+    private val mTwiceHits = LongArray(2)
+    private val mThirdsHits = LongArray(3)
 
     fun doubleClick(): Boolean {
         // 双击事件响应
@@ -44,9 +45,27 @@ object UIUtil {
          *
          */
         //实现数组的移位操作，点击一次，左移一位，末尾补上当前开机时间（cpu的时间）
-        System.arraycopy(mHits, 1, mHits, 0, mHits.size - 1)
-        mHits[mHits.size - 1] = SystemClock.uptimeMillis()
+        System.arraycopy(mTwiceHits, 1, mTwiceHits, 0, mTwiceHits.size - 1)
+        mTwiceHits[mTwiceHits.size - 1] = SystemClock.uptimeMillis()
         //双击事件的时间间隔500ms
-        return mHits[0] >= SystemClock.uptimeMillis() - 500
+        return mTwiceHits[0] >= SystemClock.uptimeMillis() - 500
+    }
+
+    fun thirdClick(): Boolean {
+        // 双击事件响应
+        /**
+         * arraycopy,拷贝数组
+         * src 要拷贝的源数组
+         * srcPos 源数组开始拷贝的下标位置
+         * dst 目标数组
+         * dstPos 开始存放的下标位置
+         * length 要拷贝的长度（元素的个数）
+         *
+         */
+        //实现数组的移位操作，点击一次，左移一位，末尾补上当前开机时间（cpu的时间）
+        System.arraycopy(mThirdsHits, 1, mThirdsHits, 0, mThirdsHits.size - 1)
+        mThirdsHits[mThirdsHits.size - 1] = SystemClock.uptimeMillis()
+        //双击事件的时间间隔500ms
+        return mThirdsHits[0] >= SystemClock.uptimeMillis() - 500
     }
 }

@@ -42,6 +42,7 @@ import com.lovejjfg.readhub.utils.ImeUtils
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.TransitionUtils
 import com.lovejjfg.readhub.utils.inflate
+import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_search.empty
@@ -123,7 +124,11 @@ open class SearchActivity : BaseActivity() {
             EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                startSearch(query)
+                if (checkKeyFirst(query)) {
+                    FirebaseUtils.logEggText(this@SearchActivity, query)
+                } else {
+                    startSearch(query)
+                }
                 return true
             }
 
@@ -201,6 +206,28 @@ open class SearchActivity : BaseActivity() {
                 toast(R.string.search_api_disable, Toast.LENGTH_LONG)
                 it.printStackTrace()
             })
+    }
+
+    private fun checkKeyFirst(nearKey: String): Boolean {
+        return try {
+            if (nearKey.contains("冯大") || nearKey.toLowerCase().contains("fenng")) {
+                JumpUitl.jumpWeb(this, "https://weibo.com/fenng")
+                true
+            } else if (nearKey.contains("lovejjfg") || nearKey.contains("俊锅锅")) {
+                JumpUitl.jumpWeb(this, "https://github.com/lovejjfg/")
+                true
+            } else if (nearKey.toLowerCase() == "readhub") {
+                JumpUitl.jumpWeb(this, "https://readhub.cn")
+                true
+            } else if (nearKey.contains("哈哈") || nearKey.toLowerCase().contains("haha")) {
+                EggsHelper.showCenterScaleView(this@SearchActivity)
+                true
+            } else
+                false
+        } catch (e: Exception) {
+            CrashReport.postCatchedException(e)
+            false
+        }
     }
 
     private fun loadMore() {

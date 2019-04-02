@@ -103,5 +103,3 @@ fun Context.getScreenHeight(): Int {
 fun ViewGroup.inflate(@LayoutRes resId: Int, attachParent: Boolean = false): View {
     return LayoutInflater.from(this.context).inflate(resId, this, attachParent)
 }
-
-

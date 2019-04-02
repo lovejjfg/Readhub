@@ -18,8 +18,11 @@
 
 package com.lovejjfg.readhub.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,9 +34,11 @@ import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Library
 import com.lovejjfg.readhub.databinding.ActivityAboutBinding
 import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
+import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.JumpUitl
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.addTo
+import kotlinx.android.synthetic.main.activity_about.readhubLogo
 
 /**
  * ReadHub
@@ -41,6 +46,8 @@ import io.reactivex.rxkotlin.addTo
  */
 class AboutActivity : BaseActivity() {
     private lateinit var aboutAdapter: PowerAdapter<Library>
+    private var takeRestCount = 0
+    private var maxRestCount = 1
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
         val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
@@ -52,6 +59,36 @@ class AboutActivity : BaseActivity() {
         initData()
         aboutAdapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
+        }
+        readhubLogo.setOnClickListener {
+            if (readhubLogo.rotation != 3600f * maxRestCount) {
+                readhubLogo.animate()
+                    .rotation(readhubLogo.rotation + 3600f)
+                    .setDuration(2000)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            readhubLogo.isEnabled = true
+                        }
+
+                        override fun onAnimationStart(animation: Animator?) {
+                            readhubLogo.isEnabled = false
+                        }
+                    })
+                    .start()
+                FirebaseUtils.logEggAbout(this@AboutActivity)
+            } else {
+                if (!EggsHelper.showCenterScaleView(this)) {
+                    return@setOnClickListener
+                }
+                takeRestCount++
+                if (takeRestCount >= maxRestCount) {
+                    maxRestCount++
+                    takeRestCount = 0
+                    readhubLogo.rotation = 0f
+                }
+                FirebaseUtils.logEggAbout(this@AboutActivity)
+            }
         }
     }
 
@@ -149,11 +186,6 @@ class AboutActivity : BaseActivity() {
         }
             .subscribe({ aboutAdapter.setList(it) }, { it.printStackTrace() })
             .addTo(mDisposables)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mDisposables.dispose()
     }
 
     class AboutAdapter : PowerAdapter<Library>() {

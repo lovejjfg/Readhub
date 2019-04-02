@@ -22,7 +22,6 @@ import android.Manifest
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -50,6 +49,7 @@ import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_home.appbarLayout
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 import kotlinx.android.synthetic.main.activity_home.toolbar
@@ -116,7 +116,9 @@ class HomeActivity : BaseActivity() {
         }
     }
     private val reSelectListener = BottomNavigationView.OnNavigationItemReselectedListener {
-        if (UIUtil.doubleClick()) {
+        if (UIUtil.thirdClick()) {
+            EggsHelper.showRandomEgg(this)
+        } else if (UIUtil.doubleClick()) {
             RxBus.instance.post(ScrollEvent())
         }
     }
@@ -189,11 +191,7 @@ class HomeActivity : BaseActivity() {
 
     private var isExpand: Boolean = true
     private fun initAppbar() {
-        appbarLayout.addOnOffsetChangedListener(object : OnOffsetChangedListener {
-            override fun onOffsetChanged(p0: AppBarLayout?, p1: Int) {
-                isExpand = p1 == 0
-            }
-        })
+        appbarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { p0, p1 -> isExpand = p1 == 0 })
     }
 
     private fun goSearch() {
@@ -234,6 +232,7 @@ class HomeActivity : BaseActivity() {
                 .subscribe({
                     SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
                 }, { it.printStackTrace() })
+                .addTo(mDisposables)
         }
     }
 
@@ -266,11 +265,6 @@ class HomeActivity : BaseActivity() {
         } catch (e: Exception) {
             super.onBackPressed()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        RxBus.instance.unSubscribe(this)
     }
 
     fun selectItem(navigationId: Int) {

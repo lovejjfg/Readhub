@@ -76,6 +76,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
 
     override fun onDestroy() {
         RxBus.instance.unSubscribe(this)
+        mDisposables.dispose()
         super.onDestroy()
     }
 
