@@ -93,7 +93,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup, savedInstanceState: Bundle?): View {
             val view = super.onCreateView(inflater, container, savedInstanceState)
             val parent = container.inflate(R.layout.activity_setting) as SwipeCoordinatorLayout
-            parent.setOnSwipeBackListener { activity?.onBackPressed() }
             parent.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
             parent.containerLayout.addView(view)
             initStatusBar(parent.statusBarProxy, parent.toolbar)
