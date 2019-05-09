@@ -16,24 +16,19 @@
 
 package com.lovejjfg.readhub.view
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
+import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.InstantView
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
-import com.lovejjfg.readhub.databinding.ActivityInstantDetailBinding
-import com.lovejjfg.readhub.databinding.HolderImgParseBinding
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.inflate
@@ -42,6 +37,10 @@ import com.lovejjfg.readhub.view.recycerview.holder.ImageParseHolder
 import com.lovejjfg.readhub.view.recycerview.holder.TextParseHolder
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.addTo
+import kotlinx.android.synthetic.main.activity_instant_detail.instantList
+import kotlinx.android.synthetic.main.activity_instant_detail.toolbar
+import kotlinx.android.synthetic.main.activity_topic_detail.refreshContainer
 import org.jsoup.Jsoup
 
 /**
@@ -49,9 +48,11 @@ import org.jsoup.Jsoup
  * Email: lovejjfg@gmail.com
  */
 class InstantActivity : BaseActivity() {
-    private lateinit var instantbind: ActivityInstantDetailBinding
-    private lateinit var refresh: SwipeRefreshLayout
     private lateinit var instantAdapter: InstantAdapter
+
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_instant_detail
+    }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
@@ -60,23 +61,20 @@ class InstantActivity : BaseActivity() {
             finish()
             return
         }
-        instantbind = DataBindingUtil.setContentView(this, R.layout.activity_instant_detail)
-        refresh = instantbind.container
-        refresh.setOnRefreshListener {
+        refreshContainer.setOnRefreshListener {
             getData(topicId)
         }
-        refresh.isRefreshing = true
-        val rvHot = instantbind.rvDetail
-        instantbind.toolbar.setOnClickListener {
+        refreshContainer.isRefreshing = true
+        toolbar.setOnClickListener {
             if (UIUtil.doubleClick()) {
-                rvHot.smoothScrollToPosition(0)
+                instantList.smoothScrollToPosition(0)
             }
         }
-        rvHot.addItemDecoration(ParseItemDerection())
-        rvHot.layoutManager = LinearLayoutManager(this)
-        instantAdapter = InstantAdapter()
-        instantAdapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
-        instantAdapter.attachRecyclerView(rvHot)
+        instantList.addItemDecoration(ParseItemDerection())
+        instantList.layoutManager = LinearLayoutManager(this)
+        instantAdapter = InstantAdapter().apply {
+            instantList.adapter = instantAdapter
+        }
         getData(topicId)
     }
 
@@ -85,14 +83,14 @@ class InstantActivity : BaseActivity() {
             handleInstant(it)
         }, Consumer {
             instantAdapter.showError()
-            refresh.isRefreshing = false
+            refreshContainer.isRefreshing = false
             handleError(it)
         })
     }
 
     private fun handleInstant(instantView: InstantView?) {
-        refresh.isRefreshing = false
-        instantbind.toolbar.title = instantView?.title
+        refreshContainer.isRefreshing = false
+        toolbar.title = instantView?.title
         if (instantView == null) {
             Log.e("InstantActivity", "extra is null")
             return
@@ -109,12 +107,12 @@ class InstantActivity : BaseActivity() {
             }, {
                 handleError(it)
 
-            })
+            }).addTo(mDisposables)
     }
 
-    inner class InstantAdapter : PowerAdapter<DetailItems>() {
+    class InstantAdapter : BaseAdapter<DetailItems>() {
         override fun getItemViewTypes(position: Int): Int {
-            return list[position].type!!
+            return list[position].type
         }
 
         override fun onViewHolderBind(holder: PowerHolder<DetailItems>, position: Int) {
@@ -127,14 +125,8 @@ class InstantActivity : BaseActivity() {
                     TextParseHolder(parent.inflate(R.layout.holder_text_parse))
                 }
                 else -> {
-                    val imgParseBinding = DataBindingUtil.inflate<HolderImgParseBinding>(
-                        LayoutInflater.from(parent.context),
-                        R.layout.holder_img_parse,
-                        parent,
-                        false
-                    )
 
-                    ImageParseHolder(imgParseBinding)
+                    ImageParseHolder(parent.inflate(R.layout.holder_img_parse))
                 }
             }
         }

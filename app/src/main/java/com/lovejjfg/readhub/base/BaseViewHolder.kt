@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.  Joe
+ * Copyright (c) 2019.  Joe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.readhub.view.recycerview.holder
+package com.lovejjfg.readhub.base
 
 import android.view.View
-import com.lovejjfg.readhub.base.BaseViewHolder
-import com.lovejjfg.readhub.data.topic.DataItem
+import com.lovejjfg.powerrecycle.holder.PowerHolder
+import kotlinx.android.extensions.LayoutContainer
 
 /**
- * Created by joe on 2018/2/5.
+ * Created by joe on 2019-05-09.
  * Email: lovejjfg@gmail.com
  */
-class AlreadyReadHolder(view: View) : BaseViewHolder<DataItem>(view, false) {
-
-    override fun onBind(t: DataItem) {
-        itemView.setOnLongClickListener {
-            return@setOnLongClickListener false
-        }
-    }
-}
+abstract class BaseViewHolder<Item>(override val containerView: View, enablClick: Boolean = true) : PowerHolder<Item>
+    (containerView, enablClick),
+    LayoutContainer

@@ -18,25 +18,24 @@ package com.lovejjfg.readhub.view.recycerview.holder
 
 import android.text.TextUtils
 import android.view.View
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
-import com.lovejjfg.readhub.databinding.HolderImgParseBinding
 import com.lovejjfg.readhub.utils.glide.GlideUtils
+import kotlinx.android.synthetic.main.holder_img_parse.view.igAlt
+import kotlinx.android.synthetic.main.holder_img_parse.view.ivContent
 
 /**
  * Created by joe on 2017/9/29.
  * Email: lovejjfg@gmail.com
  */
-class ImageParseHolder(parseBinding: HolderImgParseBinding) : PowerHolder<DetailItems>(parseBinding.root, false) {
-    var imgBind = parseBinding
+class ImageParseHolder(view: View) : BaseViewHolder<DetailItems>(view, false) {
     override fun onBind(t: DetailItems) {
-        GlideUtils.into(t.img, imgBind.ivContent)
+        GlideUtils.into(t.img, itemView.ivContent)
         if (!TextUtils.isEmpty(t.alt)) {
-            imgBind.tvIgAlt.visibility = View.VISIBLE
-            imgBind.tvIgAlt.text = t.alt
+            itemView.igAlt.visibility = View.VISIBLE
+            itemView.igAlt.text = t.alt
         } else {
-            imgBind.tvIgAlt.visibility = View.GONE
+            itemView.igAlt.visibility = View.GONE
         }
-
     }
 }

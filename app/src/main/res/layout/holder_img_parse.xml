@@ -14,39 +14,31 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<layout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/ivContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:adjustViewBounds="true"/>
 
-
-        <ImageView
-            android:id="@+id/iv_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true">
-        </ImageView>
-
-        <TextView
-            android:id="@+id/tv_ig_alt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:drawableTop="@drawable/ic_arrow_drop_up"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:textColor="@color/theme_color_text_g5"
-            android:textSize="@dimen/text_time"
-            tools:text="这是图描述这是描述这是图片描述这是图描述这是描述这是图片描述"
-            />
-    </LinearLayout>
-</layout>
+    <TextView
+        android:id="@+id/igAlt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableTop="@drawable/ic_arrow_drop_up"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textColor="@color/theme_color_text_g5"
+        android:textSize="@dimen/text_time"
+        tools:text="这是图描述这是描述这是图片描述这是图描述这是描述这是图片描述"/>
+</LinearLayout>

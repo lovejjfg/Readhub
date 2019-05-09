@@ -26,7 +26,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.util.Log
-import android.view.View
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
@@ -38,6 +37,7 @@ import com.lovejjfg.readhub.utils.isTopOrder
 import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.layout_refresh_recycler.refreshContainer
 
 /**
  * ReadHub
@@ -50,8 +50,8 @@ class HotTopicFragment : RefreshFragment() {
         return HotTopicAdapter()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun afterCreatedView(savedInstanceState: Bundle?) {
+        super.afterCreatedView(savedInstanceState)
         adapter.setOnItemClickListener { _, position, item ->
             item.isExband = !item.isExband
             adapter.notifyItemChanged(position)
@@ -112,14 +112,14 @@ class HotTopicFragment : RefreshFragment() {
         if (mSnackBar == null) {
             @Suppress("DEPRECATION")
             mSnackBar = Snackbar.make(
-                refresh, String.format(getString(R.string.hot_topic_update), refreshCount), Snackbar
+                refreshContainer, String.format(getString(R.string.hot_topic_update), refreshCount), Snackbar
                     .LENGTH_INDEFINITE
             )
                 .setActionTextColor(resources.getColor(R.color.colorAccent))
                 .setAction(R.string.refresh) {
                     RxBus.instance.post(ScrollEvent())
-                    refresh.isRefreshing = true
-                    refresh(refresh)
+                    refreshContainer.isRefreshing = true
+                    refresh(refreshContainer)
                     (activity as HomeActivity).selectItem(R.id.navigation_home)
                 }
         }

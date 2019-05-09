@@ -29,8 +29,8 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
-import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.JumpUitl
@@ -40,17 +40,14 @@ import com.lovejjfg.readhub.utils.dip2px
  * Created by joe on 2017/9/28.
  * Email: lovejjfg@gmail.com
  */
-class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false) {
-    private val JUSTIFY = "justify"
-    private val CENTER = "center"
-    private val RIGHT = "right"
+class TextParseHolder(itemView: View) : BaseViewHolder<DetailItems>(itemView, false) {
     private var mContent = itemView as TextView
     private val padding50 = itemView.context.dip2px(50F)
     private val padding20 = itemView.context.dip2px(20F)
+    @Suppress("DEPRECATION")
     override fun onBind(item: DetailItems) {
         mContent.movementMethod = LinkMovementMethod.getInstance()
         val gravity = item.gravity
-        //            mContent.setAlign(AlignTextView.Align.ALIGN_LEFT);
         if (TextUtils.isEmpty(gravity)) {
             mContent.gravity = Gravity.START
         } else if (gravity!!.contains(JUSTIFY)) {
@@ -60,7 +57,6 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
             }
         } else if (gravity.contains(CENTER)) {
             mContent.gravity = Gravity.CENTER
-            //                mContent.setAlign(AlignTextView.Align.ALIGN_CENTER);
         } else if (gravity.contains(RIGHT)) {
             mContent.gravity = Gravity.END
         }
@@ -83,9 +79,9 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
                             Log.d("TAG", "onClick: ...key:+${href.key} ;value: ${href.value}")
                         }
 
-                        override fun updateDrawState(ds: TextPaint?) {
+                        override fun updateDrawState(ds: TextPaint) {
                             super.updateDrawState(ds)
-                            ds?.color = mContent.context.resources.getColor(R.color.colorAccent)
+                            ds.color = context.resources.getColor(R.color.colorAccent)
                         }
                     }, start, start + href.key.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
@@ -93,5 +89,11 @@ class TextParseHolder(itemView: View) : PowerHolder<DetailItems>(itemView, false
             mContent.text = builder
             mContent.textSize = (if (h1) 18 else if (h6) 14 else 16).toFloat()
         }
+    }
+
+    companion object {
+        private const val JUSTIFY = "justify"
+        private const val CENTER = "center"
+        private const val RIGHT = "right"
     }
 }

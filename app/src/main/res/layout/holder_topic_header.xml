@@ -1,41 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-    >
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:orientation="vertical">
 
-    <data>
+    <TextView
+        android:id="@+id/topicDes"
+        tools:text="现实 ... 早在 2011 年海澜之家就开始了电商之旅，不过线上销量一直不太高而已，2016 年占比为 5.17%，线下始终了他们销售的主要阵地，而且数量一直也在增加当中，仅在 2017 年，海澜之家就计划净增门店 750 家，其中海澜之家门店净增 350 家，爱居兔和海一家门店净增 400 家。"
+        style="@style/Text.DetailDes"/>
 
-        <import type="android.view.View"/>
-
-        <import type="android.text.TextUtils"/>
-
-        <import type="com.lovejjfg.readhub.utils.DateUtil"/>
-
-        <variable
-            name="detail"
-            type="com.lovejjfg.readhub.data.topic.detail.TopicDetail"/>
-
-    </data>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        >
+</LinearLayout>
 
 
-        <TextView
-            android:id="@+id/tv_des"
-            style="@style/Text.DetailDes"
-            android:text="@{TextUtils.isEmpty(detail.summary)?null:detail.summary.trim()}"
-            tools:text="现实 ... 早在 2011 年海澜之家就开始了电商之旅，不过线上销量一直不太高而已，2016 年占比为 5.17%，线下始终了他们销售的主要阵地，而且数量一直也在增加当中，仅在 2017 年，海澜之家就计划净增门店 750 家，其中海澜之家门店净增 350 家，爱居兔和海一家门店净增 400 家。"
-            />
-
-
-
-    </LinearLayout>
-
-
-</layout>
 

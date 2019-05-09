@@ -16,59 +16,43 @@
 
 package com.lovejjfg.readhub.view.recycerview
 
-import android.databinding.DataBindingUtil
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseAdapter
+import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
-import com.lovejjfg.readhub.databinding.HolderHotTopicItemBinding
-import com.lovejjfg.readhub.databinding.HolderTopicHeaderBinding
-import com.lovejjfg.readhub.databinding.HolderTopicTimelineBinding
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.holder.DividerHolder
+import kotlinx.android.synthetic.main.holder_hot_topic_item.view.itemSiteName
+import kotlinx.android.synthetic.main.holder_hot_topic_item.view.itemTitle
+import kotlinx.android.synthetic.main.holder_topic_header.view.topicDes
+import kotlinx.android.synthetic.main.holder_topic_timeline.view.connector
+import kotlinx.android.synthetic.main.holder_topic_timeline.view.timeLineContent
+import kotlinx.android.synthetic.main.holder_topic_timeline.view.timeLineDate
 
 /**
  * Created by joe on 2017/9/13.
  * lovejjfg@gmail.com
  */
-class TopicDetailAdapter : PowerAdapter<DetailItems>() {
+class TopicDetailAdapter : BaseAdapter<DetailItems>() {
     override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DetailItems> {
-        when (viewType) {
+        return when (viewType) {
             Constants.TYPE_HEADER -> {
-                val itemBinding = DataBindingUtil.inflate<HolderTopicHeaderBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.holder_topic_header,
-                    parent,
-                    false
-                )
-                return HeaderHolder(itemBinding)
+                HeaderHolder(parent.inflate(R.layout.holder_topic_header))
             }
             Constants.TYPE_NEWS -> {
-                val itemBinding = DataBindingUtil.inflate<HolderHotTopicItemBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.holder_hot_topic_item,
-                    parent,
-                    false
-                )
-                return HotTopicItemHolder(itemBinding)
+                HotTopicItemHolder(parent.inflate(R.layout.holder_hot_topic_item))
             }
             Constants.TYPE_DIVIDER -> {
-                return DividerHolder(parent.inflate(R.layout.layout_divider), false)
+                DividerHolder(parent.inflate(R.layout.layout_divider))
             }
             else -> {
-                val itemBinding = DataBindingUtil.inflate<HolderTopicTimelineBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.holder_topic_timeline,
-                    parent,
-                    false
-                )
-                return TimeLineHolder(itemBinding)
+                TimeLineHolder(parent.inflate(R.layout.holder_topic_timeline))
             }
-
         }
     }
 
@@ -77,30 +61,30 @@ class TopicDetailAdapter : PowerAdapter<DetailItems>() {
     }
 
     override fun getItemViewTypes(position: Int): Int {
-        return list[position].type!!
+        return list[position].type
     }
 
-    class HeaderHolder(itemView: HolderTopicHeaderBinding?) : PowerHolder<DetailItems>(itemView!!.root, false) {
-        val viewBind = itemView
+    class HeaderHolder(itemView: View) : BaseViewHolder<DetailItems>(itemView, false) {
         override fun onBind(t: DetailItems) {
-            viewBind?.detail = t.detail
+            val summary = t.detail?.summary?.trim()
+            itemView.topicDes.text = summary
         }
     }
 
-    class TimeLineHolder(itemView: HolderTopicTimelineBinding?) : PowerHolder<DetailItems>(itemView!!.root) {
-        val viewBind = itemView
+    class TimeLineHolder(itemView: View) : BaseViewHolder<DetailItems>(itemView) {
         override fun onBind(t: DetailItems) {
             val timeLine = t.timeLine
-            viewBind?.tvContent?.text = timeLine?.title?.trim()
-            viewBind?.tvTime?.text = DateUtil.parseTimeLine(timeLine?.createdAt)
-            viewBind?.connector?.setType(t.timeLineType!!)
+            itemView.timeLineContent.text = timeLine?.title?.trim()
+            itemView.timeLineDate.text = DateUtil.parseTimeLine(timeLine?.createdAt)
+            itemView.connector.setType(t.timeLineType!!)
         }
     }
 
-    inner class HotTopicItemHolder(itemView: HolderHotTopicItemBinding) : PowerHolder<DetailItems>(itemView.root) {
-        var itemBinding: HolderHotTopicItemBinding? = itemView
+    class HotTopicItemHolder(itemView: View) : BaseViewHolder<DetailItems>(itemView) {
         override fun onBind(t: DetailItems) {
-            itemBinding!!.news = t.newsItem
+            val newsItem = t.newsItem ?: return
+            itemView.itemTitle.text = newsItem.title
+            itemView.itemSiteName.text = newsItem.siteName
         }
     }
 }

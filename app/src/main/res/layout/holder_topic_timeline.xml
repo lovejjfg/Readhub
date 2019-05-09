@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
+    <com.lovejjfg.readhub.view.widget.ConnectorView
+        android:id="@+id/connector"
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="@dimen/normal_margin_padding"/>
 
-    <android.support.design.internal.ForegroundLinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/timeLineDate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.lovejjfg.readhub.view.widget.ConnectorView
-            android:id="@+id/connector"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="@dimen/normal_margin_padding"/>
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/normal_margin_padding"
-            android:gravity="center"
-            android:textColor="@color/theme_color_text_g1"
-            android:textSize="@dimen/text_des"
-            tools:text="9-19"/>
+        android:layout_marginRight="@dimen/normal_margin_padding"
+        android:gravity="center"
+        android:textColor="@color/theme_color_text_g1"
+        android:textSize="@dimen/text_des"
+        tools:text="9-19"/>
 
 
-        <TextView
-            android:id="@+id/tv_content"
-            style="@style/Text.TimeLine"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"/>
+    <TextView
+        android:id="@+id/timeLineContent"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"
+        style="@style/Text.TimeLine"/>
 
-    </android.support.design.internal.ForegroundLinearLayout>
-
-
-</layout>
+</android.support.design.internal.ForegroundLinearLayout>
 

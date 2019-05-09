@@ -2,6 +2,7 @@ package com.lovejjfg.readhub.base
 
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -25,6 +26,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     final override fun onCreate(savedInstanceState: Bundle?) {
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
+        setContentView(getLayoutRes())
         afterCreatedView(savedInstanceState)
         initStatusBar()
         initToolBar()

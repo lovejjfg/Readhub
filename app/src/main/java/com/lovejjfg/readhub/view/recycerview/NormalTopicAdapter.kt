@@ -18,35 +18,37 @@
 
 package com.lovejjfg.readhub.view.recycerview
 
-import android.databinding.DataBindingUtil
 import android.text.TextUtils
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.base.BaseAdapter
+import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.databinding.HolderNormalTopicBinding
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
-import kotlinx.android.synthetic.main.holder_normal_topic.view.iv_share
+import kotlinx.android.synthetic.main.holder_normal_topic.view.topicDes
+import kotlinx.android.synthetic.main.holder_normal_topic.view.topicRelative
+import kotlinx.android.synthetic.main.holder_normal_topic.view.topicShare
+import kotlinx.android.synthetic.main.holder_normal_topic.view.topicTitle
 
 /**
  * ReadHub
  * Created by Joe at 2017/8/5.
  */
 
-class NormalTopicAdapter : PowerAdapter<DataItem>() {
+class NormalTopicAdapter : BaseAdapter<DataItem>() {
     override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<DataItem> {
         return when (viewType) {
             Constants.TYPE_ALREADY_READ -> {
                 AlreadyReadHolder(parent.inflate(R.layout.holder_already_read))
             }
             else -> {
-                val topicBinding = DataBindingUtil.inflate<HolderNormalTopicBinding>(LayoutInflater.from(parent.context), R.layout.holder_normal_topic, parent, false)
-                return NormalTopicHolder(topicBinding)
+                return NormalTopicHolder(parent.inflate(R.layout.holder_normal_topic))
             }
         }
     }
@@ -74,38 +76,32 @@ class NormalTopicAdapter : PowerAdapter<DataItem>() {
         holder.onBind(list[position])
     }
 
-    inner class NormalTopicHolder(itemView: HolderNormalTopicBinding) : PowerHolder<DataItem>(itemView.root) {
-        var itemBinding: HolderNormalTopicBinding? = itemView
+    inner class NormalTopicHolder(itemView: View) : BaseViewHolder<DataItem>(itemView) {
         override fun onBind(t: DataItem) {
-            itemBinding!!.tvRelative.text = null
-            itemBinding!!.tvRelative.requestLayout()
-            itemBinding!!.topic = t
+            itemView.topicTitle.text = t.title
+            itemView.topicRelative.text = null
+            itemView.topicRelative.requestLayout()
             val text: String? = if (TextUtils.isEmpty(t.authorName)) {
                 t.siteName + " · " + DateUtil.parseTime(t.publishDate)
             } else {
                 t.authorName + "/" + t.siteName + " · " + DateUtil.parseTime(t.publishDate)
-
             }
-            itemBinding!!.tvRelative.text = text
-            itemBinding!!.tvDes.setOnExpandChangeListener {
+            itemView.topicRelative.text = text
+            itemView.topicDes.setOnExpandChangeListener {
                 t.isExband = it
             }
-            itemBinding!!.tvDes.setOriginalText(t.summary)
-            itemBinding!!.tvDes.isExpanded = t.isExband!!
-            itemBinding!!.tvDes.setOnClickListener {
+            itemView.topicDes.setOriginalText(t.summary)
+            itemView.topicDes.isExpanded = t.isExband
+            itemView.topicDes.setOnClickListener {
                 itemView.performClick()
             }
-            itemBinding!!.tvDes.setOnLongClickListener {
+            itemView.topicDes.setOnLongClickListener {
                 itemView.performLongClick()
             }
-            itemView.iv_share.setOnClickListener {
+            itemView.topicShare.setOnClickListener {
                 itemView.performLongClick()
             }
-
-
         }
-
     }
-
 }
 

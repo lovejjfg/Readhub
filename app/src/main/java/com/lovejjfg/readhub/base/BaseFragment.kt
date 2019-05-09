@@ -21,6 +21,9 @@ package com.lovejjfg.readhub.base
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.lovejjfg.readhub.utils.ErrorUtil
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
@@ -44,6 +47,13 @@ abstract class BaseFragment : Fragment(), IBaseView {
         beforeCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         initFragments(savedInstanceState, this)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(getLayoutRes(), container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         afterCreatedView(savedInstanceState)
     }
 

@@ -20,42 +20,48 @@ package com.lovejjfg.readhub.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
+import com.lovejjfg.readhub.base.BaseAdapter
+import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.Library
-import com.lovejjfg.readhub.databinding.ActivityAboutBinding
-import com.lovejjfg.readhub.databinding.HolderAboutInfoBinding
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.inflate
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.addTo
+import kotlinx.android.synthetic.main.activity_about.includeList
 import kotlinx.android.synthetic.main.activity_about.readhubLogo
+import kotlinx.android.synthetic.main.activity_about.versionText
+import kotlinx.android.synthetic.main.holder_about_info.view.libDes
+import kotlinx.android.synthetic.main.holder_about_info.view.libName
 
 /**
  * ReadHub
  * Created by Joe at 2017/9/5.
  */
 class AboutActivity : BaseActivity() {
-    private lateinit var aboutAdapter: PowerAdapter<Library>
+    private lateinit var aboutAdapter: BaseAdapter<Library>
     private var takeRestCount = 0
     private var maxRestCount = 1
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_about
+    }
+
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
-        val contentView = DataBindingUtil.setContentView<ActivityAboutBinding>(this, R.layout.activity_about)
-        contentView?.tvVersoin?.text = String.format(getString(R.string.version_at), BuildConfig.VERSION_NAME)
-        aboutAdapter = AboutAdapter()
-        val recyclerView = contentView?.recyclerView
-        recyclerView?.layoutManager = LinearLayoutManager(this)
-        aboutAdapter.attachRecyclerView(recyclerView!!)
+        versionText.text = String.format(getString(R.string.version_at), BuildConfig.VERSION_NAME)
+        includeList.layoutManager = LinearLayoutManager(this)
+        aboutAdapter = AboutAdapter().apply {
+            includeList.adapter = this
+        }
         initData()
         aboutAdapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
@@ -188,26 +194,20 @@ class AboutActivity : BaseActivity() {
             .addTo(mDisposables)
     }
 
-    class AboutAdapter : PowerAdapter<Library>() {
+    class AboutAdapter : BaseAdapter<Library>() {
         override fun onViewHolderBind(holder: PowerHolder<Library>, position: Int) {
             holder.onBind(list[position])
         }
 
         override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): PowerHolder<Library>? {
-            val infoBinding = DataBindingUtil.inflate<HolderAboutInfoBinding>(
-                LayoutInflater.from(parent.context),
-                R.layout.holder_about_info,
-                parent,
-                false
-            )
-            return AboutHolder(infoBinding)
+            return AboutHolder(parent.inflate(R.layout.holder_about_info))
         }
     }
 
-    class AboutHolder(itemView: HolderAboutInfoBinding) : PowerHolder<Library>(itemView.root) {
-        private var dataBind: HolderAboutInfoBinding? = itemView
+    class AboutHolder(itemView: View) : BaseViewHolder<Library>(itemView) {
         override fun onBind(t: Library) {
-            dataBind?.lib = t
+            itemView.libDes.text = t.des
+            itemView.libName.text = t.name
         }
     }
 }

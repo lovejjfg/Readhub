@@ -20,7 +20,6 @@ package com.lovejjfg.readhub.view
 
 import android.Manifest
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
 import android.support.design.widget.BottomNavigationView
@@ -33,7 +32,6 @@ import com.lovejjfg.readhub.R.id
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.base.BaseFragment
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.databinding.ActivityHomeBinding
 import com.lovejjfg.readhub.utils.AnimUtils
 import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
 import com.lovejjfg.readhub.utils.FirebaseUtils.logScreen
@@ -51,6 +49,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_home.appbarLayout
+import kotlinx.android.synthetic.main.activity_home.navigationView
 import kotlinx.android.synthetic.main.activity_home.parentContainer
 import kotlinx.android.synthetic.main.activity_home.toolbar
 
@@ -58,7 +57,6 @@ class HomeActivity : BaseActivity() {
 
     @Suppress("PropertyName")
     val TAG = "HOME"
-    private var viewBind: ActivityHomeBinding? = null
     private lateinit var hotTopicFragment: Fragment
     private lateinit var techFragment: Fragment
     private lateinit var developFragment: Fragment
@@ -123,21 +121,22 @@ class HomeActivity : BaseActivity() {
         }
     }
 
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_home
+    }
+
     override fun afterCreatedView(savedInstanceState: Bundle?) {
         super.afterCreatedView(savedInstanceState)
-//        checkPermissions()
         addToast()
         logScreen(this, getString(R.string.title_home))
-        viewBind = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        navigation = viewBind!!.navigation
-        val toolbar = viewBind?.toolbar
-        toolbar?.setOnClickListener {
+        this.navigation = navigationView
+        toolbar.setOnClickListener {
             if (UIUtil.doubleClick()) {
                 RxBus.instance.post(ScrollEvent())
             }
         }
-        toolbar?.inflateMenu(R.menu.home)
-        toolbar?.setOnMenuItemClickListener {
+        toolbar.inflateMenu(R.menu.home)
+        toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.home_setting -> {
                     JumpUitl.jumpSetting(this)
@@ -191,7 +190,7 @@ class HomeActivity : BaseActivity() {
 
     private var isExpand: Boolean = true
     private fun initAppbar() {
-        appbarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { p0, p1 -> isExpand = p1 == 0 })
+        appbarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, p1 -> isExpand = p1 == 0 })
     }
 
     private fun goSearch() {

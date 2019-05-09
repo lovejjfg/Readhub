@@ -19,11 +19,9 @@
 package com.lovejjfg.readhub.view
 
 import android.annotation.SuppressLint
-import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
 import android.webkit.SslErrorHandler
@@ -33,27 +31,23 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ProgressBar
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.data.Constants
-import com.lovejjfg.readhub.databinding.ActivityWebBinding
 import com.lovejjfg.readhub.utils.UIUtil
+import kotlinx.android.synthetic.main.activity_web.pb
+import kotlinx.android.synthetic.main.activity_web.toolbar
+import kotlinx.android.synthetic.main.activity_web.web
 
 class WebActivity : BaseActivity() {
 
-    private lateinit var mWeb: WebView
-    private lateinit var loading: ProgressBar
-    private lateinit var toolbar: Toolbar
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_web
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun afterCreatedView(savedInstanceState: Bundle?) {
-        super.afterCreatedView(savedInstanceState)
-        val viewBind = DataBindingUtil.setContentView<ActivityWebBinding>(this, R.layout.activity_web)
-        mWeb = viewBind.web
-        loading = viewBind.pb
-        toolbar = viewBind.toolbar
         toolbar.setOnClickListener {
             if (UIUtil.doubleClick()) {
                 onTitleDoubleClick()
@@ -65,21 +59,21 @@ class WebActivity : BaseActivity() {
             finish()
             return
         }
-        mWeb.isVerticalScrollBarEnabled = false
-        mWeb.isHorizontalScrollBarEnabled = false
+        web.isVerticalScrollBarEnabled = false
+        web.isHorizontalScrollBarEnabled = false
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG)
-        val webSettings = mWeb.settings
+        val webSettings = web.settings
         webSettings!!.javaScriptEnabled = true
         //        webSettings.setUseWideViewPort(true);
         //        webSettings.setLoadWithOverviewMode(true);
-        mWeb.isClickable = true
+        web.isClickable = true
         webSettings.domStorageEnabled = true
         webSettings.loadsImagesAutomatically = true
         webSettings.builtInZoomControls = true
         webSettings.blockNetworkImage = false
         webSettings.displayZoomControls = false
-        //        mWeb.setWebViewClient(new WebViewClient());
-        mWeb.webChromeClient = object : WebChromeClient() {
+        //        web.setWebViewClient(new WebViewClient());
+        web.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
                 toolbar.title = s
@@ -87,30 +81,30 @@ class WebActivity : BaseActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                loading.progress = newProgress
+                pb.progress = newProgress
                 if (newProgress == 100)
-                    loading.visibility = View.GONE
+                    pb.visibility = View.GONE
             }
         }
-        mWeb.webViewClient = object : WebViewClient() {
+        web.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-//                loading.show()
-                loading.visibility = View.VISIBLE
+//                pb.show()
+                pb.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                loading.visibility = View.GONE
-//                loading.dismiss()
+                pb.visibility = View.GONE
+//                pb.dismiss()
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
-                loading.visibility = View.GONE
+                pb.visibility = View.GONE
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 super.onReceivedSslError(view, handler, error)
-                loading.visibility = View.GONE
+                pb.visibility = View.GONE
             }
 
             override fun onReceivedHttpError(
@@ -119,27 +113,27 @@ class WebActivity : BaseActivity() {
                 errorResponse: WebResourceResponse?
             ) {
                 super.onReceivedHttpError(view, request, errorResponse)
-                loading.visibility = View.GONE
+                pb.visibility = View.GONE
             }
         }
 
-        mWeb.loadUrl(url)
+        web.loadUrl(url)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mWeb.destroy()
+        web.destroy()
     }
 
     override fun onBackPressed() {
-        if (mWeb.canGoBack()) {
-            mWeb.goBack()
+        if (web.canGoBack()) {
+            web.goBack()
             return
         }
         super.onBackPressed()
     }
 
     private fun onTitleDoubleClick() {
-        mWeb.scrollTo(0, 0)
+        web.scrollTo(0, 0)
     }
 }

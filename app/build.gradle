@@ -68,9 +68,9 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    dataBinding {
-        enabled = true
-    }
+//    dataBinding {
+//        enabled = true
+//    }
 
     androidExtensions {
         experimental = true

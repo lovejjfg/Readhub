@@ -1,128 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:id="@+id/parentContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:foreground="?selectableItemBackground">
 
-    <data>
-
-        <import type="android.view.View"/>
-
-        <import type="android.text.TextUtils"/>
-
-        <import type="com.lovejjfg.readhub.utils.DateUtil"/>
-
-        <variable
-            name="topic"
-            type="com.lovejjfg.readhub.data.topic.DataItem"/>
-
-    </data>
-
-    <android.support.v7.widget.CardView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:foreground="?selectableItemBackground"
-        app:cardElevation="@{topic.isExband?20:4}">
+        android:padding="8dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/topicTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_height="wrap_content"
+            android:textColor="@color/theme_color_text"
+            android:textSize="@dimen/text_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="xxxxxxxxxxx"/>
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/iconGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/topicDes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topicTitle">
 
             <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{TextUtils.isEmpty(topic.title)?null:topic.title.trim()}"
-                android:textColor="@color/theme_color_text"
-                android:textSize="@dimen/text_title"
-                tools:text="xxxxxxxxxxx"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/topicPublish"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                >
+                android:textColor="@color/theme_color_text_g1"
+                android:textSize="@dimen/text_time"
+                app:layout_constraintEnd_toStartOf="@+id/ivShow"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="xxxxx"/>
 
-                <TextView
-                    android:id="@+id/tv_publish"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/theme_color_text_g1"
-                    android:textSize="@dimen/text_time"
-                    tools:text="xxxxx"
-                    />
-
-                <com.lovejjfg.readhub.view.widget.ForegroundImageView
-                    android:id="@+id/iv_show"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="@dimen/normal_margin_padding"
-                    android:background="?actionBarItemBackground"
-                    android:gravity="center"
-                    android:src="@drawable/ic_time_line_black_24dp"
-                    android:textColor="@color/theme_color_text"/>
-
-
-                <com.lovejjfg.readhub.view.widget.ForegroundImageView
-                    android:id="@+id/iv_time_line"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="@dimen/normal_margin_padding"
-                    android:background="?actionBarItemBackground"
-                    android:gravity="center"
-                    android:rotation="180"
-                    android:src="@drawable/ic_detail_topic_black_24dp"
-                    />
-
-                <com.lovejjfg.readhub.view.widget.ForegroundImageView
-                    android:id="@+id/iv_share"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="@dimen/normal_margin_padding"
-                    android:background="?actionBarItemBackground"
-                    android:gravity="center"
-                    android:src="@drawable/ic_share"
-                    />
+            <com.lovejjfg.readhub.view.widget.ForegroundImageView
+                android:id="@+id/ivShow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/normal_margin_padding"
+                android:background="?actionBarItemBackground"
+                android:gravity="center"
+                android:src="@drawable/ic_time_line_black_24dp"
+                android:textColor="@color/theme_color_text"
+                app:layout_constraintEnd_toStartOf="@+id/ivTimeLine"
+                app:layout_constraintStart_toEndOf="@+id/topicPublish"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
-            </LinearLayout>
+            <com.lovejjfg.readhub.view.widget.ForegroundImageView
+                android:id="@+id/ivTimeLine"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/normal_margin_padding"
+                android:background="?actionBarItemBackground"
+                android:gravity="center"
+                android:rotation="180"
+                android:src="@drawable/ic_detail_topic_black_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/ivShare"
+                app:layout_constraintStart_toEndOf="@+id/ivShow"
+                app:layout_constraintTop_toTopOf="parent"/>
 
+            <com.lovejjfg.readhub.view.widget.ForegroundImageView
+                android:id="@+id/ivShare"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/normal_margin_padding"
+                android:background="?actionBarItemBackground"
+                android:gravity="center"
+                android:src="@drawable/ic_share"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivTimeLine"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tv_des"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/normal_margin_padding"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1"
-                android:maxLines="@{topic.isExband?1000:3}"
-                android:text="@{TextUtils.isEmpty(topic.summary)?null:topic.summary.trim()}"
-                android:textColor="@color/theme_color_text_g4"
-                android:textSize="@dimen/text_des"
-                android:visibility="@{TextUtils.isEmpty(topic.summary)?View.GONE:View.VISIBLE}"
-                tools:text="这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了"
-                />
+        <TextView
+            android:id="@+id/topicDes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_margin_padding"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.1"
+            android:textColor="@color/theme_color_text_g4"
+            android:textSize="@dimen/text_des"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconGroup"
+            tools:text="这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了这是信息嘻嘻嘻嘻嘻嘻绥芬河市方式减肥了"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:visibility="@{topic.isExband?View.VISIBLE:View.GONE}">
-            </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/topicItemList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topicDes">
+        </android.support.v7.widget.RecyclerView>
 
+    </android.support.constraint.ConstraintLayout>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-</layout>
+</android.support.v7.widget.CardView>
 

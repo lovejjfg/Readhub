@@ -79,12 +79,9 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:descendantFocusability="beforeDescendants"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            style="@style/RecyclerViewStyle"/>
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton

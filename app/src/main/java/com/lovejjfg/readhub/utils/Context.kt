@@ -99,7 +99,3 @@ fun Context.getScreenWidth(): Int {
 fun Context.getScreenHeight(): Int {
     return this.resources.displayMetrics.heightPixels
 }
-
-fun ViewGroup.inflate(@LayoutRes resId: Int, attachParent: Boolean = false): View {
-    return LayoutInflater.from(this.context).inflate(resId, this, attachParent)
-}

@@ -12,7 +12,7 @@ class DetailItems {
     var detail: TopicDetail? = null
     var newsItem: NewsArrayItem? = null
     var timeLine: TopicsItem? = null
-    var type: Int? = null
+    var type: Int = 0
     var timeLineType: ConnectorView.Type? = null
     var img: String? = null
     var alt: String? = null
@@ -26,7 +26,6 @@ class DetailItems {
     constructor(detail: TopicDetail) {
         this.detail = detail
         type = Constants.TYPE_HEADER
-
     }
 
     constructor(newsItem: NewsArrayItem) {
@@ -52,6 +51,4 @@ class DetailItems {
     constructor(type: Int) {
         this.type = type
     }
-
-
 }

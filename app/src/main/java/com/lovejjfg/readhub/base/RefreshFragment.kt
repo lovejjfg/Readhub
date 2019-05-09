@@ -21,7 +21,6 @@ package com.lovejjfg.readhub.base
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build.VERSION
@@ -35,12 +34,11 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.text.TextUtils
 import android.util.AtomicFile
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.util.tryWrite
 import androidx.core.view.toBitmap
 import com.lovejjfg.powerrecycle.PowerAdapter
@@ -48,15 +46,14 @@ import com.lovejjfg.powerrecycle.manager.FixedLinearLayoutManager
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.databinding.LayoutRefreshRecyclerBinding
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.ScrollEvent
-import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.layout_refresh_recycler.rv_hot
+import kotlinx.android.synthetic.main.layout_refresh_recycler.refreshContainer
+import kotlinx.android.synthetic.main.layout_refresh_recycler.topicList
 import java.io.File
 
 /**
@@ -68,60 +65,43 @@ abstract class RefreshFragment : BaseFragment() {
     protected var order: String? = null
     protected var latestOrder: String? = null
     protected var preOrder: String? = null
-    protected lateinit var binding: LayoutRefreshRecyclerBinding
     protected lateinit var adapter: PowerAdapter<DataItem>
     private lateinit var navigation: BottomNavigationView
-    lateinit var refresh: SwipeRefreshLayout
     var mIsVisible = true
     var mIsAnimating = false
     private var mShareDialog: AlertDialog? = null
     private lateinit var hintArrays: Array<String>
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun beforeCreate(savedInstanceState: Bundle?) {
         hintArrays = resources.getStringArray(R.array.share_hints)
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
             Consumer {
                 if (isVisible) {
-                    binding.rvHot.scrollToPosition(0)
+                    topicList.scrollToPosition(0)
                 }
             },
             Consumer { Log.e(TAG, "error:", it) })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        navigation = (activity as HomeActivity).navigation
-        binding = DataBindingUtil.inflate(inflater, R.layout.layout_refresh_recycler, container, false)
-        return binding.root
+    override fun getLayoutRes(): Int {
+        return R.layout.layout_refresh_recycler
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
-        super.afterCreatedView(savedInstanceState)
+        navigation = (activity as HomeActivity).navigation
         if (savedInstanceState != null) {
             latestOrder = savedInstanceState.getString(Constants.CURRENT_ID)
             order = savedInstanceState.getString(Constants.LASTED_ID)
         }
+        handleView(savedInstanceState)
     }
 
-    protected open fun saveListData(): Boolean {
-        return false
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        println("onActivityCreated")
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun handleView(savedInstanceState: Bundle?) {
         println("view 创建啦：${toString()}")
-        val rvHot = binding.rvHot
-        rvHot.layoutManager = FixedLinearLayoutManager(activity)
+        topicList.layoutManager = FixedLinearLayoutManager(activity)
         adapter = createAdapter()
         handleLongClick()
         adapter.setHasStableIds(true)
-        adapter.setErrorView(rvHot.inflate(R.layout.layout_empty))
-        adapter.attachRecyclerView(rvHot)
-        refresh = binding.container
         adapter.setLoadMoreListener {
             if (order != null) {
                 loadMore()
@@ -130,15 +110,16 @@ abstract class RefreshFragment : BaseFragment() {
             }
         }
         adapter.totalCount = Int.MAX_VALUE
+        topicList.adapter = adapter
         println("tag:$tag;;isHidden:$isHidden")
         initDataOrRefresh(savedInstanceState)
         @Suppress("DEPRECATION")
-        refresh.setOnRefreshListener { refresh(refresh) }
+        refreshContainer.setOnRefreshListener { refresh(refreshContainer) }
         adapter.setOnItemClickListener { _, position, item ->
             item.isExband = !item.isExband
             adapter.notifyItemChanged(position)
         }
-        rvHot.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        topicList.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 hideNavigation()
@@ -166,8 +147,12 @@ abstract class RefreshFragment : BaseFragment() {
         })
     }
 
+    protected open fun saveListData(): Boolean {
+        return false
+    }
+
     private fun hideNavigation() {
-        refresh.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
+        refreshContainer.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE //保证view稳定
             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
@@ -185,15 +170,15 @@ abstract class RefreshFragment : BaseFragment() {
                 }
             }
         } catch (e: Exception) {
-            refresh.isRefreshing = true
-            refresh(refresh)
+            refreshContainer.isRefreshing = true
+            refresh(refreshContainer)
         }
     }
 
     private fun doFreshWithCheck() {
         if (!isHidden && adapter.list.isEmpty()) {
-            refresh.isRefreshing = true
-            refresh(refresh)
+            refreshContainer.isRefreshing = true
+            refresh(refreshContainer)
         }
     }
 
@@ -247,10 +232,10 @@ abstract class RefreshFragment : BaseFragment() {
 
     private fun doShare(position: Int) {
         try {
-            val itemView = rv_hot.findViewHolderForAdapterPosition(position)?.itemView
-            itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.INVISIBLE
+            val itemView = topicList.findViewHolderForAdapterPosition(position)?.itemView
+            itemView?.findViewById<View>(R.id.topicShare)?.visibility = View.INVISIBLE
             val bitmap = itemView?.toBitmap(Bitmap.Config.ARGB_8888)
-            itemView?.findViewById<View>(R.id.iv_share)?.visibility = View.VISIBLE
+            itemView?.findViewById<View>(R.id.topicShare)?.visibility = View.VISIBLE
             val file = File(
                 mContext?.externalCacheDir,
                 "share" + File.separator + String.format(
@@ -351,8 +336,8 @@ abstract class RefreshFragment : BaseFragment() {
         super.onHiddenChanged(hidden)
         if (!hidden) {
             if (adapter.list.isEmpty()) {
-                refresh.isRefreshing = true
-                refresh(refresh)
+                refreshContainer.isRefreshing = true
+                refresh(refreshContainer)
             } else {
                 adapter.notifyDataSetChanged()
             }
