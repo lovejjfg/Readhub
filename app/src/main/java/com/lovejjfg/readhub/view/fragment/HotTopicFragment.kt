@@ -72,15 +72,16 @@ class HotTopicFragment : RefreshFragment() {
 
     private fun checkNews() {
         refreshCount = 0
-        if (adapter.list?.isEmpty()!!) {
+        if (adapter.list.isEmpty()) {
             return
         }
         if (TextUtils.isEmpty(latestOrder)) {
             return
         }
-        DataManager.subscribe(this, DataManager.init().newCount(latestOrder!!), Consumer {
+        val latestOrder = latestOrder ?: return
+        DataManager.subscribe(this, DataManager.init().newCount(latestOrder), Consumer {
             refreshCount = it.count
-            if (adapter.list?.first()!!.isTop) {
+            if (adapter.list?.firstOrNull()?.isTop == true) {
                 refreshCount--
             }
             if (refreshCount > 0) {
@@ -106,8 +107,8 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     private fun makeSnack(callback: BaseTransientBottomBar.BaseCallback<Snackbar>?) {
-        if (mSnackBar != null && mSnackBar!!.isShown) {
-            mSnackBar!!.dismiss()
+        if (mSnackBar?.isShown == true) {
+            mSnackBar?.dismiss()
         }
         if (mSnackBar == null) {
             @Suppress("DEPRECATION")
@@ -124,11 +125,11 @@ class HotTopicFragment : RefreshFragment() {
                 }
         }
         callback?.let {
-            mSnackBar!!.addCallback(callback)
+            mSnackBar?.addCallback(callback)
         }
 
-        mSnackBar!!.setText(String.format(getString(R.string.hot_topic_update, refreshCount)))
-        mSnackBar!!.show()
+        mSnackBar?.setText(String.format(getString(R.string.hot_topic_update, refreshCount)))
+        mSnackBar?.show()
     }
 
     override fun onResume() {
@@ -143,7 +144,7 @@ class HotTopicFragment : RefreshFragment() {
                 if (hotTopic.data.isNotEmpty()) {
                     preOrder = latestOrder
                     latestOrder = hotTopic.data.first().order
-                    if (!TextUtils.isEmpty(latestOrder) && latestOrder!!.isTopOrder()) {
+                    if (latestOrder?.isTopOrder() == true) {
                         latestOrder = hotTopic.data[1].order
                         hotTopic.data.first().isTop = true
                     } else {
@@ -166,12 +167,13 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     override fun loadMore() {
-        DataManager.subscribe(this, DataManager.init().hotTopicMore(order!!, 10),
+        val order = order ?: return
+        DataManager.subscribe(this, DataManager.init().hotTopicMore(order, 10),
             Consumer { hotTopic ->
                 val data = hotTopic.data
-                order = data.last().order
+                this.order = data.last().order
                 adapter.appendList(data)
-                handleAlreadRead(true, adapter.list!!) {
+                handleAlreadRead(true, adapter.list) {
                     TextUtils.equals(it?.order, preOrder)
                 }
                 Log.i(TAG, "loadMore:order:$order")

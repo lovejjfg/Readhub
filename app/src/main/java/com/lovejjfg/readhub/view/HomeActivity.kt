@@ -170,10 +170,10 @@ class HomeActivity : BaseActivity() {
                 .hide(blockChainFragment)
                 .commitAllowingStateLoss()
         } else {
-            hotTopicFragment = supportFragmentManager.findFragmentByTag(Constants.HOT)!!
-            techFragment = supportFragmentManager.findFragmentByTag(Constants.TECH)!!
-            developFragment = supportFragmentManager.findFragmentByTag(Constants.DEV)!!
-            blockChainFragment = supportFragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN)!!
+            hotTopicFragment = supportFragmentManager.findFragmentByTag(Constants.HOT) ?: HotTopicFragment()
+            techFragment = supportFragmentManager.findFragmentByTag(Constants.TECH) ?: TechFragment()
+            developFragment = supportFragmentManager.findFragmentByTag(Constants.DEV) ?: DevelopFragment()
+            blockChainFragment = supportFragmentManager.findFragmentByTag(Constants.BLOCK_CHAIN) ?: BlockChainFragment()
             if (currentId != 0) {
                 navigation.selectedItemId = currentId
             }

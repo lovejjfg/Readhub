@@ -18,34 +18,12 @@
 
 package com.lovejjfg.readhub.data
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Created by Joe on 2017/3/14.
  * Email lovejjfg@gmail.com
  */
-
-data class Library(var name: String?, var des: String?, var jumpUrl: String?) : Parcelable {
-    constructor(source: Parcel) : this(
-            source.readString(),
-            source.readString(),
-            source.readString()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(name)
-        writeString(des)
-        writeString(jumpUrl)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<Library> = object : Parcelable.Creator<Library> {
-            override fun createFromParcel(source: Parcel): Library = Library(source)
-            override fun newArray(size: Int): Array<Library?> = arrayOfNulls(size)
-        }
-    }
-}
+@Parcelize
+data class Library(val name: String, val des: String, val jumpUrl: String) : Parcelable

@@ -25,9 +25,12 @@ import android.widget.ImageView
 object GlideUtils {
     fun into(url: String?, iv: ImageView?) {
         try {
-            GlideApp.with(iv!!.context!!)
-                    .load(url)
-                    .into(iv)
+            if (url == null || iv == null) {
+                return
+            }
+            GlideApp.with(iv.context)
+                .load(url)
+                .into(iv)
         } catch (e: Exception) {
             e.printStackTrace()
         }

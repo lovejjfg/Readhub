@@ -76,7 +76,7 @@ class TopicDetailAdapter : BaseAdapter<DetailItems>() {
             val timeLine = t.timeLine
             itemView.timeLineContent.text = timeLine?.title?.trim()
             itemView.timeLineDate.text = DateUtil.parseTimeLine(timeLine?.createdAt)
-            itemView.connector.setType(t.timeLineType!!)
+            itemView.connector.setType(t.timeLineType)
         }
     }
 

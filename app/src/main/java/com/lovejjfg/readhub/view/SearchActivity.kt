@@ -144,12 +144,9 @@ open class SearchActivity : BaseActivity() {
     }
 
     private fun getTransition(@TransitionRes transitionId: Int): Transition {
-        var transition: Transition? = transitions.get(transitionId)
-        if (transition == null) {
-            transition = TransitionInflater.from(this).inflateTransition(transitionId)
-            transitions.put(transitionId, transition)
+        return transitions.get(transitionId) ?: TransitionInflater.from(this).inflateTransition(transitionId).apply {
+            transitions.put(transitionId, this)
         }
-        return transition!!
     }
 
     private fun clearResults() {

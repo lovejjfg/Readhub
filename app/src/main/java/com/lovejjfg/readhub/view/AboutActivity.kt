@@ -188,7 +188,7 @@ class AboutActivity : BaseActivity() {
             )
             it.onComplete()
         }.toSortedList { t, t1 ->
-            t.name!!.compareTo(t1.name!!)
+            t.name.compareTo(t1.name)
         }
             .subscribe({ aboutAdapter.setList(it) }, { it.printStackTrace() })
             .addTo(mDisposables)

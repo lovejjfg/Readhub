@@ -30,11 +30,11 @@ class ParseItemDerection : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view)
-        val adapter = parent.adapter
-        val viewType = adapter?.getItemViewType(position)
+        val adapter = parent.adapter ?: return
+        val viewType = adapter.getItemViewType(position)
         var preType = -1
         if (position > 0) {
-            preType = adapter!!.getItemViewType(position - 1)
+            preType = adapter.getItemViewType(position - 1)
         }
         if (preType != -1) {
             when (viewType) {

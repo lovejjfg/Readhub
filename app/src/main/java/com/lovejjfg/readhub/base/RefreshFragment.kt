@@ -123,8 +123,8 @@ abstract class RefreshFragment : BaseFragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 hideNavigation()
-                if (mSnackBar != null && mSnackBar!!.isShown) {
-                    mSnackBar!!.dismiss()
+                if (mSnackBar?.isShown == true) {
+                    mSnackBar?.dismiss()
                     return
                 }
                 if (recyclerView.layoutManager is LinearLayoutManager) {
@@ -201,8 +201,9 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun showShareDialog(position: Int) {
+        val context = mContext ?: return
         if (mShareDialog == null) {
-            mShareDialog = AlertDialog.Builder(mContext!!)
+            mShareDialog = AlertDialog.Builder(context)
                 .setTitle(getString(R.string.share))
                 .setMessage(getString(R.string.share_hint_default))
                 .setNegativeButton(getString(R.string.not_send)) { _, _ ->
@@ -216,13 +217,12 @@ abstract class RefreshFragment : BaseFragment() {
                 .create()
         }
         val d = Math.random() * 100
-        mShareDialog!!.setMessage(hintArrays[d.toInt() % hintArrays.size])
-        mShareDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
+        mShareDialog?.setMessage(hintArrays[d.toInt() % hintArrays.size])
+        mShareDialog?.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
             shareWithCheck(position)
         }
-
         if (activity?.isFinishing == false) {
-            mShareDialog!!.show()
+            mShareDialog?.show()
         }
     }
 
@@ -232,20 +232,21 @@ abstract class RefreshFragment : BaseFragment() {
 
     private fun doShare(position: Int) {
         try {
-            val itemView = topicList.findViewHolderForAdapterPosition(position)?.itemView
-            itemView?.findViewById<View>(R.id.topicShare)?.visibility = View.INVISIBLE
-            val bitmap = itemView?.toBitmap(Bitmap.Config.ARGB_8888)
-            itemView?.findViewById<View>(R.id.topicShare)?.visibility = View.VISIBLE
+            val context = mContext ?: return
+            val itemView = topicList.findViewHolderForAdapterPosition(position)?.itemView ?: return
+            itemView.findViewById<View>(R.id.topicShare)?.visibility = View.INVISIBLE
+            val bitmap = itemView.toBitmap(Bitmap.Config.ARGB_8888)
+            itemView.findViewById<View>(R.id.topicShare)?.visibility = View.VISIBLE
             val file = File(
-                mContext?.externalCacheDir,
+                context.externalCacheDir,
                 "share" + File.separator + String.format(
                     getString(R.string.img_name),
                     System.currentTimeMillis().toString()
                 )
             )
             AtomicFile(file).tryWrite {
-                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
-                bitmap?.recycle()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+                bitmap.recycle()
             }
 
             val uriToImage: Uri
@@ -253,7 +254,7 @@ abstract class RefreshFragment : BaseFragment() {
                 Uri.fromFile(file)
             } else {
                 FileProvider.getUriForFile(
-                    context!!, context!!.packageName + ".fileProvider", file
+                    context, context.packageName + ".fileProvider", file
                 )
             }
             val shareIntent = Intent()
@@ -262,9 +263,9 @@ abstract class RefreshFragment : BaseFragment() {
             shareIntent.type = Constants.IMAGE_TYPE
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_news)))
             FirebaseUtils.logEvent(
-                mContext!!,
+                context,
                 Constants.SHARE,
-                Pair(Constants.NEWS_ID, adapter.list!![position]?.id)
+                Pair(Constants.NEWS_ID, adapter.list[position]?.id)
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -354,7 +355,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun saveData(outState: Bundle?) {
-        if (saveListData() && adapter.list != null && adapter.list?.isNotEmpty()!!) {
+        if (saveListData() && adapter.list?.isNotEmpty() == true) {
             outState?.putParcelableArrayList(Constants.DATA, ArrayList(adapter.list))
             outState?.putString(Constants.CURRENT_ID, latestOrder)
             outState?.putString(Constants.LASTED_ID, order)

@@ -35,7 +35,7 @@ import java.util.HashMap
 
 class RxBus private constructor() {
     private val mSubject: Subject<Any> = PublishSubject.create<Any>().toSerialized()
-    private var mSubscriptionMap: HashMap<String, CompositeDisposable>? = null
+    private var mSubscriptionMap: HashMap<String, CompositeDisposable> = HashMap()
 
     /**
      * 发送事件
@@ -108,16 +108,14 @@ class RxBus private constructor() {
      * @param subscription
      */
     fun addSubscription(o: Any, subscription: Disposable) {
-        if (mSubscriptionMap == null) {
-            mSubscriptionMap = HashMap()
-        }
         val key = o.toString()
-        if (mSubscriptionMap!![key] != null) {
-            mSubscriptionMap!![key]!!.add(subscription)
+        val disposable = mSubscriptionMap[key]
+        if (disposable != null) {
+            disposable.add(subscription)
         } else {
             val compositeSubscription = CompositeDisposable()
             compositeSubscription.add(subscription)
-            mSubscriptionMap!![key] = compositeSubscription
+            mSubscriptionMap[key] = compositeSubscription
         }
     }
 
@@ -127,19 +125,14 @@ class RxBus private constructor() {
      * @param o
      */
     fun unSubscribe(o: Any) {
-        if (mSubscriptionMap == null) {
-            return
-        }
 
         val key = o.toString()
-        if (!mSubscriptionMap!!.containsKey(key)) {
+        if (!mSubscriptionMap.containsKey(key)) {
             return
         }
-        if (mSubscriptionMap!![key] != null) {
-            mSubscriptionMap!![key]!!.dispose()
-        }
+        mSubscriptionMap[key]?.dispose()
 
-        mSubscriptionMap!!.remove(key)
+        mSubscriptionMap.remove(key)
     }
 
     companion object {
@@ -155,7 +148,7 @@ class RxBus private constructor() {
                         }
                     }
                 }
-                return INSTANCE!!
+                return INSTANCE ?: throw NullPointerException("init RxBus error")
             }
     }
 }

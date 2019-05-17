@@ -21,7 +21,6 @@ package com.lovejjfg.readhub.view.recycerview
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseAdapter
@@ -62,11 +61,8 @@ class NormalTopicAdapter : BaseAdapter<DataItem>() {
 
     override fun getItemId(position: Int): Long {
         return try {
-            if (position >= 0 && position < list.size) {
-                list[position].id!!.hashCode().toLong()
-            } else {
-                super.getItemId(position)
-            }
+            val id = list[position].id
+            id?.hashCode()?.toLong() ?: super.getItemId(position)
         } catch (e: Exception) {
             super.getItemId(position)
         }

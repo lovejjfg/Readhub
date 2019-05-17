@@ -40,8 +40,12 @@ class LoggingInterceptor : Interceptor {
             return chain.proceed(request)
         }
         val t1 = System.nanoTime()
-        Log.i(TAG, String.format("Sending request method:%s  url:%s%n%s",
-                request.method(), request.url(), request.headers()))
+        Log.i(
+            TAG, String.format(
+                "Sending request method:%s  url:%s%n%s",
+                request.method(), request.url(), request.headers()
+            )
+        )
         return try {
             val response = chain.proceed(request)
             if (response.isSuccessful) {
@@ -67,34 +71,34 @@ class LoggingInterceptor : Interceptor {
             return
         }
         val t2 = System.nanoTime()
-        val format = String.format("Received response for %s in %.1fms%n%s",
-                response.request().url(), (t2 - t1) / 1e6, response.headers())
+        val format = String.format(
+            "Received response for %s in %.1fms%n%s",
+            response.request().url(), (t2 - t1) / 1e6, response.headers()
+        )
         Log.i(TAG, format)
         source.request(java.lang.Long.MAX_VALUE) // Buffer the entire body.
         val buffer = source.buffer()
 
-        var charset: Charset? = UTF8
+        var charset: Charset = UTF8
         val contentType = responseBody.contentType()
         val contentLength = responseBody.contentLength()
         if (contentType != null) {
             try {
-                charset = contentType.charset(UTF8)
+                charset = contentType.charset(UTF8) ?: UTF8
             } catch (e: UnsupportedCharsetException) {
                 Log.i(TAG, "intercept: " + "Couldn't decode the response body; charset is likely malformed.")
                 Log.i(TAG, "intercept: " + "<-- END HTTP")
             }
-
         }
 
         if (contentLength != 0L) {
             var json: String? = null
             try {
-                json = buffer.clone().readString(charset!!)
+                json = buffer.clone().readString(charset)
                 Log.i(TAG, json)
             } catch (e: Exception) {
                 Log.e(TAG, json)
             }
-
         }
 
         Log.i(TAG, "intercept: " + "<-- END HTTP (" + buffer.size() + "-byte body)")

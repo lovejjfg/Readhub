@@ -32,14 +32,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
-import okhttp3.OkHttpClient
+import okhttp3.OkHttpClient.Builder
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.SECONDS
 
 /**
  * ReadHub
@@ -53,27 +53,33 @@ object DataManager {
     private const val TIME_OUT = 10L
 
     fun <T> init(clazz: Class<T>): T {
+        val retrofit = this.retrofit ?: initRetrofit()
+        return retrofit.create(clazz)
+    }
 
-        if (retrofit == null) {
-            val cacheSize = 10 * 1024 * 1024L
-            val cache = Cache(AppProxy.cacheDirectory!!, cacheSize)
-            retrofit = Retrofit.Builder()
-                .baseUrl(API_RELEASE)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder()
-                    .cache(cache)
-                    .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
-                    .addInterceptor(CacheControlInterceptor())
-                    .addInterceptor(LoggingInterceptor())
-                    .build()
-                )
+    private fun initRetrofit(): Retrofit {
+        val cacheSize = 10 * 1024 * 1024L
+        val cache = Cache(
+            AppProxy.cacheDirectory ?: throw NullPointerException("init cacheDirectory error"),
+            cacheSize
+        )
+        val retrofit = Retrofit.Builder()
+            .baseUrl(API_RELEASE)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(Builder()
+                .cache(cache)
+                .connectTimeout(TIME_OUT, SECONDS)
+                .readTimeout(TIME_OUT, SECONDS)
+                .writeTimeout(TIME_OUT, SECONDS)
+                .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
+                .addInterceptor(CacheControlInterceptor())
+                .addInterceptor(LoggingInterceptor())
                 .build()
-        }
-        return retrofit!!.create(clazz)
+            )
+            .build()
+        this.retrofit = retrofit
+        return retrofit
     }
 
     fun init(): ReadHubService {
@@ -81,26 +87,30 @@ object DataManager {
     }
 
     fun initSearch(): SearchService {
-        if (searchRetrofit == null) {
-            val cacheSize = 10 * 1024 * 1024L
-            val cache = Cache(AppProxy.cacheDirectory!!, cacheSize)
-            searchRetrofit = Retrofit.Builder()
-                .baseUrl(API_SEARCH_RELEASE)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder()
-                    .cache(cache)
-                    .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
-                    .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
-                    .addInterceptor(CacheControlInterceptor())
-                    .addInterceptor(LoggingInterceptor())
-                    .build()
-                )
+        val searchRetrofit = this.searchRetrofit ?: initSearchRetrofit()
+        return searchRetrofit.create(SearchService::class.java)
+    }
+
+    private fun initSearchRetrofit(): Retrofit {
+        val cacheSize = 10 * 1024 * 1024L
+        val cache = Cache(AppProxy.cacheDirectory ?: throw NullPointerException("init cacheDirectory error"), cacheSize)
+        val searchRetrofit = Retrofit.Builder()
+            .baseUrl(API_SEARCH_RELEASE)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(Builder()
+                .cache(cache)
+                .connectTimeout(TIME_OUT, SECONDS)
+                .readTimeout(TIME_OUT, SECONDS)
+                .writeTimeout(TIME_OUT, SECONDS)
+                .addInterceptor { chain -> chain.proceed(RequestUtils.createNormalHeader(chain.request())) }
+                .addInterceptor(CacheControlInterceptor())
+                .addInterceptor(LoggingInterceptor())
                 .build()
-        }
-        return searchRetrofit!!.create(SearchService::class.java)
+            )
+            .build()
+        this.searchRetrofit = searchRetrofit
+        return searchRetrofit
     }
 
     fun <R> convert(request: Observable<Response<R>>): Observable<R> {
@@ -112,7 +122,7 @@ object DataManager {
             }
             .map { t: Response<R> ->
                 return@map if (t.isSuccessful) {
-                    t.body()!!
+                    t.body() ?: throw NullPointerException("null Body")
                 } else {
                     throw ReadhubException(t.code(), t.message())
                 }

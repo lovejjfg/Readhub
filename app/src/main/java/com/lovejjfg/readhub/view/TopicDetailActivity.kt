@@ -92,19 +92,19 @@ class TopicDetailActivity : BaseActivity() {
                         val newsArray = topicDetail.newsArray
                         if (newsArray != null && newsArray.isNotEmpty()) {
                             for (item in newsArray) {
-                                it.onNext(DetailItems(item!!))
+                                it.onNext(DetailItems(item))
                             }
                             it.onNext(DetailItems())
                         }
                         val topics = topicDetail.timeline?.topics
                         if (topics != null && topics.isNotEmpty()) {
                             if (topics.size == 1) {
-                                val items = DetailItems(topics[0]!!)
+                                val items = DetailItems(topics[0])
                                 items.timeLineType = ConnectorView.Type.ONLY
                                 it.onNext(items)
                             } else {
                                 topics.forEachIndexed { index, topicsItem ->
-                                    val items = DetailItems(topicsItem!!)
+                                    val items = DetailItems(topicsItem)
                                     when (index) {
                                         0 -> items.timeLineType = ConnectorView.Type.START
                                         topics.size - 1 -> items.timeLineType = ConnectorView.Type.END
@@ -126,7 +126,7 @@ class TopicDetailActivity : BaseActivity() {
             .subscribe({
                 refreshContainer.isRefreshing = false
                 topicDetailAdapter.setList(it)
-                toolbar.title = it[0]?.detail?.title
+                toolbar.title = it[0].detail?.title
             }, {
                 it.printStackTrace()
                 refreshContainer.isRefreshing = false

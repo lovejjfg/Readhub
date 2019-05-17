@@ -19,6 +19,7 @@ package com.lovejjfg.readhub.utils
 import android.content.Context
 import android.util.Log
 import com.lovejjfg.readhub.R
+import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import retrofit2.HttpException
@@ -46,6 +47,8 @@ object ErrorUtil {
             val code = throwable.code()
             if (code == 504) {
                 ToastUtil.showToast(context, context.getString(R.string.net_unavailable))
+            } else {
+                ToastUtil.showToast(context, context.getString(string.data_load_error))
             }
             return
         }

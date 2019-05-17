@@ -17,6 +17,7 @@
 
 package com.lovejjfg.readhub.utils
 
+import android.R.interpolator
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.content.Context
@@ -42,40 +43,36 @@ object AnimUtils {
 
     val linearInterpolator: Interpolator
         get() {
-            if (linear == null) {
-                linear = LinearInterpolator()
+            return this.linear ?: LinearInterpolator().apply {
+                this@AnimUtils.linear = this
             }
-            return linear!!
         }
 
     fun getFastOutSlowInInterpolator(context: Context): Interpolator {
-        if (fastOutSlowIn == null) {
-            fastOutSlowIn = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.fast_out_slow_in
-            )
+        return this.fastOutSlowIn ?: AnimationUtils.loadInterpolator(
+            context,
+            interpolator.fast_out_slow_in
+        ).apply {
+            fastOutLinearIn = this
         }
-        return fastOutSlowIn!!
     }
 
     fun getFastOutLinearInInterpolator(context: Context): Interpolator {
-        if (fastOutLinearIn == null) {
-            fastOutLinearIn = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.fast_out_linear_in
-            )
+        return this.fastOutLinearIn ?: AnimationUtils.loadInterpolator(
+            context,
+            android.R.interpolator.fast_out_linear_in
+        ).apply {
+            fastOutLinearIn = this
         }
-        return fastOutLinearIn!!
     }
 
     fun getLinearOutSlowInInterpolator(context: Context): Interpolator {
-        if (linearOutSlowIn == null) {
-            linearOutSlowIn = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.linear_out_slow_in
-            )
+        return this.linearOutSlowIn ?: AnimationUtils.loadInterpolator(
+            context,
+            android.R.interpolator.linear_out_slow_in
+        ).apply {
+            linearOutSlowIn = this
         }
-        return linearOutSlowIn!!
     }
 
     /**

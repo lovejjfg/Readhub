@@ -37,7 +37,6 @@ import android.view.ViewOutlineProvider
 import android.widget.TextView
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.dip2px
-import java.lang.IllegalStateException
 
 class PartnerLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = -1) :
     ViewGroup(context, attrs, defStyleAttr) {
@@ -79,7 +78,7 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
                     return
                 }
                 if (tv.lineSpacingMultiplier > 1) {
-                    throw IllegalStateException("lineSpacingMultiplier is not support here!!")
+                    throw IllegalStateException("lineSpacingMultiplier is not support here!")
                 }
                 initTextParams(tv.text, tv.measuredWidth, tv.paint)
             } else {
@@ -160,7 +159,9 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
      * 得到Textview绘制文字的基本信息
      */
     private fun initTextParams(text: CharSequence, maxWidth: Int, paint: TextPaint) {
-        val staticLayout = StaticLayout(text, paint, maxWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false)
+        @Suppress("DEPRECATION")
+        val staticLayout =
+            StaticLayout(text, paint, maxWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false)
         val lineCount = staticLayout.lineCount
         lastLineTop = staticLayout.getLineTop(lineCount - 1)
         lastLineRight = staticLayout.getLineRight(lineCount - 1)
@@ -168,9 +169,7 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (foreground != null) {
-            foreground!!.setBounds(0, 0, w, h)
-        }
+        foreground?.setBounds(0, 0, w, h)
     }
 
     override fun hasOverlappingRendering(): Boolean {
@@ -183,13 +182,13 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState()
-        if (foreground != null) foreground!!.jumpToCurrentState()
+        foreground?.jumpToCurrentState()
     }
 
     override fun drawableStateChanged() {
         super.drawableStateChanged()
-        if (foreground != null && foreground!!.isStateful) {
-            foreground!!.state = drawableState
+        if (foreground?.isStateful == true) {
+            foreground?.state = drawableState
         }
     }
 
@@ -210,19 +209,15 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
      */
     override fun setForeground(drawable: Drawable) {
         if (foreground !== drawable) {
-            if (foreground != null) {
-                foreground!!.callback = null
-                unscheduleDrawable(foreground)
-            }
-
+            foreground?.callback = null
+            unscheduleDrawable(foreground)
             foreground = drawable
-
             if (foreground != null) {
-                foreground!!.setBounds(0, 0, width, height)
+                foreground?.setBounds(0, 0, width, height)
                 setWillNotDraw(false)
-                foreground!!.callback = this
-                if (foreground!!.isStateful) {
-                    foreground!!.state = drawableState
+                foreground?.callback = this
+                if (foreground?.isStateful == true) {
+                    foreground?.state = drawableState
                 }
             } else {
                 setWillNotDraw(true)
@@ -233,29 +228,25 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        if (foreground != null) {
-            foreground!!.draw(canvas)
-        }
+        foreground?.draw(canvas)
     }
 
     override fun drawableHotspotChanged(x: Float, y: Float) {
         super.drawableHotspotChanged(x, y)
-        if (foreground != null) {
-            foreground!!.setHotspot(x, y)
-        }
+        foreground?.setHotspot(x, y)
     }
 
     companion object {
 
-        private val TOP = 0
-        private val CENTER = 1
-        private val BOTTOM = 2
+        private const val TOP = 0
+        private const val CENTER = 1
+        private const val BOTTOM = 2
         //single
-        private val SINGLE_LINE = 4
+        private const val SINGLE_LINE = 4
         //mul
-        private val MULTI_LINE = 5
+        private const val MULTI_LINE = 5
         //next line
-        private val NEXT_LINE = 6
+        private const val NEXT_LINE = 6
     }
 }
 

@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.powerrecycle.holder.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseAdapter
@@ -77,11 +76,8 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
 
     override fun getItemId(position: Int): Long {
         return try {
-            if (position >= 0 && position < list.size) {
-                list[position].id!!.hashCode().toLong()
-            } else {
-                super.getItemId(position)
-            }
+            val id = list[position].id
+            id?.hashCode()?.toLong() ?: super.getItemId(position)
         } catch (e: Exception) {
             super.getItemId(position)
         }
@@ -99,17 +95,7 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                     enableLoadMore(false)
                     itemView.topicItemList.adapter = this
                 }
-                itemAdapter.setOnItemClickListener { _, position, _ ->
-                    val mobileUrl = t.newsArray!![position]?.mobileUrl
-                    JumpUitl.jumpWeb(context, mobileUrl)
-                }
-
-                val array = if (t.newsArray!!.size > ITEM_MAX_COUNT) {
-                    t.newsArray.subList(0, ITEM_MAX_COUNT)
-                } else {
-                    t.newsArray
-                }
-                itemAdapter.setList(array)
+                setRelativeItems(t, itemAdapter)
                 if (t.extra?.instantView == true) {
                     itemView.ivTimeLine.visibility = View.VISIBLE
                     itemView.ivTimeLine.setOnClickListener {
@@ -131,15 +117,33 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 }
                 handleView(t)
             } else {
-                //todo
+                //todo 更新逻辑相关优化
                 dataItem = t
-                handleView(t)
+//                handleView(t)
             }
             if (t.isTop) {
                 itemView.topicPublish.text = "置顶"
             } else {
                 itemView.topicPublish.text = DateUtil.parseTime(t.createdAt)
             }
+        }
+
+        private fun setRelativeItems(
+            t: DataItem,
+            itemAdapter: HotTopicItemAdapter
+        ) {
+            val newsArray: List<NewsArrayItem> = t.newsArray ?: return
+            itemAdapter.setOnItemClickListener { _, position, _ ->
+                val mobileUrl = newsArray[position].mobileUrl
+                JumpUitl.jumpWeb(context, mobileUrl)
+            }
+
+            val array = if (newsArray.size > ITEM_MAX_COUNT) {
+                newsArray.subList(0, ITEM_MAX_COUNT)
+            } else {
+                newsArray
+            }
+            itemAdapter.setList(array)
         }
 
         private fun handleView(t: DataItem) {

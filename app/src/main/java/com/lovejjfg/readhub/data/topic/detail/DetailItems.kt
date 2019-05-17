@@ -3,6 +3,7 @@ package com.lovejjfg.readhub.data.topic.detail
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
 import com.lovejjfg.readhub.view.widget.ConnectorView
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.NODE
 
 /**
  * Created by joe on 2017/9/13.
@@ -13,7 +14,7 @@ class DetailItems {
     var newsItem: NewsArrayItem? = null
     var timeLine: TopicsItem? = null
     var type: Int = 0
-    var timeLineType: ConnectorView.Type? = null
+    var timeLineType: ConnectorView.Type = NODE
     var img: String? = null
     var alt: String? = null
     var text: String? = null

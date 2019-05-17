@@ -20,7 +20,7 @@ data class TopicDetail(
         val publishDate: String? = null,
 
         @field:SerializedName("newsArray")
-        val newsArray: List<NewsArrayItem?>? = null,
+        val newsArray: List<NewsArrayItem>? = null,
 
         @field:SerializedName("title")
         val title: String? = null,

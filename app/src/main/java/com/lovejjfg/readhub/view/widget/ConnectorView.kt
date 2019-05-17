@@ -10,8 +10,10 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
-import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.dip2px
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.NODE
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.ONLY
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.START
 
 /**
  * Created by joe on 2017/9/13.
@@ -58,29 +60,32 @@ class ConnectorView : View {
         transitionY = (height * 0.5f).toInt()
 
 
-        if (cache != null && (cache!!.width != width || cache!!.height != height)) {
-            cache!!.recycle()
+        if (cache?.width != width || cache?.height != height) {
+            cache?.recycle()
             cache = null
         }
+        val cache = initCache(width, height)
+        canvas.drawBitmap(cache, 0f, 0f, null)
+    }
 
-        if (cache == null) {
-            cache = Bitmap.createBitmap(width, height, ARGB_8888)
-
-            val cacheCanvas = Canvas(cache!!)
+    private fun initCache(width: Int, height: Int): Bitmap {
+        return this.cache ?: Bitmap.createBitmap(width, height, ARGB_8888).apply {
+            cache = this
+            val cacheCanvas = Canvas(this)
 
             val halfWidth = width / 2f
             val strokeSize = context.dip2px(0.8f).toFloat()
             iconPaint.strokeWidth = strokeSize
             when (type) {
-                ConnectorView.Type.NODE -> {
+                NODE -> {
                     cacheCanvas.drawLine(halfWidth, 0f, halfWidth, height.toFloat(), iconPaint)
                     cacheCanvas.drawCircle(halfWidth, transitionY.toFloat(), outR.toFloat(), leakPaint)
                 }
-                ConnectorView.Type.START -> {
+                START -> {
                     cacheCanvas.drawLine(halfWidth, transitionY.toFloat(), halfWidth, height.toFloat(), iconPaint)
                     cacheCanvas.drawCircle(halfWidth, transitionY.toFloat(), outR.toFloat(), leakPaint)
                 }
-                ConnectorView.Type.ONLY -> {
+                ONLY -> {
                     cacheCanvas.drawCircle(halfWidth, transitionY.toFloat(), outR.toFloat(), leakPaint)
                 }
                 else -> {
@@ -89,30 +94,21 @@ class ConnectorView : View {
                 }
             }
         }
-        canvas.drawBitmap(cache!!, 0f, 0f, null)
     }
 
     fun setType(type: Type) {
         if (type != this.type) {
             this.type = type
-            if (cache != null) {
-                cache!!.recycle()
-                cache = null
-            }
+            cache?.recycle()
+            cache = null
         }
         invalidate()
     }
 
     companion object {
+        const val LIGHT_GREY = 0xFFbababa.toInt()
+        const val ROOT_COLOR = 0xFF84a6c5.toInt()
 
-        internal val LIGHT_GREY = 0xFFbababa.toInt()
-        internal val ROOT_COLOR = 0xFF84a6c5.toInt()
-        internal val LEAK_COLOR = 0xFFb1554e.toInt()
-
-        internal val CLEAR_XFER_MODE = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-
-        init {
-
-        }
+        val CLEAR_XFER_MODE = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
 }

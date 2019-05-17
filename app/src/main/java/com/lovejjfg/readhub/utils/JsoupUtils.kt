@@ -10,7 +10,6 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import java.util.regex.Pattern
 
-
 /**
  * Created by Joe on 2017/4/19.
  * Email lovejjfg@gmail.com
@@ -59,7 +58,8 @@ object JsoupUtils {
                 for (i in 0 until size) {
                     val ee = img[i]
                     val s = ee.outerHtml()//图片的标签地址
-                    val substring = html.split(Pattern.quote(s).toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()//图片见面的text
+                    val substring =
+                        html.split(Pattern.quote(s).toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()//图片见面的text
                     if (substring.isEmpty()) {//没有可以切割的
                         addImage(subscriber, ee)
                         continue
@@ -79,7 +79,6 @@ object JsoupUtils {
                             addText(subscriber, gravity, substring[0], currentFlag)
                             addImage(subscriber, ee)
                         }
-
                     }
                 }
             } else {
@@ -111,7 +110,8 @@ object JsoupUtils {
         val select = Jsoup.parse(html).select("br")
         val size = select.size
         if (size > 0) {
-            val substring = html.split(Pattern.quote("<br>").toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()//图片见面的text
+            val substring =
+                html.split(Pattern.quote("<br>").toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()//图片见面的text
             if (substring.isEmpty()) {//没有可以切割的
                 Log.i("TAG", "文字解析结果: 没有可以切割的")
                 addEmptyText(subscriber)
@@ -122,9 +122,7 @@ object JsoupUtils {
         } else {
             addContent(subscriber, gravity, html, flag)
         }
-
     }
-
 
     private fun addContent(html1: String, flag: Int, sb: StringBuilder, addSpan: Boolean) {
         var html = html1
@@ -175,7 +173,6 @@ object JsoupUtils {
                 Log.i("TAG", "addContent: 嵌套span标签：" + s.html())
             } else {//没有自标签
                 addText(sb, currentFlag, s)
-
             }
         }
     }
@@ -209,11 +206,9 @@ object JsoupUtils {
                 }
                 addATag(sb, ee, flag)
             }
-
         } else {
             addText(sb, flag, element.outerHtml())
         }
-
     }
 
     private fun correctHtml(s1: String): String {
@@ -228,7 +223,6 @@ object JsoupUtils {
             s = "<u>" + s1
         }
         return s
-
     }
 
     var map = HashMap<String, String>()
@@ -285,7 +279,12 @@ object JsoupUtils {
         addRealText(subscriber, gravity, sb.toString(), flag)
     }
 
-    private fun addRealText(subscriber: ObservableEmitter<in DetailItems>, gravity: String?, texts: String, flag1: Int) {
+    private fun addRealText(
+        subscriber: ObservableEmitter<in DetailItems>,
+        gravity: String?,
+        texts: String,
+        flag1: Int
+    ) {
         var text = texts
         var flag = flag1
         Log.i("TAG", "addRealText: " + text)
@@ -328,7 +327,7 @@ object JsoupUtils {
             var href: String? = null
             if (TextUtils.equals(first.parent().tagName(), "a")) {
                 href = first.parent().attr("href")
-                Log.i("TAG", "addImage: 图片被a嵌套了：" + href!!)
+                Log.i("TAG", "addImage: 图片被a嵌套了：$href")
             }
             val src = first.attr("src")
             val alt = first.attr("alt")
@@ -374,5 +373,4 @@ object JsoupUtils {
             value
         } else value xor flag
     }
-
 }

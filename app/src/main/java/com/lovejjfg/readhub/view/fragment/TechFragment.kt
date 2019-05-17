@@ -46,7 +46,7 @@ class TechFragment : RefreshFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.setOnItemClickListener { _, _, item ->
-            JumpUitl.jumpWeb(activity, item.url!!)
+            JumpUitl.jumpWeb(activity, item.url)
         }
     }
 
@@ -73,12 +73,13 @@ class TechFragment : RefreshFragment() {
     }
 
     override fun loadMore() {
-        DataManager.subscribe(this, DataManager.init().techMore(order!!, 10),
+        val order = order?:return
+        DataManager.subscribe(this, DataManager.init().techMore(order, 10),
                 Consumer { tech ->
                     val data = tech.data
-                    order = DateUtil.parseTimeToMillis(data.last().publishDate)
+                    this.order = DateUtil.parseTimeToMillis(data.last().publishDate)
                     adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list!!) {
+                    handleAlreadRead(true, adapter.list) {
                         TextUtils.equals(it?.id, preOrder)
                     }
                     Log.i(TAG, "order:$order")

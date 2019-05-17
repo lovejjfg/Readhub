@@ -10,7 +10,7 @@ data class Timeline(
         val keywords: List<String?>? = null,
 
         @field:SerializedName("topics")
-        val topics: List<TopicsItem?>? = null,
+        val topics: List<TopicsItem>? = null,
 
         @field:SerializedName("errorCode")
         val errorCode: Int? = null,

@@ -48,9 +48,9 @@ class TextParseHolder(itemView: View) : BaseViewHolder<DetailItems>(itemView, fa
     override fun onBind(item: DetailItems) {
         mContent.movementMethod = LinkMovementMethod.getInstance()
         val gravity = item.gravity
-        if (TextUtils.isEmpty(gravity)) {
+        if (gravity == null || gravity.isEmpty()) {
             mContent.gravity = Gravity.START
-        } else if (gravity!!.contains(JUSTIFY)) {
+        } else if (gravity.contains(JUSTIFY)) {
             mContent.gravity = Gravity.START
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mContent.breakStrategy = Layout.BREAK_STRATEGY_HIGH_QUALITY

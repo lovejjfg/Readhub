@@ -62,17 +62,16 @@ class WebActivity : BaseActivity() {
         web.isVerticalScrollBarEnabled = false
         web.isHorizontalScrollBarEnabled = false
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG)
-        val webSettings = web.settings
-        webSettings!!.javaScriptEnabled = true
-        //        webSettings.setUseWideViewPort(true);
-        //        webSettings.setLoadWithOverviewMode(true);
         web.isClickable = true
-        webSettings.domStorageEnabled = true
-        webSettings.loadsImagesAutomatically = true
-        webSettings.builtInZoomControls = true
-        webSettings.blockNetworkImage = false
-        webSettings.displayZoomControls = false
-        //        web.setWebViewClient(new WebViewClient());
+        web.settings?.apply {
+            this.javaScriptEnabled = true
+            this.domStorageEnabled = true
+            this.loadsImagesAutomatically = true
+            this.builtInZoomControls = true
+            this.blockNetworkImage = false
+            this.displayZoomControls = false
+        }
+
         web.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(webView: WebView, s: String) {
                 super.onReceivedTitle(webView, s)
@@ -88,13 +87,11 @@ class WebActivity : BaseActivity() {
         }
         web.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-//                pb.show()
                 pb.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 pb.visibility = View.GONE
-//                pb.dismiss()
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
