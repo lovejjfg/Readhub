@@ -10,12 +10,16 @@ import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
+import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.UIUtil
+import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.view.recycerview.TopicDetailAdapter
-import com.lovejjfg.readhub.view.widget.ConnectorView
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.END
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.NODE
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.ONLY
+import com.lovejjfg.readhub.view.widget.ConnectorView.Type.START
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_topic_detail.appbarLayout
 import kotlinx.android.synthetic.main.activity_topic_detail.detailList
@@ -50,6 +54,7 @@ class TopicDetailActivity : BaseActivity() {
         detailList.layoutManager = LinearLayoutManager(this)
         topicDetailAdapter = TopicDetailAdapter().apply {
             detailList.adapter = this
+            enableLoadMore(false)
         }
         topicDetailAdapter.setOnItemClickListener { _, position, item ->
             when (topicDetailAdapter.getItemViewTypes(position)) {
@@ -83,46 +88,12 @@ class TopicDetailActivity : BaseActivity() {
     }
 
     private fun getData() {
-        DataManager.convert(DataManager.init().topicDetail(id))
-            .flatMap { topicDetail ->
-                Observable.create<DetailItems> {
-                    try {
-                        it.onNext(DetailItems(topicDetail))
-                        it.onNext(DetailItems())
-                        val newsArray = topicDetail.newsArray
-                        if (newsArray != null && newsArray.isNotEmpty()) {
-                            for (item in newsArray) {
-                                it.onNext(DetailItems(item))
-                            }
-                            it.onNext(DetailItems())
-                        }
-                        val topics = topicDetail.timeline?.topics
-                        if (topics != null && topics.isNotEmpty()) {
-                            if (topics.size == 1) {
-                                val items = DetailItems(topics[0])
-                                items.timeLineType = ConnectorView.Type.ONLY
-                                it.onNext(items)
-                            } else {
-                                topics.forEachIndexed { index, topicsItem ->
-                                    val items = DetailItems(topicsItem)
-                                    when (index) {
-                                        0 -> items.timeLineType = ConnectorView.Type.START
-                                        topics.size - 1 -> items.timeLineType = ConnectorView.Type.END
-                                        else -> items.timeLineType = ConnectorView.Type.NODE
-                                    }
-                                    it.onNext(items)
-                                }
-                            }
-                        }
-                        it.onComplete()
-                    } catch (e: Exception) {
-                        it.onError(e)
-                    }
-
-                }
+        DataManager.topicDetail(id)
+            .flatMap {
+                convertItems(it)
             }
             .toList()
-            .observeOn(AndroidSchedulers.mainThread())
+            .ioToMain()
             .subscribe({
                 refreshContainer.isRefreshing = false
                 topicDetailAdapter.setList(it)
@@ -134,5 +105,43 @@ class TopicDetailActivity : BaseActivity() {
                 handleError(it)
             })
             .addTo(mDisposables)
+    }
+
+    private fun convertItems(topicDetail: TopicDetail): Observable<DetailItems>? {
+        return Observable.unsafeCreate<DetailItems> {
+            try {
+                it.onNext(DetailItems(topicDetail))
+                it.onNext(DetailItems())
+                val newsArray = topicDetail.newsArray
+                if (newsArray != null && newsArray.isNotEmpty()) {
+                    for (item in newsArray) {
+                        it.onNext(DetailItems(item))
+                    }
+                    it.onNext(DetailItems())
+                }
+                val topics = topicDetail.timeline?.topics
+                if (topics != null && topics.isNotEmpty()) {
+                    if (topics.size == 1) {
+                        val items = DetailItems(topics[0])
+                        items.timeLineType = ONLY
+                        it.onNext(items)
+                    } else {
+                        topics.forEachIndexed { index, topicsItem ->
+                            val items = DetailItems(topicsItem)
+                            when (index) {
+                                0 -> items.timeLineType = START
+                                topics.size - 1 -> items.timeLineType = END
+                                else -> items.timeLineType = NODE
+                            }
+                            it.onNext(items)
+                        }
+                    }
+                }
+                it.onComplete()
+            } catch (e: Exception) {
+                it.onError(e)
+            }
+
+        }
     }
 }

@@ -27,10 +27,11 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.ioToMain
+import com.lovejjfg.readhub.utils.parseTimeToMillis
 import com.lovejjfg.readhub.view.recycerview.NormalTopicAdapter
-import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.addTo
 
 /**
  * ReadHub
@@ -50,12 +51,13 @@ class DevelopFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(this, DataManager.init().devNews(),
-            Consumer { develop ->
+        DataManager.devNews()
+            .ioToMain()
+            .subscribe({ develop ->
                 if (develop.data.isNotEmpty()) {
                     preOrder = latestOrder
                     latestOrder = develop.data.first().id
-                    order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
+                    order = develop.data.last().publishDate?.parseTimeToMillis()
                     adapter.setList(develop.data)
                     handleAlreadRead(false, develop.data) {
                         TextUtils.equals(it?.id, preOrder)
@@ -63,29 +65,36 @@ class DevelopFragment : RefreshFragment() {
                 }
                 refresh?.isRefreshing = false
             },
-            Consumer {
-                Log.e(TAG, "error:", it)
-                adapter.showError(false)
-                handleError(it)
-                refresh?.isRefreshing = false
-            })
+                {
+                    Log.e(TAG, "error:", it)
+                    adapter.showError(false)
+                    handleError(it)
+                    refresh?.isRefreshing = false
+                })
+            .addTo(mDisposables)
     }
 
     override fun loadMore() {
-        val order = order ?: return
-        DataManager.subscribe(this, DataManager.init().devNewsMore(order, 10),
-            Consumer { develop ->
+        val order = order
+        if (order == null || order.isEmpty()) {
+            adapter.loadMoreError()
+            return
+        }
+        DataManager.devNewsMore(order)
+            .ioToMain()
+            .subscribe({ develop ->
                 val data = develop.data
-                this.order = DateUtil.parseTimeToMillis(data.last().publishDate)
+                this.order = data.last().publishDate?.parseTimeToMillis()
                 adapter.appendList(data)
                 handleAlreadRead(true, adapter.list) {
                     TextUtils.equals(it?.id, preOrder)
                 }
             },
-            Consumer {
-                Log.e(TAG, "error:", it)
-                adapter.loadMoreError()
+                {
+                    Log.e(TAG, "error:", it)
+                    adapter.loadMoreError()
 
-            })
+                })
+            .addTo(mDisposables)
     }
 }

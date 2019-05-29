@@ -27,11 +27,11 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.ioToMain
+import com.lovejjfg.readhub.utils.parseTimeToMillis
 import com.lovejjfg.readhub.view.recycerview.NormalTopicAdapter
-import io.reactivex.functions.Consumer
-
+import io.reactivex.rxkotlin.addTo
 
 /**
  * ReadHub
@@ -51,44 +51,50 @@ class TechFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(this, DataManager.init().tech(),
-                Consumer { tech ->
-                    if (tech.data.isNotEmpty()) {
-                        preOrder = latestOrder
-                        latestOrder = tech.data.first().id
-                        order = DateUtil.parseTimeToMillis(tech.data.last().publishDate)
-                        adapter.setList(tech.data)
-                        handleAlreadRead(false, tech.data) {
-                            TextUtils.equals(it?.id, preOrder)
-                        }
+        DataManager.tech()
+            .ioToMain()
+            .subscribe({ tech ->
+                if (tech.data.isNotEmpty()) {
+                    preOrder = latestOrder
+                    latestOrder = tech.data.first().id
+                    order = tech.data.last().publishDate?.parseTimeToMillis()
+                    adapter.setList(tech.data)
+                    handleAlreadRead(false, tech.data) {
+                        TextUtils.equals(it?.id, preOrder)
                     }
-                    refresh?.isRefreshing = false
-                },
-                Consumer {
-                    Log.i(TAG, "error:", it)
+                }
+                refresh?.isRefreshing = false
+            },
+                {
+                    Log.e(TAG, "error:", it)
                     adapter.showError(false)
                     handleError(it)
                     refresh?.isRefreshing = false
                 })
+            .addTo(mDisposables)
     }
 
     override fun loadMore() {
-        val order = order?:return
-        DataManager.subscribe(this, DataManager.init().techMore(order, 10),
-                Consumer { tech ->
-                    val data = tech.data
-                    this.order = DateUtil.parseTimeToMillis(data.last().publishDate)
-                    adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list) {
-                        TextUtils.equals(it?.id, preOrder)
-                    }
-                    Log.i(TAG, "order:$order")
-                },
-                Consumer {
+        val order = order
+        if (order == null || order.isEmpty()) {
+            adapter.loadMoreError()
+            return
+        }
+        DataManager.techMore(order)
+            .ioToMain()
+            .subscribe({ tech ->
+                val data = tech.data
+                this.order = data.last().publishDate?.parseTimeToMillis()
+                adapter.appendList(data)
+                handleAlreadRead(true, adapter.list) {
+                    TextUtils.equals(it?.id, preOrder)
+                }
+            },
+                {
                     Log.e(TAG, "error:", it)
                     adapter.loadMoreError()
 
                 })
+            .addTo(mDisposables)
     }
-
 }

@@ -29,6 +29,7 @@ import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.utils.parseTime
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
 import kotlinx.android.synthetic.main.holder_normal_topic.view.topicDes
 import kotlinx.android.synthetic.main.holder_normal_topic.view.topicRelative
@@ -78,9 +79,9 @@ class NormalTopicAdapter : BaseAdapter<DataItem>() {
             itemView.topicRelative.text = null
             itemView.topicRelative.requestLayout()
             val text: String? = if (TextUtils.isEmpty(t.authorName)) {
-                t.siteName + " · " + DateUtil.parseTime(t.publishDate)
+                t.siteName + " · " + t.publishDate?.parseTime()
             } else {
-                t.authorName + "/" + t.siteName + " · " + DateUtil.parseTime(t.publishDate)
+                t.authorName + "/" + t.siteName + " · " + t.publishDate?.parseTime()
             }
             itemView.topicRelative.text = text
             itemView.topicDes.setOnExpandChangeListener {

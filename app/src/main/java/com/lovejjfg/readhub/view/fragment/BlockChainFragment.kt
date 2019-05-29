@@ -27,9 +27,10 @@ import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.ioToMain
+import com.lovejjfg.readhub.utils.parseTimeToMillis
 import com.lovejjfg.readhub.view.recycerview.NormalTopicAdapter
-import io.reactivex.functions.Consumer
-
+import io.reactivex.rxkotlin.addTo
 
 /**
  * ReadHub
@@ -49,43 +50,50 @@ class BlockChainFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
-        DataManager.subscribe(this, DataManager.init().blockchain(10),
-                Consumer { develop ->
-                    if (develop.data.isNotEmpty()) {
-                        preOrder = latestOrder
-                        latestOrder = develop.data.first().id
-                        order = DateUtil.parseTimeToMillis(develop.data.last().publishDate)
-                        adapter.setList(develop.data)
-                        handleAlreadRead(false, develop.data) {
-                            TextUtils.equals(it?.id, preOrder)
-                        }
+        DataManager.blockchain()
+            .ioToMain()
+            .subscribe({ develop ->
+                if (develop.data.isNotEmpty()) {
+                    preOrder = latestOrder
+                    latestOrder = develop.data.first().id
+                    order = develop.data.last().publishDate?.parseTimeToMillis()
+                    adapter.setList(develop.data)
+                    handleAlreadRead(false, develop.data) {
+                        TextUtils.equals(it?.id, preOrder)
                     }
-                    refresh?.isRefreshing = false
-                },
-                Consumer {
+                }
+                refresh?.isRefreshing = false
+            },
+                {
                     Log.e(TAG, "error:", it)
                     adapter.showError(false)
                     handleError(it)
                     refresh?.isRefreshing = false
                 })
+            .addTo(mDisposables)
     }
 
     override fun loadMore() {
-        val order = order ?: return
-        DataManager.subscribe(this, DataManager.init().blockchainMore(order, 10),
-                Consumer { develop ->
-                    val data = develop.data
-                    this.order = DateUtil.parseTimeToMillis(data.last().publishDate)
-                    adapter.appendList(data)
-                    handleAlreadRead(true, adapter.list) {
-                        TextUtils.equals(it?.id, preOrder)
-                    }
-                },
-                Consumer {
+        val order = order
+        if (order == null || order.isEmpty()) {
+            adapter.loadMoreError()
+            return
+        }
+        DataManager.blockchainMore(order)
+            .ioToMain()
+            .subscribe({ develop ->
+                val data = develop.data
+                this.order = data.last().publishDate?.parseTimeToMillis()
+                adapter.appendList(data)
+                handleAlreadRead(true, adapter.list) {
+                    TextUtils.equals(it?.id, preOrder)
+                }
+            },
+                {
                     Log.e(TAG, "error:", it)
                     adapter.loadMoreError()
 
                 })
+            .addTo(mDisposables)
     }
-
 }

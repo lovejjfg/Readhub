@@ -32,11 +32,11 @@ import com.lovejjfg.readhub.data.topic.detail.DetailItems
 import com.lovejjfg.readhub.utils.JsoupUtils
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.view.recycerview.ParseItemDerection
 import com.lovejjfg.readhub.view.recycerview.holder.ImageParseHolder
 import com.lovejjfg.readhub.view.recycerview.holder.TextParseHolder
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_instant_detail.instantList
 import kotlinx.android.synthetic.main.activity_instant_detail.toolbar
@@ -73,19 +73,23 @@ class InstantActivity : BaseActivity() {
         instantList.addItemDecoration(ParseItemDerection())
         instantList.layoutManager = LinearLayoutManager(this)
         instantAdapter = InstantAdapter().apply {
-            instantList.adapter = instantAdapter
+            instantList.adapter = this
+            enableLoadMore(false)
         }
         getData(topicId)
     }
 
     private fun getData(topicId: String) {
-        DataManager.subscribe(this, DataManager.init().topicInstant(topicId), Consumer {
-            handleInstant(it)
-        }, Consumer {
-            instantAdapter.showError()
-            refreshContainer.isRefreshing = false
-            handleError(it)
-        })
+        DataManager.topicInstant(topicId)
+            .ioToMain()
+            .subscribe({
+                handleInstant(it)
+            }, {
+                instantAdapter.showError()
+                refreshContainer.isRefreshing = false
+                handleError(it)
+            })
+            .addTo(mDisposables)
     }
 
     private fun handleInstant(instantView: InstantView?) {

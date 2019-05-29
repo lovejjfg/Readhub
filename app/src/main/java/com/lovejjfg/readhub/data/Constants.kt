@@ -28,7 +28,7 @@ object Constants {
 
     const val RELATIVE_ITEMS = "relative_items"
     const val URL: String = "url"
-    const val HOT: String = "hotTopic"
+    const val HOT: String = "search"
     const val TECH: String = "tech"
     const val DEV: String = "developer"
     const val BLOCK_CHAIN: String = "block_chain"

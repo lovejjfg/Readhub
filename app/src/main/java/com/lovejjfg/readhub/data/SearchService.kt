@@ -31,5 +31,5 @@ import retrofit2.http.QueryMap
 interface SearchService {
 
     @GET("entity/news")
-    fun hotTopic(@QueryMap map: Map<String, String>): Observable<Response<SearchResult>>
+    fun search(@QueryMap map: Map<String, String>): Observable<Response<SearchResult>>
 }

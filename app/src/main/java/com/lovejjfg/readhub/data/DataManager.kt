@@ -19,26 +19,25 @@
 package com.lovejjfg.readhub.data
 
 import com.lovejjfg.readhub.base.AppProxy
-import com.lovejjfg.readhub.base.IBaseView
-import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
 import com.lovejjfg.readhub.data.Constants.API_SEARCH_RELEASE
+import com.lovejjfg.readhub.data.search.SearchResult
+import com.lovejjfg.readhub.data.topic.HotTopic
+import com.lovejjfg.readhub.data.topic.InstantView
+import com.lovejjfg.readhub.data.topic.NewCount
+import com.lovejjfg.readhub.data.topic.detail.TopicDetail
+import com.lovejjfg.readhub.data.topic.develop.Develop
+import com.lovejjfg.readhub.data.topic.tech.Tech
+import com.lovejjfg.readhub.utils.convert
 import com.lovejjfg.readhub.utils.http.CacheControlInterceptor
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
 import okhttp3.OkHttpClient.Builder
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit.SECONDS
 
 /**
@@ -52,7 +51,15 @@ object DataManager {
     private val isDebug = false
     private const val TIME_OUT = 10L
 
-    fun <T> init(clazz: Class<T>): T {
+    private val readHubService: ReadHubService  by lazy {
+        init()
+    }
+
+    private val readHubSearchService: SearchService  by lazy {
+        initSearch()
+    }
+
+    private fun <T> init(clazz: Class<T>): T {
         val retrofit = this.retrofit ?: initRetrofit()
         return retrofit.create(clazz)
     }
@@ -82,11 +89,11 @@ object DataManager {
         return retrofit
     }
 
-    fun init(): ReadHubService {
+    private fun init(): ReadHubService {
         return init(ReadHubService::class.java)
     }
 
-    fun initSearch(): SearchService {
+    private fun initSearch(): SearchService {
         val searchRetrofit = this.searchRetrofit ?: initSearchRetrofit()
         return searchRetrofit.create(SearchService::class.java)
     }
@@ -113,37 +120,52 @@ object DataManager {
         return searchRetrofit
     }
 
-    fun <R> convert(request: Observable<Response<R>>): Observable<R> {
-
-        return request
-            .subscribeOn(Schedulers.io())//事件产生在子线程
-            .retry { integer, throwable ->
-                (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
-            }
-            .map { t: Response<R> ->
-                return@map if (t.isSuccessful) {
-                    t.body() ?: throw NullPointerException("null Body")
-                } else {
-                    throw ReadhubException(t.code(), t.message())
-                }
-            }
+    fun hotTopic(): Observable<HotTopic> {
+        return readHubService.hotTopic().convert()
     }
 
-    fun <R> subscribe(
-        view: IBaseView,
-        request: Observable<Response<R>>,
-        onNext: Consumer<R>,
-        onError: Consumer<Throwable>
-    ) {
-        val subscribe = convert(request)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, onError)
-        view.subscribe(subscribe)
+    fun topicInstant(id: String): Observable<InstantView> {
+        return readHubService.topicInstant(id).convert()
     }
 
-    fun <R> mapScribe(request: Observable<Response<R>>, onNext: Consumer<R>, onError: Consumer<Throwable>): Disposable {
-        return convert(request)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, onError)
+    fun topicDetail(id: String): Observable<TopicDetail> {
+        return readHubService.topicDetail(id).convert()
+    }
+
+    fun hotTopicMore(lastId: String, size: Int = 10): Observable<HotTopic> {
+        return readHubService.hotTopicMore(lastId, size).convert()
+    }
+
+    fun tech(): Observable<Tech> {
+        return readHubService.tech().convert()
+    }
+
+    fun techMore(lastId: String, size: Int = 10): Observable<Tech> {
+        return readHubService.techMore(lastId, size).convert()
+    }
+
+    fun devNews(): Observable<Develop> {
+        return readHubService.devNews().convert()
+    }
+
+    fun devNewsMore(lastId: String, size: Int = 10): Observable<Develop> {
+        return readHubService.devNewsMore(lastId, size).convert()
+    }
+
+    fun newCount(lastId: String): Observable<NewCount> {
+        return readHubService.newCount(lastId).convert()
+    }
+
+    //https://api.readhub.me/blockchain?lastCursor=1520307600000&pageSize=10
+    fun blockchain(size: Int = 10): Observable<Develop> {
+        return readHubService.blockchain(size).convert()
+    }
+
+    fun blockchainMore(lastId: String, size: Int = 10): Observable<Develop> {
+        return readHubService.blockchainMore(lastId, size).convert()
+    }
+
+    fun search(map: Map<String, String>): Observable<SearchResult> {
+        return readHubSearchService.search(map).convert()
     }
 }

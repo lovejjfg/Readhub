@@ -35,7 +35,7 @@ import io.reactivex.disposables.Disposable
  */
 
 abstract class BaseFragment : Fragment(), IBaseView {
-    private var mDisposables: CompositeDisposable = CompositeDisposable()
+    var mDisposables: CompositeDisposable = CompositeDisposable()
     var mContext: Context? = null
 
     override fun onAttach(context: Context?) {
@@ -101,6 +101,11 @@ abstract class BaseFragment : Fragment(), IBaseView {
 
     override fun unSubscribe() {
         mDisposables.clear()
+    }
+
+    override fun onDestroy() {
+        mDisposables.clear()
+        super.onDestroy()
     }
 
     override fun handleError(throwable: Throwable) {

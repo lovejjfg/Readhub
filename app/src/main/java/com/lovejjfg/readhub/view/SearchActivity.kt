@@ -37,14 +37,15 @@ import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.search.SearchItem
 import com.lovejjfg.readhub.transitions.CircularReveal
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.ImeUtils
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.TransitionUtils
 import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.utils.ioToMain
+import com.lovejjfg.readhub.utils.parseTime
 import com.tencent.bugly.crashreport.CrashReport
-import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_search.empty
 import kotlinx.android.synthetic.main.activity_search.goTop
 import kotlinx.android.synthetic.main.activity_search.noResultLayout
@@ -181,9 +182,9 @@ open class SearchActivity : BaseActivity() {
         }
         this.searchKey = nearKey
         empty.visibility = View.VISIBLE
-        DataManager.subscribe(this, DataManager.initSearch()
-            .hotTopic(mapOf("page" to "$currentPage", "size" to "20", "ner_name" to nearKey, "type" to "hot"))
-            , Consumer {
+        DataManager.search(mapOf("page" to "$currentPage", "size" to "20", "ner_name" to nearKey, "type" to "hot"))
+            .ioToMain()
+            .subscribe({
                 empty.visibility = View.GONE
                 val data = it.data
                 if (data != null && data.items.isNotEmpty()) {
@@ -200,11 +201,13 @@ open class SearchActivity : BaseActivity() {
                 } else {
                     setNoResultsVisibility(View.VISIBLE)
                 }
-            }, Consumer {
+            }, {
                 empty.visibility = View.GONE
                 toast(R.string.search_api_disable, Toast.LENGTH_LONG)
                 it.printStackTrace()
-            })
+            }
+            )
+            .addTo(mDisposables)
     }
 
     private fun checkKeyFirst(nearKey: String): Boolean {
@@ -232,9 +235,9 @@ open class SearchActivity : BaseActivity() {
     private fun loadMore() {
         val nearKey = searchKey ?: return
         currentPage++
-        DataManager.subscribe(this, DataManager.initSearch()
-            .hotTopic(mapOf("page" to "$currentPage", "size" to "20", "ner_name" to nearKey, "type" to "hot"))
-            , Consumer {
+        DataManager.search(mapOf("page" to "$currentPage", "size" to "20", "ner_name" to nearKey, "type" to "hot"))
+            .ioToMain()
+            .subscribe({
                 val data = it.data
                 if (data != null) {
                     adapter.totalCount = data.totalItems
@@ -243,10 +246,11 @@ open class SearchActivity : BaseActivity() {
                 } else {
                     adapter.showEmpty()
                 }
-            }, Consumer {
+            }, {
                 --currentPage
                 it.printStackTrace()
             })
+            .addTo(mDisposables)
     }
 
     private fun setNoResultsVisibility(visibility: Int) {
@@ -318,7 +322,7 @@ open class SearchActivity : BaseActivity() {
             override fun onBind(t: SearchItem) {
                 itemView.searchTitle.text = t.topicTitle?.trim()
                 itemView.searchDes.text = t.topicSummary?.trim()
-                itemView.searchTime.text = DateUtil.parseTime(t.topicCreateAt)
+                itemView.searchTime.text = t.topicCreateAt?.parseTime()
             }
         }
     }

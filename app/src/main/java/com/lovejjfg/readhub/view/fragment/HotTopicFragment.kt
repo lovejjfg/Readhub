@@ -33,10 +33,11 @@ import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.ScrollEvent
+import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.utils.isTopOrder
 import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
-import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.layout_refresh_recycler.refreshContainer
 
 /**
@@ -75,19 +76,24 @@ class HotTopicFragment : RefreshFragment() {
         if (adapter.list.isEmpty()) {
             return
         }
-        if (TextUtils.isEmpty(latestOrder)) {
+        val latestOrder = this.latestOrder
+        if (latestOrder == null || latestOrder.isEmpty()) {
             return
         }
-        val latestOrder = latestOrder ?: return
-        DataManager.subscribe(this, DataManager.init().newCount(latestOrder), Consumer {
-            refreshCount = it.count
-            if (adapter.list?.firstOrNull()?.isTop == true) {
-                refreshCount--
-            }
-            if (refreshCount > 0) {
-                showHint()
-            }
-        }, Consumer { it.printStackTrace() })
+        DataManager.newCount(latestOrder)
+            .ioToMain()
+            .subscribe(
+                {
+                    refreshCount = it.count
+                    if (adapter.list?.firstOrNull()?.isTop == true) {
+                        refreshCount--
+                    }
+                    if (refreshCount > 0) {
+                        showHint()
+                    }
+                }, { it.printStackTrace() }
+            )
+            .addTo(mDisposables)
     }
 
     private fun showHint() {
@@ -139,8 +145,9 @@ class HotTopicFragment : RefreshFragment() {
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
         mSnackBar?.dismiss()
-        DataManager.subscribe(this, DataManager.init().hotTopic(),
-            Consumer { hotTopic ->
+        DataManager.hotTopic()
+            .ioToMain()
+            .subscribe({ hotTopic ->
                 if (hotTopic.data.isNotEmpty()) {
                     preOrder = latestOrder
                     latestOrder = hotTopic.data.first().order
@@ -158,18 +165,24 @@ class HotTopicFragment : RefreshFragment() {
                 }
                 refresh?.isRefreshing = false
             },
-            Consumer {
-                it.printStackTrace()
-                adapter.showError(false)
-                handleError(it)
-                refresh?.isRefreshing = false
-            })
+                {
+                    Log.e(TAG, "error:", it)
+                    adapter.showError(false)
+                    handleError(it)
+                    refresh?.isRefreshing = false
+                })
+            .addTo(mDisposables)
     }
 
     override fun loadMore() {
-        val order = order ?: return
-        DataManager.subscribe(this, DataManager.init().hotTopicMore(order, 10),
-            Consumer { hotTopic ->
+        val order = order
+        if (order == null || order.isEmpty()) {
+            adapter.loadMoreError()
+            return
+        }
+        DataManager.hotTopicMore(order)
+            .ioToMain()
+            .subscribe({ hotTopic ->
                 val data = hotTopic.data
                 this.order = data.last().order
                 adapter.appendList(data)
@@ -178,9 +191,10 @@ class HotTopicFragment : RefreshFragment() {
                 }
                 Log.i(TAG, "loadMore:order:$order")
             },
-            Consumer {
-                it.printStackTrace()
-                adapter.loadMoreError()
-            })
+                {
+                    it.printStackTrace()
+                    adapter.loadMoreError()
+                })
+            .addTo(mDisposables)
     }
 }

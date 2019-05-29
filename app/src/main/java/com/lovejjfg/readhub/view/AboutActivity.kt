@@ -61,6 +61,7 @@ class AboutActivity : BaseActivity() {
         includeList.layoutManager = LinearLayoutManager(this)
         aboutAdapter = AboutAdapter().apply {
             includeList.adapter = this
+            enableLoadMore(false)
         }
         initData()
         aboutAdapter.setOnItemClickListener { _, _, item ->

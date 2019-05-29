@@ -32,9 +32,9 @@ import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.Constants.ITEM_MAX_COUNT
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.data.topic.NewsArrayItem
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.utils.parseTime
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder
 import kotlinx.android.synthetic.main.holder_hot_topic.view.ivShare
 import kotlinx.android.synthetic.main.holder_hot_topic.view.ivShow
@@ -83,18 +83,22 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
         }
     }
 
-    inner class HotTopicHolder(itemView: View) : BaseViewHolder<DataItem>(itemView) {
+    class HotTopicHolder(itemView: View) : BaseViewHolder<DataItem>(itemView) {
+        private val itemAdapter: HotTopicItemAdapter
+
+        init {
+            itemView.topicItemList.layoutManager = LinearLayoutManager(context)
+            itemAdapter = HotTopicItemAdapter().apply {
+                enableLoadMore(false)
+                itemView.topicItemList.adapter = this
+            }
+        }
 
         private var dataItem: DataItem? = null
         override fun onBind(t: DataItem) {
             itemView.parentContainer.cardElevation = if (t.isExband) 20f else 4f
             if (dataItem?.order != t.order) {
                 dataItem = t
-                itemView.topicItemList.layoutManager = LinearLayoutManager(context)
-                val itemAdapter = HotTopicItemAdapter().apply {
-                    enableLoadMore(false)
-                    itemView.topicItemList.adapter = this
-                }
                 setRelativeItems(t, itemAdapter)
                 if (t.extra?.instantView == true) {
                     itemView.ivTimeLine.visibility = View.VISIBLE
@@ -117,14 +121,12 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 }
                 handleView(t)
             } else {
-                //todo 更新逻辑相关优化
                 dataItem = t
-//                handleView(t)
             }
             if (t.isTop) {
                 itemView.topicPublish.text = "置顶"
             } else {
-                itemView.topicPublish.text = DateUtil.parseTime(t.createdAt)
+                itemView.topicPublish.text = t.createdAt?.parseTime()
             }
         }
 
@@ -151,7 +153,6 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
             itemView.topicTitle.text = title
 
             itemView.topicDes.apply {
-                // android:visibility="@{TextUtils.isEmpty(topic.summary)?View.GONE:View.VISIBLE}"
                 val summary = t.summary?.trim()
                 if (TextUtils.isEmpty(summary)) {
                     isGone = true

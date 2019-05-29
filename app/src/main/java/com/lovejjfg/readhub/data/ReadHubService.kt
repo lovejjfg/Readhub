@@ -40,9 +40,6 @@ interface ReadHubService {
     @GET("topic")
     fun hotTopic(): Observable<Response<HotTopic>>
 
-    @GET("topic")
-    fun hotTopic1(): Call<HotTopic>
-
     //https://api.readhub.me/topic/instantview?topicId=RwOK8HoWNG
     @GET("topic/instantview")
     fun topicInstant(@Query("topicId") id: String): Observable<Response<InstantView>>

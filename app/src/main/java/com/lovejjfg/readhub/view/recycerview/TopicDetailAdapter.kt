@@ -24,8 +24,8 @@ import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.inflate
+import com.lovejjfg.readhub.utils.parseTimeLine
 import com.lovejjfg.readhub.view.recycerview.holder.DividerHolder
 import kotlinx.android.synthetic.main.holder_hot_topic_item.view.itemSiteName
 import kotlinx.android.synthetic.main.holder_hot_topic_item.view.itemTitle
@@ -75,7 +75,7 @@ class TopicDetailAdapter : BaseAdapter<DetailItems>() {
         override fun onBind(t: DetailItems) {
             val timeLine = t.timeLine
             itemView.timeLineContent.text = timeLine?.title?.trim()
-            itemView.timeLineDate.text = DateUtil.parseTimeLine(timeLine?.createdAt)
+            itemView.timeLineDate.text = timeLine?.createdAt?.parseTimeLine()
             itemView.connector.setType(t.timeLineType)
         }
     }
