@@ -26,7 +26,6 @@ import android.support.multidex.MultiDex
 import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.utils.http.NetWorkUtils
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.lovejjfg.shake.ShakerHelper
 import com.meituan.android.walle.WalleChannelReader
@@ -57,13 +56,10 @@ class AppProxy(
     tinkerResultIntent
 
 ) {
-
-    val TAG = "AppProxy"
     private var channel: String = "dev"
-
     override fun onCreate() {
         super.onCreate()
-        mApp = this
+        applicationContext = application
         ShakerHelper.init(application)
         CrashReport.setIsDevelopmentDevice(application, BuildConfig.IS_DEBUG)
 
@@ -82,7 +78,6 @@ class AppProxy(
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         Beta.init(application, BuildConfig.IS_DEBUG)
         ToastUtil.initToast(application)
-        NetWorkUtils.init(application)
         cacheDirectory = File(application.cacheDir, "responses")
     }
 
@@ -117,7 +112,7 @@ class AppProxy(
 
     companion object {
         var cacheDirectory: File? = null
-        var mApp: AppProxy? = null
         var needRestart: Boolean = false
+        var applicationContext: Application? = null
     }
 }

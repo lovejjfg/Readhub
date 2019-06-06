@@ -1,12 +1,14 @@
 package com.lovejjfg.readhub.data.search
 
 import com.google.gson.annotations.SerializedName
+import com.lovejjfg.readhub.data.Cache
 
 data class SearchResult(
 
     @field:SerializedName("data")
-    val data: Data? = null
-)
+    val data: Data? = null,
+    override var fromCache: Boolean = false
+) : Cache
 
 data class Data(
 

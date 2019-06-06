@@ -25,7 +25,6 @@ import com.lovejjfg.powerrecycle.PowerAdapter
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.utils.parseTimeToMillis
@@ -54,12 +53,12 @@ class BlockChainFragment : RefreshFragment() {
             .ioToMain()
             .subscribe({ develop ->
                 if (develop.data.isNotEmpty()) {
-                    preOrder = latestOrder
+                    preLatestOrder = latestOrder
                     latestOrder = develop.data.first().id
                     order = develop.data.last().publishDate?.parseTimeToMillis()
                     adapter.setList(develop.data)
-                    handleAlreadRead(false, develop.data) {
-                        TextUtils.equals(it?.id, preOrder)
+                    handleAlreadyRead(false, develop.data, develop.fromCache) {
+                        TextUtils.equals(it?.id, preLatestOrder)
                     }
                 }
                 refresh?.isRefreshing = false
@@ -85,8 +84,8 @@ class BlockChainFragment : RefreshFragment() {
                 val data = develop.data
                 this.order = data.last().publishDate?.parseTimeToMillis()
                 adapter.appendList(data)
-                handleAlreadRead(true, adapter.list) {
-                    TextUtils.equals(it?.id, preOrder)
+                handleAlreadyRead(true, adapter.list) {
+                    TextUtils.equals(it?.id, preLatestOrder)
                 }
             },
                 {

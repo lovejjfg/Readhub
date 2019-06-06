@@ -19,6 +19,7 @@
 package com.lovejjfg.readhub.data.topic.develop
 
 import com.google.gson.annotations.SerializedName
+import com.lovejjfg.readhub.data.Cache
 import com.lovejjfg.readhub.data.topic.DataItem
 import javax.annotation.Generated
 
@@ -35,5 +36,6 @@ data class Develop(
     val totalPages: Int? = null,
 
     @field:SerializedName("pageSize")
-    val pageSize: Int? = null
-)
+    val pageSize: Int? = null,
+    override var fromCache: Boolean = false
+) : Cache

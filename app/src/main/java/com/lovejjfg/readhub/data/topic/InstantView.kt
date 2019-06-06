@@ -9,18 +9,18 @@ import javax.annotation.Generated
 @Parcelize
 data class InstantView(
 
-        @field:SerializedName("siteName")
-        val siteName: String? = null,
+    @field:SerializedName("siteName")
+    val siteName: String? = null,
 
-        @field:SerializedName("title")
-        val title: String? = null,
+    @field:SerializedName("title")
+    val title: String? = null,
 
-        @field:SerializedName("siteSlug")
-        val siteSlug: String? = null,
+    @field:SerializedName("siteSlug")
+    val siteSlug: String? = null,
 
-        @field:SerializedName("url")
-        val url: String? = null,
+    @field:SerializedName("url")
+    val url: String? = null,
 
-        @field:SerializedName("content")
-        val content: String? = null
-) : Parcelable
+    @field:SerializedName("content")
+    val content: String? = null
+    ) : Parcelable

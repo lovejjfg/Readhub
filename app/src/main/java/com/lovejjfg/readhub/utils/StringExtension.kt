@@ -25,7 +25,7 @@ import java.text.ParseException
  * Email: lovejjfg@gmail.com
  */
 fun CharSequence.isTopOrder(): Boolean {
-    return startsWith("10")
+    return this.length > 6
 }
 
 fun CharSequence?.empty(): Boolean {

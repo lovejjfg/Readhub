@@ -31,8 +31,6 @@ import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.utils.isTopOrder
 import com.lovejjfg.readhub.view.HomeActivity
@@ -124,10 +122,10 @@ class HotTopicFragment : RefreshFragment() {
             )
                 .setActionTextColor(resources.getColor(R.color.colorAccent))
                 .setAction(R.string.refresh) {
-                    RxBus.instance.post(ScrollEvent())
-                    refreshContainer.isRefreshing = true
-                    refresh(refreshContainer)
                     (activity as HomeActivity).selectItem(R.id.navigation_home)
+                    refreshContainer.isRefreshing = true
+                    adapter.clearList()
+                    refresh(refreshContainer)
                 }
         }
         callback?.let {
@@ -149,18 +147,19 @@ class HotTopicFragment : RefreshFragment() {
             .ioToMain()
             .subscribe({ hotTopic ->
                 if (hotTopic.data.isNotEmpty()) {
-                    preOrder = latestOrder
+                    preLatestOrder = latestOrder
                     latestOrder = hotTopic.data.first().order
+                    val secondOrder = hotTopic.data[1].order
                     if (latestOrder?.isTopOrder() == true) {
-                        latestOrder = hotTopic.data[1].order
+                        latestOrder = secondOrder
                         hotTopic.data.first().isTop = true
                     } else {
                         hotTopic.data.first().isTop = false
                     }
                     order = hotTopic.data.last().order
                     adapter.setList(hotTopic.data)
-                    handleAlreadRead(false, hotTopic.data) {
-                        TextUtils.equals(it?.order, preOrder)
+                    handleAlreadyRead(false, hotTopic.data, hotTopic.fromCache) {
+                        TextUtils.equals(it?.order, preLatestOrder)
                     }
                 }
                 refresh?.isRefreshing = false
@@ -186,8 +185,8 @@ class HotTopicFragment : RefreshFragment() {
                 val data = hotTopic.data
                 this.order = data.last().order
                 adapter.appendList(data)
-                handleAlreadRead(true, adapter.list) {
-                    TextUtils.equals(it?.order, preOrder)
+                handleAlreadyRead(true, adapter.list) {
+                    TextUtils.equals(it?.order, preLatestOrder)
                 }
                 Log.i(TAG, "loadMore:order:$order")
             },

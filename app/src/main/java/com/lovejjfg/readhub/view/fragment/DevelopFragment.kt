@@ -55,12 +55,12 @@ class DevelopFragment : RefreshFragment() {
             .ioToMain()
             .subscribe({ develop ->
                 if (develop.data.isNotEmpty()) {
-                    preOrder = latestOrder
+                    preLatestOrder = latestOrder
                     latestOrder = develop.data.first().id
                     order = develop.data.last().publishDate?.parseTimeToMillis()
                     adapter.setList(develop.data)
-                    handleAlreadRead(false, develop.data) {
-                        TextUtils.equals(it?.id, preOrder)
+                    handleAlreadyRead(false, develop.data, develop.fromCache) {
+                        TextUtils.equals(it?.id, preLatestOrder)
                     }
                 }
                 refresh?.isRefreshing = false
@@ -86,8 +86,8 @@ class DevelopFragment : RefreshFragment() {
                 val data = develop.data
                 this.order = data.last().publishDate?.parseTimeToMillis()
                 adapter.appendList(data)
-                handleAlreadRead(true, adapter.list) {
-                    TextUtils.equals(it?.id, preOrder)
+                handleAlreadyRead(true, adapter.list) {
+                    TextUtils.equals(it?.id, preLatestOrder)
                 }
             },
                 {

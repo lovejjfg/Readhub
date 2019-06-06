@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.readhub.utils
-
-import android.support.annotation.LayoutRes
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+package com.lovejjfg.readhub.data
 
 /**
- * Created by joe on 2019-05-09.
+ * Created by joe on 2019-06-06.
  * Email: lovejjfg@gmail.com
  */
-inline fun ViewGroup.inflate(@LayoutRes resId: Int, attachParent: Boolean = false): View {
-    return LayoutInflater.from(this.context).inflate(resId, this, attachParent)
+interface Cache {
+    var fromCache: Boolean
 }
-
-inline fun View.canScrollUp(): Boolean {
-    return this.canScrollVertically(-1)
-}
-
-inline fun View.canScrollDown(): Boolean {
-    return this.canScrollVertically(1)
-}
-
-

@@ -35,7 +35,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.text.TextUtils
 import android.util.AtomicFile
 import android.util.Log
 import android.view.View
@@ -48,6 +47,7 @@ import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.RxBus
+import com.lovejjfg.readhub.utils.canScrollUp
 import com.lovejjfg.readhub.utils.event.ScrollEvent
 import com.lovejjfg.readhub.view.HomeActivity
 import com.tencent.bugly.crashreport.CrashReport
@@ -64,7 +64,7 @@ abstract class RefreshFragment : BaseFragment() {
     @Suppress("PropertyName")
     protected var order: String? = null
     protected var latestOrder: String? = null
-    protected var preOrder: String? = null
+    protected var preLatestOrder: String? = null
     protected lateinit var adapter: PowerAdapter<DataItem>
     private lateinit var navigation: BottomNavigationView
     var mIsVisible = true
@@ -77,7 +77,11 @@ abstract class RefreshFragment : BaseFragment() {
         RxBus.instance.addSubscription(this, ScrollEvent::class.java,
             Consumer {
                 if (isVisible) {
-                    topicList.scrollToPosition(0)
+                    if (topicList.canScrollUp()) {
+                        topicList.scrollToPosition(0)
+                    } else {
+                        doRefresh()
+                    }
                 }
             },
             Consumer { Log.e(TAG, "error:", it) })
@@ -160,25 +164,23 @@ abstract class RefreshFragment : BaseFragment() {
     private fun initDataOrRefresh(savedInstanceState: Bundle?) {
         try {
             if (savedInstanceState == null) {
-                doFreshWithCheck()
+                doRefreshWithCheck()
             } else {
                 val mList = savedInstanceState.getParcelableArrayList<DataItem>(Constants.DATA)
                 if (mList != null && mList.isNotEmpty()) {
                     adapter.setList(mList)
                 } else {
-                    doFreshWithCheck()
+                    doRefreshWithCheck()
                 }
             }
         } catch (e: Exception) {
-            refreshContainer.isRefreshing = true
-            refresh(refreshContainer)
+            doRefresh()
         }
     }
 
-    private fun doFreshWithCheck() {
+    private fun doRefreshWithCheck() {
         if (!isHidden && adapter.list.isEmpty()) {
-            refreshContainer.isRefreshing = true
-            refresh(refreshContainer)
+            doRefresh()
         }
     }
 
@@ -337,12 +339,16 @@ abstract class RefreshFragment : BaseFragment() {
         super.onHiddenChanged(hidden)
         if (!hidden) {
             if (adapter.list.isEmpty()) {
-                refreshContainer.isRefreshing = true
-                refresh(refreshContainer)
+                doRefresh()
             } else {
                 adapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun doRefresh() {
+        refreshContainer.isRefreshing = true
+        refresh(refreshContainer)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -362,37 +368,32 @@ abstract class RefreshFragment : BaseFragment() {
         }
     }
 
-    protected inline fun handleAlreadRead(
+    protected fun handleAlreadyRead(
         loadMore: Boolean,
         data: List<DataItem>,
+        fromCache: Boolean = false,
         check: (item: DataItem?) -> Boolean
     ) {
-        println("currentId:$latestOrder;;preId::$preOrder")
+        println("currentId:$latestOrder;;preId::$preLatestOrder")
         try {
-            if (TextUtils.equals(latestOrder, preOrder)) {
-                if (!loadMore) {
-                    removeRead()
-                    showToast(getString(R.string.wait_away))
-                }
-                return
-            }
             val first = data.firstOrNull {
                 !it.isTop && check(it)
             }
-            println(first?.id)
+            println("头条id:${first?.id}")
             if (first != null) {
                 val indexOf = data.indexOf(first)
-                if (indexOf == -1) {
+                if (indexOf < 0) {
                     return
                 }
-                if (indexOf == 0) {
+                if (indexOf == 0 || (data[indexOf - 1].isTop)) {
                     println("没有新的更新：$indexOf")
-                    if (!loadMore) {
-                        removeRead()
-                        showToast(getString(R.string.wait_away))
+                    if (!loadMore && !fromCache) {
+                        removeReadAndHint()
                     }
                 } else {
-                    removeRead()
+                    if (!loadMore && !fromCache) {
+                        removeRead()
+                    }
                     val hintCount = if (data.first().isTop) {
                         indexOf - 1
                     } else {
@@ -402,16 +403,20 @@ abstract class RefreshFragment : BaseFragment() {
                     showToast(String.format(getString(R.string.update_news_with_count), hintCount))
                     val element = DataItem()
                     adapter.insertItem(indexOf, element)
-                    preOrder = latestOrder
                 }
             }
         } catch (e: Exception) {
-            Log.e("RefreshFragment", "handleAlreadRead", e)
+            Log.e("RefreshFragment", "handleAlreadyRead", e)
             CrashReport.postCatchedException(e)
         }
     }
 
-    fun removeRead() {
+    private fun removeReadAndHint() {
+        removeRead()
+        showToast(getString(R.string.wait_away))
+    }
+
+    private fun removeRead() {
         try {
             val position = adapter.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
             if (position != -1) {

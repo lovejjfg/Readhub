@@ -55,12 +55,12 @@ class TechFragment : RefreshFragment() {
             .ioToMain()
             .subscribe({ tech ->
                 if (tech.data.isNotEmpty()) {
-                    preOrder = latestOrder
+                    preLatestOrder = latestOrder
                     latestOrder = tech.data.first().id
                     order = tech.data.last().publishDate?.parseTimeToMillis()
                     adapter.setList(tech.data)
-                    handleAlreadRead(false, tech.data) {
-                        TextUtils.equals(it?.id, preOrder)
+                    handleAlreadyRead(false, tech.data, tech.fromCache) {
+                        TextUtils.equals(it?.id, preLatestOrder)
                     }
                 }
                 refresh?.isRefreshing = false
@@ -86,8 +86,8 @@ class TechFragment : RefreshFragment() {
                 val data = tech.data
                 this.order = data.last().publishDate?.parseTimeToMillis()
                 adapter.appendList(data)
-                handleAlreadRead(true, adapter.list) {
-                    TextUtils.equals(it?.id, preOrder)
+                handleAlreadyRead(true, adapter.list) {
+                    TextUtils.equals(it?.id, preLatestOrder)
                 }
             },
                 {

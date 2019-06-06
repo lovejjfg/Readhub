@@ -19,21 +19,23 @@
 package com.lovejjfg.readhub.data.topic.tech
 
 import com.google.gson.annotations.SerializedName
+import com.lovejjfg.readhub.data.Cache
 import com.lovejjfg.readhub.data.topic.DataItem
 import javax.annotation.Generated
 
 @Generated("com.robohorse.robopojogenerator")
 data class Tech(
 
-	@field:SerializedName("totalItems")
-	val totalItems: String? = null,
+    @field:SerializedName("totalItems")
+    val totalItems: String? = null,
 
-	@field:SerializedName("data")
-	val data: List<DataItem>,
+    @field:SerializedName("data")
+    val data: List<DataItem>,
 
-	@field:SerializedName("totalPages")
-	val totalPages: Int? = null,
+    @field:SerializedName("totalPages")
+    val totalPages: Int? = null,
 
-	@field:SerializedName("pageSize")
-	val pageSize: Int? = null
-)
+    @field:SerializedName("pageSize")
+    val pageSize: Int? = null,
+    override var fromCache: Boolean = false
+) : Cache

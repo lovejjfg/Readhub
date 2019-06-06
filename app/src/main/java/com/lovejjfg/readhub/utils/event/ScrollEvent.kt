@@ -22,4 +22,5 @@ package com.lovejjfg.readhub.utils.event
  * ReadHub
  * Created by Joe at 2017/8/6.
  */
+// used in HomeActivity
 class ScrollEvent

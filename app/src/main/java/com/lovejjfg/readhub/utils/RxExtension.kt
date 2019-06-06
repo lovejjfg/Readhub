@@ -17,6 +17,7 @@
 package com.lovejjfg.readhub.utils
 
 import com.lovejjfg.readhub.base.ReadhubException
+import com.lovejjfg.readhub.data.Cache
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -71,6 +72,22 @@ inline fun Completable.ioToMain(crossinline action: (dis: Disposable) -> Unit): 
         }
 }
 
+inline fun <R : Cache> Observable<Response<R>>.convertCache(): Observable<R> {
+    return this
+        .retry { integer, throwable ->
+            (throwable is UnknownHostException || throwable is SocketTimeoutException) && integer <= 2
+        }
+        .map { t: Response<R> ->
+            return@map if (t.isSuccessful) {
+                t.body().apply {
+                    this?.fromCache = t.headers()?.names()?.contains("Cache-Control") == true
+                } ?: throw NullPointerException("null Body")
+            } else {
+                throw ReadhubException(t.code(), t.message())
+            }
+        }
+}
+
 inline fun <R> Observable<Response<R>>.convert(): Observable<R> {
     return this
         .retry { integer, throwable ->
@@ -84,3 +101,4 @@ inline fun <R> Observable<Response<R>>.convert(): Observable<R> {
             }
         }
 }
+

@@ -19,7 +19,6 @@ package com.lovejjfg.readhub.utils
 import android.content.Context
 import android.util.Log
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.ReadhubException
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import retrofit2.HttpException
@@ -38,8 +37,6 @@ object ErrorUtil {
 
     fun handleError(context: Context?, throwable: Throwable) {
         Log.e("ErrorUtil", "handleError: ", throwable)
-        //  CrashReport.postCatchedException(throwable)
-        //        view.showErrorView();
         if (context == null) {
             return
         }
@@ -48,21 +45,16 @@ object ErrorUtil {
             if (code == 504) {
                 ToastUtil.showToast(context, context.getString(R.string.net_unavailable))
             } else {
-                ToastUtil.showToast(context, context.getString(string.data_load_error))
+                ToastUtil.showToast(context, context.getString(R.string.data_load_error))
             }
-            return
-        }
-        if (throwable is SocketTimeoutException) {
+        } else if (throwable is SocketTimeoutException) {
             ToastUtil.showToast(context, context.getString(R.string.net_time_out))
-            return
-        }
-        if (throwable is CertPathValidatorException || throwable is SSLHandshakeException) {
+        } else if (throwable is CertPathValidatorException || throwable is SSLHandshakeException) {
             ToastUtil.showToast(context, context.getString(R.string.net_error_proxy))
-            return
-        }
-
-        if (throwable is ConnectException || throwable is UnknownHostException || throwable is HttpException) {
+        } else if (throwable is ConnectException || throwable is UnknownHostException || throwable is HttpException) {
             ToastUtil.showToast(context, context.getString(R.string.net_error2))
+        } else {
+            ToastUtil.showToast(context, context.getString(R.string.data_load_error))
         }
     }
 }

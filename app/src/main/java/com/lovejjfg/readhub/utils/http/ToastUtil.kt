@@ -23,6 +23,7 @@ import android.os.Build.VERSION_CODES
 import android.os.Looper
 import android.support.annotation.StringRes
 import android.widget.Toast
+import com.lovejjfg.readhub.base.AppProxy
 import com.tencent.bugly.crashreport.CrashReport
 
 /**

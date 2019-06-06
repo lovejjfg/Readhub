@@ -29,6 +29,7 @@ import com.lovejjfg.readhub.data.topic.detail.TopicDetail
 import com.lovejjfg.readhub.data.topic.develop.Develop
 import com.lovejjfg.readhub.data.topic.tech.Tech
 import com.lovejjfg.readhub.utils.convert
+import com.lovejjfg.readhub.utils.convertCache
 import com.lovejjfg.readhub.utils.http.CacheControlInterceptor
 import com.lovejjfg.readhub.utils.http.LoggingInterceptor
 import com.lovejjfg.readhub.utils.http.RequestUtils
@@ -45,10 +46,8 @@ import java.util.concurrent.TimeUnit.SECONDS
  * Created by Joe at 2017/7/26.
  */
 object DataManager {
-    //https://search.readhub.cn/api/entity/news?page=1&size=20&ner_name=%E9%A9%AC%E6%96%AF%E5%85%8B&entity_id=baike_3776526&type=hot
     private var retrofit: Retrofit? = null
     private var searchRetrofit: Retrofit? = null
-    private val isDebug = false
     private const val TIME_OUT = 10L
 
     private val readHubService: ReadHubService  by lazy {
@@ -121,7 +120,7 @@ object DataManager {
     }
 
     fun hotTopic(): Observable<HotTopic> {
-        return readHubService.hotTopic().convert()
+        return readHubService.hotTopic().convertCache()
     }
 
     fun topicInstant(id: String): Observable<InstantView> {
@@ -133,36 +132,35 @@ object DataManager {
     }
 
     fun hotTopicMore(lastId: String, size: Int = 10): Observable<HotTopic> {
-        return readHubService.hotTopicMore(lastId, size).convert()
+        return readHubService.hotTopicMore(lastId, size).convertCache()
     }
 
     fun tech(): Observable<Tech> {
-        return readHubService.tech().convert()
+        return readHubService.tech().convertCache()
     }
 
     fun techMore(lastId: String, size: Int = 10): Observable<Tech> {
-        return readHubService.techMore(lastId, size).convert()
+        return readHubService.techMore(lastId, size).convertCache()
     }
 
     fun devNews(): Observable<Develop> {
-        return readHubService.devNews().convert()
+        return readHubService.devNews().convertCache()
     }
 
     fun devNewsMore(lastId: String, size: Int = 10): Observable<Develop> {
-        return readHubService.devNewsMore(lastId, size).convert()
+        return readHubService.devNewsMore(lastId, size).convertCache()
     }
 
     fun newCount(lastId: String): Observable<NewCount> {
         return readHubService.newCount(lastId).convert()
     }
 
-    //https://api.readhub.me/blockchain?lastCursor=1520307600000&pageSize=10
     fun blockchain(size: Int = 10): Observable<Develop> {
-        return readHubService.blockchain(size).convert()
+        return readHubService.blockchain(size).convertCache()
     }
 
     fun blockchainMore(lastId: String, size: Int = 10): Observable<Develop> {
-        return readHubService.blockchainMore(lastId, size).convert()
+        return readHubService.blockchainMore(lastId, size).convertCache()
     }
 
     fun search(map: Map<String, String>): Observable<SearchResult> {

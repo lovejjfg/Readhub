@@ -20,6 +20,7 @@ package com.lovejjfg.readhub.data.topic
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.lovejjfg.readhub.data.Cache
 import kotlinx.android.parcel.Parcelize
 import javax.annotation.Generated
 
@@ -37,5 +38,6 @@ data class HotTopic(
     val totalPages: Int? = null,
 
     @field:SerializedName("pageSize")
-    val pageSize: Int? = null
-) : Parcelable
+    val pageSize: Int? = null,
+    override var fromCache: Boolean = false
+) : Parcelable, Cache

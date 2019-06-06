@@ -19,11 +19,8 @@ package com.lovejjfg.readhub.utils
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Build
-import android.support.annotation.LayoutRes
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 
 /**
  * Created by joe on 2018/2/7.
@@ -99,3 +96,9 @@ fun Context.getScreenWidth(): Int {
 fun Context.getScreenHeight(): Int {
     return this.resources.displayMetrics.heightPixels
 }
+
+fun Context?.isNetworkConnected(): Boolean {
+    val manager = this?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    return manager?.activeNetworkInfo?.isAvailable == true
+}
+

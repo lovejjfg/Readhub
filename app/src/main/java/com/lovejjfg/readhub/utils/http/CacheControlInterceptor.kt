@@ -16,10 +16,11 @@
 
 package com.lovejjfg.readhub.utils.http
 
-
 import android.util.Log
+import com.lovejjfg.readhub.base.AppProxy
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.NoNetEvent
+import com.lovejjfg.readhub.utils.isNetworkConnected
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -35,24 +36,21 @@ class CacheControlInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        if (!NetWorkUtils.isNetworkConnected()) {
+        return if (!AppProxy.applicationContext.isNetworkConnected()) {
             request = request.newBuilder()
-                    .cacheControl(CacheControl.FORCE_CACHE)
-                    .build()
+                .cacheControl(CacheControl.FORCE_CACHE)
+                .build()
             RxBus.instance.post(NoNetEvent())
             Log.i(TAG, "intercept: 没有网络。。")
-        }
-        val originalResponse = chain.proceed(request)
-        /**
-         * Only accept the response if it is in the cache. If the response isn't cached, a `504
-         * Unsatisfiable Request` response will be returned.
-         */
-        val cacheControl = request.cacheControl().toString()
-        originalResponse.newBuilder()
+            val cacheControl = request.cacheControl().toString()
+            chain.proceed(request)
+                .newBuilder()
                 .removeHeader("Pragma")
                 .header("Cache-Control", cacheControl)
                 .build()
-        return originalResponse
+        } else {
+            chain.proceed(request)
+        }
     }
 
     companion object {
