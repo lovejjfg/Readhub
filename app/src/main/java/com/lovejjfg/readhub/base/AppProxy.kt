@@ -27,6 +27,7 @@ import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.http.ToastUtil
+import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.shake.ShakerHelper
 import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
@@ -34,6 +35,7 @@ import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.tinker.lib.reporter.DefaultLoadReporter
 import com.tencent.tinker.loader.app.DefaultApplicationLike
+import io.reactivex.Observable
 import java.io.File
 
 /**
@@ -79,6 +81,21 @@ class AppProxy(
         Beta.init(application, BuildConfig.IS_DEBUG)
         ToastUtil.initToast(application)
         cacheDirectory = File(application.cacheDir, "responses")
+        clearShareCache()
+    }
+
+    private fun clearShareCache() {
+        val subscribe = Observable.just(File(application.externalCacheDir, "share"))
+            .flatMap {
+                Observable.fromIterable(it.list().toList())
+            }
+            .map {
+                val file = File(application.externalCacheDir, "share${File.separator}$it")
+                println("delete share file:${file.path} ")
+                file.delete()
+            }
+            .ioToMain()
+            .subscribe({}, { it.printStackTrace() })
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

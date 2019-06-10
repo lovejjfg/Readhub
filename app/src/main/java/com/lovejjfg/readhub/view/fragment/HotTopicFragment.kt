@@ -37,6 +37,7 @@ import com.lovejjfg.readhub.view.HomeActivity
 import com.lovejjfg.readhub.view.recycerview.HotTopicAdapter
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.layout_refresh_recycler.refreshContainer
+import kotlinx.android.synthetic.main.layout_refresh_recycler.topicList
 
 /**
  * ReadHub
@@ -123,9 +124,8 @@ class HotTopicFragment : RefreshFragment() {
                 .setActionTextColor(resources.getColor(R.color.colorAccent))
                 .setAction(R.string.refresh) {
                     (activity as HomeActivity).selectItem(R.id.navigation_home)
-                    refreshContainer.isRefreshing = true
-                    adapter.clearList()
-                    refresh(refreshContainer)
+                    topicList.scrollToPosition(0)
+                    doRefresh()
                 }
         }
         callback?.let {
@@ -142,6 +142,7 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: SwipeRefreshLayout?) {
+        println("start refresh.......")
         mSnackBar?.dismiss()
         DataManager.hotTopic()
             .ioToMain()

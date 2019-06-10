@@ -174,6 +174,7 @@ abstract class RefreshFragment : BaseFragment() {
                 }
             }
         } catch (e: Exception) {
+            Log.e(TAG, "initDataOrRefresh() : ", e)
             doRefresh()
         }
     }
@@ -337,6 +338,7 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
+        println("$this hiddenChange: $hidden")
         if (!hidden) {
             if (adapter.list.isEmpty()) {
                 doRefresh()
@@ -346,7 +348,10 @@ abstract class RefreshFragment : BaseFragment() {
         }
     }
 
-    private fun doRefresh() {
+    protected fun doRefresh() {
+        if (refreshContainer.isRefreshing) {
+            return
+        }
         refreshContainer.isRefreshing = true
         refresh(refreshContainer)
     }
