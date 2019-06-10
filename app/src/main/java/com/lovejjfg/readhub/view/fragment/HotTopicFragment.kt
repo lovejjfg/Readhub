@@ -21,12 +21,11 @@ package com.lovejjfg.readhub.view.fragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.util.Log
-import com.lovejjfg.powerrecycle.PowerAdapter
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import com.lovejjfg.powerrecyclerx.PowerAdapter
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
@@ -141,7 +140,7 @@ class HotTopicFragment : RefreshFragment() {
         checkNews()
     }
 
-    override fun refresh(refresh: SwipeRefreshLayout?) {
+    override fun refresh(refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout?) {
         println("start refresh.......")
         mSnackBar?.dismiss()
         DataManager.hotTopic()

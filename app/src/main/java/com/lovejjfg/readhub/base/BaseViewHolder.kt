@@ -17,7 +17,7 @@
 package com.lovejjfg.readhub.base
 
 import android.view.View
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.powerrecyclerx.PowerHolder
 import kotlinx.android.extensions.LayoutContainer
 
 /**

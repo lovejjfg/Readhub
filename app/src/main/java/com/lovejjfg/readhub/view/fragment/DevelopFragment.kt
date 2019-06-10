@@ -19,11 +19,11 @@
 package com.lovejjfg.readhub.view.fragment
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import com.lovejjfg.powerrecycle.PowerAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.lovejjfg.powerrecyclerx.PowerAdapter
 import com.lovejjfg.readhub.base.RefreshFragment
 import com.lovejjfg.readhub.data.DataManager
 import com.lovejjfg.readhub.data.topic.DataItem

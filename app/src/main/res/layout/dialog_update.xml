@@ -64,7 +64,7 @@
             android:visibility="gone"
             />
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -81,7 +81,7 @@
                 android:textColor="#666"
                 android:textSize="@dimen/text_normal"
                 />
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/buttonPanel"
@@ -95,7 +95,7 @@
             android:paddingRight="10dp"
             android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"

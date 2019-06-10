@@ -19,9 +19,9 @@ package com.lovejjfg.readhub.view.widget
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
-import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.lovejjfg.swipeback.SwipeBackHelper
 import com.lovejjfg.swipeback.SwipeBackHelper.Callback
 

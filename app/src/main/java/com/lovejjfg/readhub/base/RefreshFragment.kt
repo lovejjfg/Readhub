@@ -20,6 +20,7 @@ package com.lovejjfg.readhub.base
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -27,21 +28,21 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.content.FileProvider
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.util.AtomicFile
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.core.util.tryWrite
-import androidx.core.view.toBitmap
-import com.lovejjfg.powerrecycle.PowerAdapter
-import com.lovejjfg.powerrecycle.manager.FixedLinearLayoutManager
+import androidx.core.view.drawToBitmap
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.lovejjfg.powerrecyclerx.PowerAdapter
+import com.lovejjfg.powerrecyclerx.manager.FixedLinearLayoutManager
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
@@ -238,7 +239,7 @@ abstract class RefreshFragment : BaseFragment() {
             val context = mContext ?: return
             val itemView = topicList.findViewHolderForAdapterPosition(position)?.itemView ?: return
             itemView.findViewById<View>(R.id.topicShare)?.visibility = View.INVISIBLE
-            val bitmap = itemView.toBitmap(Bitmap.Config.ARGB_8888)
+            val bitmap = itemView.drawToBitmap(Bitmap.Config.ARGB_8888)
             itemView.findViewById<View>(R.id.topicShare)?.visibility = View.VISIBLE
             val file = File(
                 context.externalCacheDir,
@@ -433,6 +434,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         var mSnackBar: Snackbar? = null
     }

@@ -66,7 +66,7 @@ class PartnerLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val childCount = childCount
-        val w = View.MeasureSpec.getSize(widthMeasureSpec)
+        val w = MeasureSpec.getSize(widthMeasureSpec)
         measureChildren(widthMeasureSpec, heightMeasureSpec)
         if (childCount == 2) {
             val tv: TextView?

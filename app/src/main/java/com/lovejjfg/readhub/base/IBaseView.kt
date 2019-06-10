@@ -18,8 +18,8 @@ package com.lovejjfg.readhub.base
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import io.reactivex.disposables.Disposable
 
 /**

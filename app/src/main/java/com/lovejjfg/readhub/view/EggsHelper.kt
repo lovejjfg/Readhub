@@ -20,13 +20,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.graphics.Color
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
-import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.dip2px
 import com.lovejjfg.readhub.utils.getScreenHeight
@@ -138,9 +137,8 @@ object EggsHelper {
     private fun createLayoutParams(
         width: Int = LayoutParams.WRAP_CONTENT,
         height: Int = LayoutParams.WRAP_CONTENT
-    ): FrameLayout
-    .LayoutParams {
-        return FrameLayout.LayoutParams(
+    ): LayoutParams {
+        return LayoutParams(
             width,
             height
         )

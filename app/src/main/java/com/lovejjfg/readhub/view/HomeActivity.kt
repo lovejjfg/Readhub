@@ -21,14 +21,13 @@ package com.lovejjfg.readhub.view
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lovejjfg.readhub.R
-import com.lovejjfg.readhub.R.id
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.base.BaseFragment
 import com.lovejjfg.readhub.data.Constants
@@ -207,7 +206,7 @@ class HomeActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.REQUST_CODE_SEARCH) {
-            val view = toolbar.findViewById<View>(id.home_search)
+            val view = toolbar.findViewById<View>(R.id.home_search)
             view?.alpha = 1.0F
         }
     }

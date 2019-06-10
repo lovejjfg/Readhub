@@ -19,7 +19,7 @@
 
 package com.lovejjfg.readhub.utils
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.transition.Transition
 import android.transition.TransitionSet
 import android.view.View

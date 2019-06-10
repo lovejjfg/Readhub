@@ -17,11 +17,11 @@
 package com.lovejjfg.readhub.view
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.base.BaseAdapter

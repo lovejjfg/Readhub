@@ -21,13 +21,12 @@ package com.lovejjfg.readhub.view.recycerview
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.topic.DataItem
-import com.lovejjfg.readhub.utils.DateUtil
 import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.utils.parseTime
 import com.lovejjfg.readhub.view.recycerview.holder.AlreadyReadHolder

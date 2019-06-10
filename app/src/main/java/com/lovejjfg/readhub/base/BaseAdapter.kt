@@ -18,7 +18,7 @@ package com.lovejjfg.readhub.base
 
 import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.PowerAdapter
+import com.lovejjfg.powerrecyclerx.PowerAdapter
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.inflate
 

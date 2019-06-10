@@ -20,7 +20,7 @@ package com.lovejjfg.readhub.base
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +34,7 @@ import io.reactivex.disposables.Disposable
  * Email lovejjfg@gmail.com
  */
 
-abstract class BaseFragment : Fragment(), IBaseView {
+abstract class BaseFragment : androidx.fragment.app.Fragment(), IBaseView {
     var mDisposables: CompositeDisposable = CompositeDisposable()
     var mContext: Context? = null
 

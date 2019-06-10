@@ -18,7 +18,7 @@ package com.lovejjfg.readhub.view.recycerview
 
 import android.view.View
 import android.view.ViewGroup
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.base.BaseViewHolder

@@ -6,10 +6,6 @@ import android.content.Context
 import android.graphics.Point
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.annotation.TransitionRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -25,11 +21,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.TransitionRes
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.core.widget.toast
-import com.lovejjfg.powerrecycle.holder.PowerHolder
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.base.BaseAdapter
@@ -41,6 +39,7 @@ import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.ImeUtils
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.TransitionUtils
+import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.lovejjfg.readhub.utils.inflate
 import com.lovejjfg.readhub.utils.ioToMain
 import com.lovejjfg.readhub.utils.parseTime
@@ -75,7 +74,7 @@ open class SearchActivity : BaseActivity() {
     }
 
     override fun afterCreatedView(savedInstanceState: Bundle?) {
-        toast(getString(R.string.search_api_disable))
+        ToastUtil.showToast(this, getString(R.string.search_api_disable))
         val manager = LinearLayoutManager(this)
         searchContent.layoutManager = manager
         adapter = SearchAdapter()
@@ -203,7 +202,7 @@ open class SearchActivity : BaseActivity() {
                 }
             }, {
                 empty.visibility = View.GONE
-                toast(R.string.search_api_disable, Toast.LENGTH_LONG)
+                ToastUtil.showToast(this, R.string.search_api_disable)
                 it.printStackTrace()
             }
             )
@@ -293,7 +292,7 @@ open class SearchActivity : BaseActivity() {
                 sharedElements: List<View>?,
                 sharedElementSnapshots: List<View>
             ) {
-                if (sharedElements != null && !sharedElements.isEmpty()) {
+                if (sharedElements != null && sharedElements.isNotEmpty()) {
                     val searchIcon = sharedElements[0]
                     if (searchIcon.id != R.id.searchback) return
                     val centerX = (searchIcon.left + searchIcon.right) / 2

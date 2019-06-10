@@ -22,7 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import android.util.Log
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R

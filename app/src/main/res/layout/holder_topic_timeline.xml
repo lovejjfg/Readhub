@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.internal.ForegroundLinearLayout
+<com.google.android.material.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,5 +33,5 @@
         tools:text="哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹哎哟不凑这个热闹"
         style="@style/Text.TimeLine"/>
 
-</android.support.design.internal.ForegroundLinearLayout>
+</com.google.android.material.internal.ForegroundLinearLayout>
 

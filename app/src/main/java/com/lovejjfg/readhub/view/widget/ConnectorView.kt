@@ -37,7 +37,7 @@ class ConnectorView : View {
         START, NODE, END, ONLY
     }
 
-    private var type: Type = Type.ONLY
+    private var type: Type = ONLY
     private var cache: Bitmap? = null
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
