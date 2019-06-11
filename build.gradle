@@ -26,6 +26,10 @@ allprojects {
         maven {
             url "https://dl.bintray.com/lovejjfg/maven"
         }
+        maven {
+            name 'glide-snapshot'
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+        }
     }
 }
 

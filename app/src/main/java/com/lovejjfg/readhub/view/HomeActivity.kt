@@ -18,7 +18,6 @@
 
 package com.lovejjfg.readhub.view
 
-import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +35,6 @@ import com.lovejjfg.readhub.utils.FirebaseUtils.logEvent
 import com.lovejjfg.readhub.utils.FirebaseUtils.logScreen
 import com.lovejjfg.readhub.utils.JumpUitl
 import com.lovejjfg.readhub.utils.RxBus
-import com.lovejjfg.readhub.utils.SharedPrefsUtil
 import com.lovejjfg.readhub.utils.UIUtil
 import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.event.ScrollEvent
@@ -44,9 +42,7 @@ import com.lovejjfg.readhub.view.fragment.BlockChainFragment
 import com.lovejjfg.readhub.view.fragment.DevelopFragment
 import com.lovejjfg.readhub.view.fragment.HotTopicFragment
 import com.lovejjfg.readhub.view.fragment.TechFragment
-import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.functions.Consumer
-import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_home.appbarLayout
 import kotlinx.android.synthetic.main.activity_home.navigationView
 import kotlinx.android.synthetic.main.activity_home.parentContainer
@@ -217,21 +213,6 @@ class HomeActivity : BaseActivity() {
         }, Consumer {
             it.printStackTrace()
         })
-    }
-
-    @Suppress("unused")
-    private fun checkPermissions() {
-        if (!SharedPrefsUtil.getValue(this, Constants.SHOW_PROMISSION, false)) {
-            RxPermissions(this).request(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE
-            )
-                .subscribe({
-                    SharedPrefsUtil.putValue(this, Constants.SHOW_PROMISSION, true)
-                }, { it.printStackTrace() })
-                .addTo(mDisposables)
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
