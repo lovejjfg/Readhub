@@ -17,7 +17,7 @@
 package com.lovejjfg.readhub.utils.http
 
 import android.util.Log
-import com.lovejjfg.readhub.base.AppProxy
+import com.lovejjfg.readhub.base.AppDelegate
 import com.lovejjfg.readhub.utils.RxBus
 import com.lovejjfg.readhub.utils.event.NoNetEvent
 import com.lovejjfg.readhub.utils.isNetworkConnected
@@ -36,7 +36,7 @@ class CacheControlInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        return if (!AppProxy.applicationContext.isNetworkConnected()) {
+        return if (!AppDelegate.applicationContext.isNetworkConnected()) {
             request = request.newBuilder()
                 .cacheControl(CacheControl.FORCE_CACHE)
                 .build()

@@ -31,7 +31,7 @@ import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R.id
 import com.lovejjfg.readhub.R.string
-import com.lovejjfg.readhub.base.AppProxy
+import com.lovejjfg.readhub.base.AppDelegate
 import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.view.AboutActivity
 import com.lovejjfg.readhub.view.InstantActivity
@@ -115,7 +115,7 @@ object JumpUitl {
         if (context == null) {
             return
         }
-        if (AppProxy.needRestart) {
+        if (AppDelegate.needRestart) {
             context.finish()
             android.os.Process.killProcess(android.os.Process.myPid())
             return

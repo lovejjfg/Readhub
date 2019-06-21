@@ -18,7 +18,7 @@
 
 package com.lovejjfg.readhub.data
 
-import com.lovejjfg.readhub.base.AppProxy
+import com.lovejjfg.readhub.base.AppDelegate
 import com.lovejjfg.readhub.data.Constants.API_RELEASE
 import com.lovejjfg.readhub.data.Constants.API_SEARCH_RELEASE
 import com.lovejjfg.readhub.data.search.SearchResult
@@ -66,7 +66,7 @@ object DataManager {
     private fun initRetrofit(): Retrofit {
         val cacheSize = 10 * 1024 * 1024L
         val cache = Cache(
-            AppProxy.cacheDirectory ?: throw NullPointerException("init cacheDirectory error"),
+            AppDelegate.cacheDirectory,
             cacheSize
         )
         val retrofit = Retrofit.Builder()
@@ -99,7 +99,7 @@ object DataManager {
 
     private fun initSearchRetrofit(): Retrofit {
         val cacheSize = 10 * 1024 * 1024L
-        val cache = Cache(AppProxy.cacheDirectory ?: throw NullPointerException("init cacheDirectory error"), cacheSize)
+        val cache = Cache(AppDelegate.cacheDirectory, cacheSize)
         val searchRetrofit = Retrofit.Builder()
             .baseUrl(API_SEARCH_RELEASE)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
