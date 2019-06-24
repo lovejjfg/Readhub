@@ -28,7 +28,7 @@ import android.preference.PreferenceManager
 import androidx.appcompat.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
-//import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.lovejjfg.readhub.R.id
 import com.lovejjfg.readhub.R.string
 import com.lovejjfg.readhub.base.AppProxy
@@ -58,7 +58,7 @@ object JumpUitl {
             }
             val bundle = Bundle()
             bundle.putString("链接", url)
-//            FirebaseAnalytics.getInstance(context).logEvent("点击", bundle)
+            FirebaseAnalytics.getInstance(context).logEvent("点击", bundle)
             val default = PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getBoolean("browser_use", false)

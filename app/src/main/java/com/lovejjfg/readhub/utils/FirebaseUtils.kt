@@ -19,7 +19,7 @@ package com.lovejjfg.readhub.utils
 import android.app.Activity
 import android.content.Context
 import androidx.core.os.bundleOf
-//import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.bugly.crashreport.CrashReport
 
 /**
@@ -35,7 +35,7 @@ object FirebaseUtils {
     fun logEvent(context: Context, category: String, vararg pairs: Pair<String, Any?>) {
         try {
             val params = bundleOf(*pairs)
-//            FirebaseAnalytics.getInstance(context)?.logEvent(category, params)
+            FirebaseAnalytics.getInstance(context)?.logEvent(category, params)
         } catch (e: Exception) {
             CrashReport.postCatchedException(e)
         }
@@ -66,7 +66,7 @@ object FirebaseUtils {
 
     fun logScreen(context: Activity, screenName: String) {
         try {
-//            FirebaseAnalytics.getInstance(context)?.setCurrentScreen(context, "screen:$screenName", null)
+            FirebaseAnalytics.getInstance(context)?.setCurrentScreen(context, "screen:$screenName", null)
         } catch (e: Exception) {
             CrashReport.postCatchedException(e)
         }
