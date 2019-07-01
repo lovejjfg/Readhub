@@ -122,14 +122,6 @@ class WebActivity : BaseActivity() {
         web.destroy()
     }
 
-    override fun onBackPressed() {
-        if (web.canGoBack()) {
-            web.goBack()
-            return
-        }
-        super.onBackPressed()
-    }
-
     private fun onTitleDoubleClick() {
         web.scrollTo(0, 0)
     }

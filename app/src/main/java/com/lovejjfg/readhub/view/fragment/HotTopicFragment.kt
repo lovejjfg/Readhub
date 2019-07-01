@@ -153,6 +153,7 @@ class HotTopicFragment : RefreshFragment() {
                     val secondOrder = hotTopic.data[1].order
                     if (latestOrder?.isTopOrder() == true) {
                         latestOrder = secondOrder
+                        println("有置顶操作，选取第二个设为 top")
                         hotTopic.data.first().isTop = true
                     } else {
                         hotTopic.data.first().isTop = false

@@ -119,15 +119,8 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 itemView.ivShare.setOnClickListener {
                     itemView.performLongClick()
                 }
-                handleView(t)
-            } else {
-                dataItem = t
             }
-            if (t.isTop) {
-                itemView.topicPublish.text = "置顶"
-            } else {
-                itemView.topicPublish.text = t.createdAt?.parseTime()
-            }
+            handleView(t)
         }
 
         private fun setRelativeItems(
@@ -163,6 +156,11 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 }
             }
             itemView.topicItemList.isVisible = t.isExband
+            if (t.isTop) {
+                itemView.topicPublish.text = "置顶"
+            } else {
+                itemView.topicPublish.text = t.createdAt?.parseTime()
+            }
         }
     }
 
