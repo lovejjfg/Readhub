@@ -391,24 +391,23 @@ abstract class RefreshFragment : BaseFragment() {
                 if (indexOf < 0) {
                     return
                 }
+                // no more
                 if (indexOf == 0 || (data[indexOf - 1].isTop)) {
                     println("没有新的更新：$indexOf")
                     if (!loadMore && !fromCache) {
                         removeReadAndHint()
                     }
                 } else {
-                    if (!loadMore && !fromCache) {
+                    // 插入 没有更多
+                    val removeReadPosition = adapter.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
+                    println("没有更多的位置：$removeReadPosition")
+                    if (removeReadPosition + 1 != indexOf) {
+                        val hintCount = if (data.first().isTop) indexOf - 1 else indexOf
+                        println("插入更新位置：$indexOf")
                         removeRead()
+                        showToast(String.format(getString(R.string.update_news_with_count), hintCount))
+                        adapter.insertItem(indexOf, DataItem())
                     }
-                    val hintCount = if (data.first().isTop) {
-                        indexOf - 1
-                    } else {
-                        indexOf
-                    }
-                    println("插入更新位置：$indexOf")
-                    showToast(String.format(getString(R.string.update_news_with_count), hintCount))
-                    val element = DataItem()
-                    adapter.insertItem(indexOf, element)
                 }
             }
         } catch (e: Exception) {
@@ -422,14 +421,14 @@ abstract class RefreshFragment : BaseFragment() {
         showToast(getString(R.string.wait_away))
     }
 
-    private fun removeRead() {
-        try {
+    private fun removeRead(): Int {
+        return try {
             val position = adapter.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
-            if (position != -1) {
-                adapter.removeItem(position)
-            }
+            adapter.removeItem(position)
+            return position
         } catch (e: Exception) {
             e.printStackTrace()
+            -1
         }
     }
 

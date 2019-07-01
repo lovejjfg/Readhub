@@ -25,7 +25,6 @@ import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.lovejjfg.readhub.utils.ioToMain
-import com.lovejjfg.shake.ShakerHelper
 import com.meituan.android.walle.WalleChannelReader
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
@@ -67,7 +66,6 @@ class AppDelegate(private val application: Application) {
     }
 
     fun onCreate() {
-        ShakerHelper.init(application)
         CrashReport.setIsDevelopmentDevice(application, BuildConfig.IS_DEBUG)
 
         val strategy = CrashReport.UserStrategy(application)

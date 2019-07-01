@@ -18,12 +18,12 @@
 
 package com.lovejjfg.readhub.view.recycerview
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseAdapter
@@ -119,15 +119,8 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 itemView.ivShare.setOnClickListener {
                     itemView.performLongClick()
                 }
-                handleView(t)
-            } else {
-                dataItem = t
             }
-            if (t.isTop) {
-                itemView.topicPublish.text = "置顶"
-            } else {
-                itemView.topicPublish.text = t.createdAt?.parseTime()
-            }
+            handleView(t)
         }
 
         private fun setRelativeItems(
@@ -163,6 +156,11 @@ class HotTopicAdapter : BaseAdapter<DataItem>() {
                 }
             }
             itemView.topicItemList.isVisible = t.isExband
+            if (t.isTop) {
+                itemView.topicPublish.text = "置顶"
+            } else {
+                itemView.topicPublish.text = t.createdAt?.parseTime()
+            }
         }
     }
 
