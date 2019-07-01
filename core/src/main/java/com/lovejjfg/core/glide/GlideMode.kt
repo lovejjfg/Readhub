@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.readhub.utils.glide
+package com.lovejjfg.core.glide
 
 import android.content.Context
 import com.bumptech.glide.GlideBuilder

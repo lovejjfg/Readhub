@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.  Joe
+ * Copyright (c) 2019.  Joe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.readhub.utils.glide
+package com.lovejjfg.core;
 
-import android.widget.ImageView
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by joe on 2017/9/29.
- * Email: lovejjfg@gmail.com
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-object GlideUtils {
-    fun into(url: String?, iv: ImageView?) {
-        try {
-            if (url == null || iv == null) {
-                return
-            }
-            GlideApp.with(iv.context)
-                .load(url)
-                .into(iv)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+public class ExampleUnitTest {
+    @Test
+    public void addition_isCorrect() {
+        assertEquals(4, 2 + 2);
     }
 }

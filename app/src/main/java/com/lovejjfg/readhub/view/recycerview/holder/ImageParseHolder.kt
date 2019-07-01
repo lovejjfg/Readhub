@@ -20,7 +20,7 @@ import android.text.TextUtils
 import android.view.View
 import com.lovejjfg.readhub.base.BaseViewHolder
 import com.lovejjfg.readhub.data.topic.detail.DetailItems
-import com.lovejjfg.readhub.utils.glide.GlideUtils
+import com.lovejjfg.core.glide.GlideUtils
 import kotlinx.android.synthetic.main.holder_img_parse.view.igAlt
 import kotlinx.android.synthetic.main.holder_img_parse.view.ivContent
 

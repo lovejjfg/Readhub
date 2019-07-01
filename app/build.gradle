@@ -95,6 +95,7 @@ def mockitoVersion = "2.13.0"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(":core")
     implementation 'androidx.multidex:multidex:2.0.1' // 多dex配置
 
     implementation 'com.google.firebase:firebase-core:17.0.0'
@@ -113,11 +114,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     //    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
     implementation 'com.lovejjfg:powerrecyclerx:2.0.1'
-    implementation 'javax.annotation:javax.annotation-api:1.2'
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation 'com.github.bumptech.glide:okhttp-integration:4.9.0'
-    kapt 'androidx.annotation:annotation:1.1.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+
 
     implementation 'org.jsoup:jsoup:1.11.3'
     testImplementation 'junit:junit:4.12'
