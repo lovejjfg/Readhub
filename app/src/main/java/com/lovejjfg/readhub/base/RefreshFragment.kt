@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.lovejjfg.core.utils.printSelf
 import com.lovejjfg.powerrecyclerx.PowerAdapter
 import com.lovejjfg.powerrecyclerx.manager.FixedLinearLayoutManager
 import com.lovejjfg.readhub.R
@@ -102,7 +103,7 @@ abstract class RefreshFragment : BaseFragment() {
     }
 
     private fun handleView(savedInstanceState: Bundle?) {
-        println("view 创建啦：${toString()}")
+       "view 创建啦：${toString()}".printSelf()
         topicList.layoutManager = FixedLinearLayoutManager(activity)
         adapter = createAdapter()
         handleLongClick()
@@ -116,7 +117,7 @@ abstract class RefreshFragment : BaseFragment() {
         }
         adapter.totalCount = Int.MAX_VALUE
         topicList.adapter = adapter
-        println("tag:$tag;;isHidden:$isHidden")
+        ("tag:$tag;;isHidden:$isHidden").printSelf()
         initDataOrRefresh(savedInstanceState)
         @Suppress("DEPRECATION")
         refreshContainer.setOnRefreshListener { refresh(refreshContainer) }
@@ -339,7 +340,7 @@ abstract class RefreshFragment : BaseFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        println("$this hiddenChange: $hidden")
+        ("$this hiddenChange: $hidden").printSelf()
         if (!hidden) {
             if (adapter.list.isEmpty()) {
                 doRefresh()
@@ -380,12 +381,12 @@ abstract class RefreshFragment : BaseFragment() {
         fromCache: Boolean = false,
         check: (item: DataItem?) -> Boolean
     ) {
-        println("currentId:$latestOrder;;preId::$preLatestOrder")
+        ("currentId:$latestOrder;;preId::$preLatestOrder").printSelf()
         try {
             val first = data.firstOrNull {
                 !it.isTop && check(it)
             }
-            println("头条id:${first?.id}")
+            ("头条id:${first?.id}").printSelf()
             if (first != null) {
                 val indexOf = data.indexOf(first)
                 if (indexOf < 0) {
@@ -393,17 +394,17 @@ abstract class RefreshFragment : BaseFragment() {
                 }
                 // no more
                 if (indexOf == 0 || (data[indexOf - 1].isTop)) {
-                    println("没有新的更新：$indexOf")
+                    ("没有新的更新：$indexOf").printSelf()
                     if (!loadMore && !fromCache) {
                         removeReadAndHint()
                     }
                 } else {
                     // 插入 没有更多
                     val removeReadPosition = adapter.findFirstPositionOfType(Constants.TYPE_ALREADY_READ)
-                    println("没有更多的位置：$removeReadPosition")
+                    ("没有更多的位置：$removeReadPosition").printSelf()
                     if (removeReadPosition + 1 != indexOf) {
                         val hintCount = if (data.first().isTop) indexOf - 1 else indexOf
-                        println("插入更新位置：$indexOf")
+                        ("插入更新位置：$indexOf").printSelf()
                         removeRead()
                         showToast(String.format(getString(R.string.update_news_with_count), hintCount))
                         adapter.insertItem(indexOf, DataItem())

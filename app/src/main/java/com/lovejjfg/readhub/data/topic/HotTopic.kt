@@ -24,7 +24,6 @@ import com.lovejjfg.readhub.data.Cache
 import kotlinx.android.parcel.Parcelize
 import javax.annotation.Generated
 
-@Generated("com.robohorse.robopojogenerator")
 @Parcelize
 data class HotTopic(
 

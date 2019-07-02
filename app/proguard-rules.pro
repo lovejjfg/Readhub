@@ -31,21 +31,37 @@
 
 
 #retrofit
-# Platform calls Class.forName on types which do not exist on Android to determine platform.
--dontnote retrofit2.Platform
-# Platform used when running on Java 8 VMs. Will not be used at runtime.
--dontwarn retrofit2.Platform$Java8
-#-dontwarn retrofit2.OkHttpCall
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
+# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
+# EnclosingMethod is required to use InnerClasses.
+-keepattributes Signature, InnerClasses, EnclosingMethod
 
--dontwarn javax.annotation.**
-# keep anotation
--keepclasseswithmembers class * {
+# Retrofit does reflection on method and parameter annotations.
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.KotlinExtensions
+
+-dontwarn kotlin.reflect.jvm.internal.**
+
+
+# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
+# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
+#-if interface * { @retrofit2.http.* <methods>; }
+#-keep,allowobfuscation interface <1>
 
 #rx
 #-dontwarn rx.**
@@ -57,6 +73,7 @@
 -keepattributes InnerClasses
 -dontwarn InnerClasses
 -dontwarn InnerClasses$*
+-ignorewarnings
 
 
 -dontwarn com.lovejjfg.**
@@ -82,7 +99,11 @@
 -assumenosideeffects class android.util.Log {
     public static *** i(...);
     public static *** v(...);
-    public static *** println(...);
     public static *** w(...);
     public static *** wtf(...);
 }
+-assumenosideeffects class java.io.PrintStream{
+    public *** print(...);
+    public *** println(...);
+}
+

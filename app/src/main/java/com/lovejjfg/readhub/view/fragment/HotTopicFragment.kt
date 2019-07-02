@@ -25,6 +25,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.lovejjfg.core.utils.printSelf
 import com.lovejjfg.powerrecyclerx.PowerAdapter
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.RefreshFragment
@@ -59,7 +60,7 @@ class HotTopicFragment : RefreshFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        println(" HotTopicFragment onHiddenChanged:: $hidden")
+        (" HotTopicFragment onHiddenChanged:: $hidden").printSelf()
         if (!hidden) {
             checkNews()
         }
@@ -141,7 +142,7 @@ class HotTopicFragment : RefreshFragment() {
     }
 
     override fun refresh(refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout?) {
-        println("start refresh.......")
+        ("start refresh.......").printSelf()
         mSnackBar?.dismiss()
         DataManager.hotTopic()
             .ioToMain()
@@ -152,7 +153,7 @@ class HotTopicFragment : RefreshFragment() {
                     val secondOrder = hotTopic.data[1].order
                     if (latestOrder?.isTopOrder() == true) {
                         latestOrder = secondOrder
-                        println("有置顶操作，选取第二个设为 top")
+                        ("有置顶操作，选取第二个设为 top").printSelf()
                         hotTopic.data.first().isTop = true
                     } else {
                         hotTopic.data.first().isTop = false

@@ -21,12 +21,14 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.Keep
 import com.tencent.tinker.loader.app.DefaultApplicationLike
 
 /**
  * Created by joe on 2018/5/10.
  * Email: lovejjfg@gmail.com
  */
+@Keep
 class AppProxy(
     application: Application?,
     tinkerFlags: Int,

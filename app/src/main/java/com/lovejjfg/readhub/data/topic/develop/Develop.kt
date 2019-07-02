@@ -21,9 +21,7 @@ package com.lovejjfg.readhub.data.topic.develop
 import com.google.gson.annotations.SerializedName
 import com.lovejjfg.readhub.data.Cache
 import com.lovejjfg.readhub.data.topic.DataItem
-import javax.annotation.Generated
 
-@Generated("com.robohorse.robopojogenerator")
 data class Develop(
 
     @field:SerializedName("totalItems")

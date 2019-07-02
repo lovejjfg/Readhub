@@ -17,10 +17,10 @@
 package com.lovejjfg.readhub.view
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
@@ -105,6 +105,7 @@ class InstantActivity : BaseActivity() {
             it.onComplete()
         }
             .toList()
+            .ioToMain()
             .subscribe({
                 instantAdapter.clearList()
                 instantAdapter.setList(it)

@@ -48,7 +48,7 @@ android {
             minifyEnabled true //default true
             signingConfig signingConfigs.release
             debuggable false //default false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "IS_DEBUG", "false" //default false
             ndk {
                 //设置支持的SO库架构
