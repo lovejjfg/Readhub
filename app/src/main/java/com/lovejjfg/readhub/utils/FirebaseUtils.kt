@@ -18,6 +18,7 @@ package com.lovejjfg.readhub.utils
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.bugly.crashreport.CrashReport
@@ -52,6 +53,7 @@ object FirebaseUtils {
     fun logEggCenter(context: Context) {
         logEvent(context, "彩蛋", Pair("type", "center"))
     }
+
     fun logEggAbout(context: Context) {
         logEvent(context, "彩蛋", Pair("type", "About"))
     }
@@ -66,9 +68,13 @@ object FirebaseUtils {
 
     fun logScreen(context: Activity, screenName: String) {
         try {
-            FirebaseAnalytics.getInstance(context)?.setCurrentScreen(context, "screen:$screenName", null)
+            FirebaseAnalytics.getInstance(context).setCurrentScreen(context, "screen:$screenName", null)
         } catch (e: Exception) {
             CrashReport.postCatchedException(e)
         }
+    }
+
+    fun logMarketEvent(context: Activity) {
+        logEvent(context, "应用市场", Pair("设备", Build.MODEL))
     }
 }

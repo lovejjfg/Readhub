@@ -45,6 +45,8 @@ object Constants {
     const val LASTED_ID = "LASTED_ID"
 
     const val FROM_CACHE = "fromCache"
+    const val SHOW_MARKET = "show_market"
+
     //
     const val TYPE_HEADER = 1
     const val TYPE_NEWS = 2

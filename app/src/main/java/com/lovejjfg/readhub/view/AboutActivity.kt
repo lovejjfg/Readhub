@@ -20,20 +20,26 @@ package com.lovejjfg.readhub.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lovejjfg.powerrecyclerx.PowerHolder
 import com.lovejjfg.readhub.BuildConfig
 import com.lovejjfg.readhub.R
 import com.lovejjfg.readhub.base.BaseActivity
 import com.lovejjfg.readhub.base.BaseAdapter
 import com.lovejjfg.readhub.base.BaseViewHolder
+import com.lovejjfg.readhub.data.Constants
 import com.lovejjfg.readhub.data.Library
 import com.lovejjfg.readhub.utils.FirebaseUtils
 import com.lovejjfg.readhub.utils.JumpUitl
+import com.lovejjfg.readhub.utils.SharedPrefsUtil
+import com.lovejjfg.readhub.utils.http.ToastUtil
 import com.lovejjfg.readhub.utils.inflate
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.addTo
@@ -50,7 +56,9 @@ import kotlinx.android.synthetic.main.holder_about_info.view.libName
 class AboutActivity : BaseActivity() {
     private lateinit var aboutAdapter: BaseAdapter<Library>
     private var takeRestCount = 0
-    private var maxRestCount = 1
+    private var maxRestCount = 4
+    private var showMarket: Boolean = true
+
     override fun getLayoutRes(): Int {
         return R.layout.activity_about
     }
@@ -64,38 +72,58 @@ class AboutActivity : BaseActivity() {
             enableLoadMore(false)
         }
         initData()
+        showMarket = SharedPrefsUtil.getValue(this, Constants.SHOW_MARKET, true)
         aboutAdapter.setOnItemClickListener { _, _, item ->
             JumpUitl.jumpWeb(this, item.jumpUrl)
         }
         readhubLogo.setOnClickListener {
-            if (readhubLogo.rotation != 3600f * maxRestCount) {
-                readhubLogo.animate()
-                    .rotation(readhubLogo.rotation + 3600f)
-                    .setDuration(2000)
-                    .setInterpolator(FastOutSlowInInterpolator())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            readhubLogo.isEnabled = true
-                        }
+            handleLogoClick(showMarket)
+        }
+    }
 
-                        override fun onAnimationStart(animation: Animator?) {
-                            readhubLogo.isEnabled = false
+    private fun handleLogoClick(showMarket: Boolean) {
+        readhubLogo.animate()
+            .rotation(readhubLogo.rotation + 3600f)
+            .setDuration(1500)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    takeRestCount++
+                    readhubLogo.isEnabled = true
+                    FirebaseUtils.logEggAbout(this@AboutActivity)
+                    if (takeRestCount >= maxRestCount) {
+                        if (showMarket) {
+                            shareAppShop(this@AboutActivity)
                         }
-                    })
-                    .start()
-                FirebaseUtils.logEggAbout(this@AboutActivity)
-            } else {
-                if (!EggsHelper.showCenterScaleView(this)) {
-                    return@setOnClickListener
+                        takeRestCount = 0
+                        readhubLogo.rotation = 0f
+                    }
                 }
-                takeRestCount++
-                if (takeRestCount >= maxRestCount) {
-                    maxRestCount++
-                    takeRestCount = 0
-                    readhubLogo.rotation = 0f
+
+                override fun onAnimationStart(animation: Animator?) {
+                    readhubLogo.isEnabled = false
+                    if (showMarket) {
+                        ToastUtil.showToast(this@AboutActivity, "${maxRestCount - takeRestCount - 1}")
+                    }
                 }
-                FirebaseUtils.logEggAbout(this@AboutActivity)
-            }
+            })
+            .start()
+        if (!EggsHelper.showCenterScaleView(this)) {
+            return
+        }
+    }
+
+    private fun shareAppShop(activity: Activity) {
+        SharedPrefsUtil.putValue(this, Constants.SHOW_MARKET, false)
+        showMarket = false
+        val uri = Uri.parse("market://details?id=$packageName")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (intent.resolveActivity(packageManager) != null) {
+            activity.startActivity(intent)
+            FirebaseUtils.logMarketEvent(this)
+        } else {
+            ToastUtil.showToast(this, "装逼失败，0.0")
         }
     }
 
@@ -110,9 +138,9 @@ class AboutActivity : BaseActivity() {
             )
             it.onNext(
                 Library(
-                    "Android support libraries",
-                    "The Android support libraries offer a number of features that are not built into the framework.",
-                    "https://developer.android.com/topic/libraries/support-library"
+                    "Android Jetpack AndroidX",
+                    "AndroidX is the open-source project that the Android team uses to develop, test, package, version and release libraries within Jetpack.",
+                    "https://developer.android.com/jetpack/androidx"
                 )
             )
             it.onNext(
@@ -187,6 +215,22 @@ class AboutActivity : BaseActivity() {
                     "https://github.com/tbruyelle/RxPermissions"
                 )
             )
+
+            it.onNext(
+                Library(
+                    "Kotlin",
+                    "The Kotlin Programming Language",
+                    "https://github.com/JetBrains/kotlin"
+                )
+            )
+            it.onNext(
+                Library(
+                    "SwipeBack",
+                    "The gesture and animation for page to go back.",
+                    "https://github.com/lovejjfg/SwipeBack"
+                )
+            )
+
             it.onComplete()
         }.toSortedList { t, t1 ->
             t.name.compareTo(t1.name)
