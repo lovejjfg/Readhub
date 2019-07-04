@@ -2,7 +2,7 @@
 ![icon](https://raw.githubusercontent.com/lovejjfg/Readhub/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
 
-无码科技 [冯大辉](https://github.com/Fenng) 的 [Readhub](https://readhub.me/) Android 客户端。说句废话，**这不是官方的App** 。
+无码科技 [冯大辉](https://github.com/Fenng) 的 [Readhub](https://readhub.cn/) Android 客户端。说句废话，**这不是官方的App** 。
 
 ### Release 
 
